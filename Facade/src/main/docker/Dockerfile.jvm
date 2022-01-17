@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/startUp/docker/Dockerfile.jvm -t quarkus/facade-jvm .
+# docker build -f src/facade.StartUp/docker/Dockerfile.jvm -t quarkus/facade-jvm .
 #
 # Then run the container using:
 #

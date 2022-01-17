@@ -1,7 +1,7 @@
-package adapters;
+package facade.adapters;
 
-import domain.DTUPayAccount;
-import domain.Payment;
+import facade.domain.DTUPayAccount;
+import facade.domain.Payment;
 import messaging.MessageQueue;
 import messaging.Event;
 

@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/startUp/docker/Dockerfile.native-distroless -t quarkus/facade .
+# docker build -f src/facade.StartUp/docker/Dockerfile.native-distroless -t quarkus/facade .
 #
 # Then run the container using:
 #

@@ -1,7 +1,7 @@
-package adapters;
+package facade.adapters;
 
-import domain.AccountList;
-import domain.DTUPayAccount;
+import facade.domain.AccountList;
+import facade.domain.DTUPayAccount;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

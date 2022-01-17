@@ -1,4 +1,4 @@
-package domain;
+package facade.domain;
 
 import java.util.ArrayList;
 // todo: This class should be deleted as the payments will be saved in Payment microservice

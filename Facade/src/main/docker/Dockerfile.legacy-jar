@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/startUp/docker/Dockerfile.legacy-jar -t quarkus/facade-legacy-jar .
+# docker build -f src/facade.StartUp/docker/Dockerfile.legacy-jar -t quarkus/facade-legacy-jar .
 #
 # Then run the container using:
 #

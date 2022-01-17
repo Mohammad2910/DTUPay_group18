@@ -1,4 +1,4 @@
-package domain;
+package facade.domain;
 
 import java.util.ArrayList;
 // todo: This class should be deleted as the account will be saved in Account microservice

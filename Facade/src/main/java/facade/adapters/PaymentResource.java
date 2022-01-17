@@ -1,7 +1,7 @@
-package adapters;
+package facade.adapters;
 
-import domain.Payment;
-import domain.Paymentlist;
+import facade.domain.Payment;
+import facade.domain.Paymentlist;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

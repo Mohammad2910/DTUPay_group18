@@ -1,9 +1,11 @@
-package adapters;
+package facade.adapters;
 
 import javax.ws.rs.*;
 
-import domain.AccountList;
-import domain.DTUPayAccount;
+import facade.StartUp;
+import facade.domain.AccountList;
+import facade.domain.DTUPayAccount;
+
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
@@ -17,6 +19,11 @@ public class MerchantResource {
         //this.facadeController = facadeController;
     }
 */
+    @GET
+    public void startUpTest(){
+        new StartUp().startUp();
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
