@@ -6,10 +6,6 @@ services:
     container_name: Facade
     ports:
       - "8080:8080"
-  payment_ms:
-    build: payment_ms
-    image: payment_ms
-    container_name: payment_ms
   rabbitMq:
     image: rabbitmq:3-management
     container_name: rabbitmq_container
