@@ -1,9 +1,9 @@
 version: '3'
 services:
   facade:
-    build: facade
-    image: facade
-    container_name: facade
+    build: Facade
+    image: Facade
+    container_name: Facade
     ports:
       - "8080:8080"
   payment_ms:
