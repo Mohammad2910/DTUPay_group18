@@ -1,9 +1,9 @@
 version: '3'
 services:
   facade:
-    build: Facade
-    image: Facade
-    container_name: Facade
+    build: facade
+    image: facade
+    container_name: facade
     ports:
       - "8080:8080"
   rabbitMq:
