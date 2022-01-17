@@ -13,7 +13,6 @@ docker image prune
 #chmod u+x mvnw
 #./mvnw package
 #cd ..
-cd DTU
 cd messaging-utilities-3.2
 chmod u+x build.sh
 ./build.sh
