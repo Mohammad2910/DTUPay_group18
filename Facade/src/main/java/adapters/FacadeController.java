@@ -13,6 +13,8 @@ public class FacadeController {
         queue = q;
         // todo: make handlers for each event Facade need to look at
         queue.addHandler("PaymentRequested", this::handlePaymentRequest);
+        queue.addHandler("Test", this::handlePaymentRequest);
+        queue.publish(new Event("Test", new Object[] {}));
     }
 
     public void handlePaymentRequest(Event event) {
