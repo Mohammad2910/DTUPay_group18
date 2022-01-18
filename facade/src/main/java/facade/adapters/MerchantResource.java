@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @Path("/merchant")
 public class MerchantResource {
-    //public FacadeController facadeController;
+    public FacadeController facadeController;
 
     private AccountList accountList = AccountList.getInstance();
 /*
@@ -21,16 +21,17 @@ public class MerchantResource {
 */
     @GET
     public void startUpTest(){
-        new StartUp().startUp();
+        new StartUp().startUp(facadeController);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account){
-        accountList.addAccount(account);
-        //facadeController.publishCreateCustomer(account);
+        //accountList.addAccount(account);
+        facadeController.publishCreateMerchant(account);
     }
+
     // todo: should this be here?
     @GET
     @Path("/list")

@@ -1,6 +1,7 @@
 package facade;
 
 import facade.adapters.FacadeController;
+import facade.adapters.MerchantResource;
 import messaging.implementations.RabbitMqQueue;
 
 public class StartUp {
@@ -13,9 +14,9 @@ public class StartUp {
         //new MerchantResource(f);
     }*/
 
-    public void startUp() {
+    public void startUp(FacadeController facadeController) {
         System.out.println("startup");
         var mq = new RabbitMqQueue("localhost");
-        FacadeController f = new FacadeController(mq);
+        facadeController = new FacadeController(mq);
     }
 }
