@@ -74,8 +74,10 @@ public class AccountController {
         }
 
         // Publish event
+        System.out.println("BEFORE QUEUE");
         Event accCreationSucceeded = new Event("MerchantAccountCreatedSucceeded", new Object[] {account});
         queue.publish(accCreationSucceeded);
+        System.out.println("AFTER QUEUE");
     }
 
     /**
