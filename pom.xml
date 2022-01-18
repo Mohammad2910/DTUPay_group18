@@ -12,6 +12,7 @@
         <module>facade</module>
         <module>messaging-utilities-3.2</module>
         <module>account</module>
+        <module>payment</module>
     </modules>
 
     <properties>
