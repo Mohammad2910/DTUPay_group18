@@ -10,6 +10,10 @@ services:
     build: account
     image: account
     container_name: account
+  token:
+    build: token
+    image: token
+    container_name: token
   rabbitMq:
     image: rabbitmq:3-management
     container_name: rabbitmq_container

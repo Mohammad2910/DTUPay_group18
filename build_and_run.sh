@@ -27,8 +27,12 @@ cd account
 mvn package
 
 cd ..
+cd token
+mvn package
+
+cd ..
 #deploying the docker-containers (services) in the background specified in the docker-compose.yml file
 docker-compose build
 docker-compose up -d rabbitMq
 sleep 10
-docker-compose up -d account facade
+docker-compose up -d account facade token
