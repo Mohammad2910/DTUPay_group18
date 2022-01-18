@@ -62,24 +62,18 @@ public class AccountController {
      */
     public void handleCreateMerchantAccountRequest(Event event) {
         var account = event.getArgument(0, DTUPayAccount.class);
-        System.out.println("HELLO MERCHANT FROM ACCOUNT----------------------");
         try {
             // Create account
-            System.out.println("WE ARE INSIDE THE TRY-------------------------");
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event
-            System.out.println("WE ARE  INSIDE THE CATCH----------------------");
             Event accCreationFailed = new Event("MerchantAccountCreatedFailed", new Object[] {e.getMessage()});
             queue.publish(accCreationFailed);
         }
 
         // Publish event
-        System.out.println("BEFORE QUEUE");
         Event accCreationSucceeded = new Event("MerchantAccountCreatedSucceeded", new Object[] {account});
-        System.out.println("AFTER EVENT");
         queue.publish(accCreationSucceeded);
-        System.out.println("AFTER QUEUE");
     }
 
     /**
