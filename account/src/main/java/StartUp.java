@@ -3,8 +3,10 @@ import domain.storage.InMemory;
 import messaging.implementations.RabbitMqQueue;
 
 public class StartUp {
-
-    public void startUp() {
+    public static void main(String[] args) {
+        new StartUp().startUp();
+    }
+    private void startUp() {
         System.out.println("startup of account microservice");
         var mq = new RabbitMqQueue("localhost");
         InMemory memory = InMemory.instance();

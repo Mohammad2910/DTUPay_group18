@@ -17,6 +17,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>hubert.dtu.dk</groupId>
+            <artifactId>messaging-utilities</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>RELEASE</version>
