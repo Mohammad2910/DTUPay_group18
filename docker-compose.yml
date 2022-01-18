@@ -6,6 +6,10 @@ services:
     container_name: facade
     ports:
       - "8080:8080"
+  account:
+    build: account
+    image: account
+    container_name: account
   rabbitMq:
     image: rabbitmq:3-management
     container_name: rabbitmq_container
