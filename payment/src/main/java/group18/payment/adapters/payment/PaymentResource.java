@@ -4,8 +4,8 @@ package group18.payment.adapters.payment;
 import group18.payment.adapters.payment.model.PaymentPayload;
 import group18.payment.domain.PaymentService;
 import group18.payment.domain.model.Payment;
-import group18.payment.utilities.messaging.Event;
-import group18.payment.utilities.messaging.MessageQueue;
+import messaging.Event;
+import messaging.MessageQueue;
 
 public class PaymentResource {
 

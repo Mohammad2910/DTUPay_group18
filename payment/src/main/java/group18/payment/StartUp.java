@@ -1,5 +1,6 @@
 package group18.payment;
 
+
 import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceService;
 import group18.payment.adapters.bankTransfer.BankTransferService;
@@ -8,8 +9,8 @@ import group18.payment.adapters.payment.PaymentResource;
 import group18.payment.domain.PaymentService;
 import group18.payment.domain.cache.PaymentsCache;
 import group18.payment.domain.cache.impl.PaymentsInMemory;
-import group18.payment.utilities.messaging.MessageQueue;
-import group18.payment.utilities.messaging.impl.RabbitMqQueue;
+import messaging.MessageQueue;
+import messaging.implementations.RabbitMqQueue;
 
 public class StartUp {
 
