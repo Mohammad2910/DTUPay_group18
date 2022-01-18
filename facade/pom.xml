@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Facade</artifactId>
+    <artifactId>facade</artifactId>
 
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
