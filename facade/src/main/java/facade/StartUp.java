@@ -16,7 +16,7 @@ public class StartUp {
 
     public void startUp(FacadeController facadeController) {
         System.out.println("startup");
-        var mq = new RabbitMqQueue("http://fm-18.compute.dtu.dk:8282/");
+        var mq = new RabbitMqQueue("rabbitmq_container");
         facadeController = new FacadeController(mq);
     }
 }
