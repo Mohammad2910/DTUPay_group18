@@ -42,8 +42,11 @@ public class DTUPayAccountBusinessLogic {
      * @throws DuplicateBankAccountException
      */
     public String createAccount(DTUPayAccount account) throws DuplicateBankAccountException {
+        System.out.println("WE ARE IN CREATEACCOUNTLOGIC");
+
         // check bank account already has been registered
         checkUniqueBankAccount(account);
+        System.out.println("ACCOUNT IS UNIQUE");
 
         // Add account
         String id = UUID.randomUUID().toString();
@@ -72,6 +75,7 @@ public class DTUPayAccountBusinessLogic {
      * @throws DuplicateBankAccountException
      */
     public void checkUniqueBankAccount(DTUPayAccount account) throws DuplicateBankAccountException {
+        System.out.println("CHECKING FOR UNIQUE ACCOUNT");
         // Get accounts
         Map<String, DTUPayAccount> dtuPayAccounts = memory.getAccounts();
 

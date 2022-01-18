@@ -68,6 +68,7 @@ public class AccountController {
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event
+            System.out.println("WE ARE  INSIDE THE CATCH----------------------");
             Event accCreationFailed = new Event("MerchantAccountCreatedFailed", new Object[] {e.getMessage()});
             queue.publish(accCreationFailed);
         }
