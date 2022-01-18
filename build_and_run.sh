@@ -24,8 +24,7 @@ chmod u+x mvnw
 
 cd ..
 cd account
-chmod u+x mvnw
-./mvnw package
+mvn package
 
 cd ..
 #deploying the docker-containers (services) in the background specified in the docker-compose.yml file
