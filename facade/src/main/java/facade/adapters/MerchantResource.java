@@ -19,6 +19,7 @@ public class MerchantResource {
         //this.facadeController = facadeController;
     }
 */
+    //todo: should implemented better so it works for all resources
     @GET
     public void startUpTest(){
         new StartUp().startUp(facadeController);
@@ -30,6 +31,7 @@ public class MerchantResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account){
         //accountList.addAccount(account);
+        System.out.println(account.getDtuBankAccount());
         facadeController.publishCreateMerchant(account);
     }
 

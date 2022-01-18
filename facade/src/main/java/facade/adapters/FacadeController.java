@@ -15,9 +15,7 @@ public class FacadeController {
         queue = q;
         // todo: make handlers for each event Facade need to look at
         queue.addHandler("PaymentRequested", this::handlePaymentRequest);
-        //queue.addHandler("MerchantAccountCreatedSucceeded", this::handleMerchantCreated);
-        queue.addHandler("Test", this::handlePaymentRequest);
-        queue.publish(new Event("Test", new Object[] {}));
+        queue.addHandler("MerchantAccountCreatedSucceeded", this::handleMerchantCreated);
     }
 
     public void handlePaymentRequest(Event event) {
@@ -45,12 +43,9 @@ public class FacadeController {
     public void publishCreateMerchant(DTUPayAccount account) {
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {account});
         queue.publish(createMerchantAccount);
-        queue.addHandler("MerchantAccountCreatedSucceeded", this::handleMerchantCreated);
     }
 
-    @Path("/merchant/list")
-    public String handleMerchantCreated(Event event) {
+    public void handleMerchantCreated(Event event) {
         var a = event.getArgument(0, DTUPayAccount.class);
-        return a.getName();
     }
 }
