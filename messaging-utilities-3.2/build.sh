@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
-chmod u+x mvn
-mvn clean install
+chmod u+x mvnw
+mvnw clean install
 
