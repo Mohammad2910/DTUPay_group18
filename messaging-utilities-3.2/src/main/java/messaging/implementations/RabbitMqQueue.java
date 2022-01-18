@@ -32,6 +32,7 @@ public class RabbitMqQueue implements MessageQueue {
 
 	@Override
 	public void publish(Event event) {
+		System.out.println("PUBLISH----------------------------------------");
 		String message = new Gson().toJson(event);
 		System.out.println("[x] Publish event " + message);
 		try {
