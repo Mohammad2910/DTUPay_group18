@@ -61,7 +61,7 @@ public class AccountController {
      */
     public void handleCreateMerchantAccountRequest(Event event) {
         var account = event.getArgument(0, DTUPayAccount.class);
-
+        System.out.println("HELLO MERCHANT FROM ACCOUNT----------------------");
         try {
             // Create account
             accountLogic.createAccount(account);
