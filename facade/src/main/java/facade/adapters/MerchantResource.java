@@ -25,6 +25,7 @@ public class MerchantResource {
     }
 
     @POST
+    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account){
