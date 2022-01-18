@@ -22,6 +22,12 @@ cd facade
 chmod u+x mvnw
 ./mvnw package
 
+cd ..
+cd account
+chmod u+x mvnw
+./mvnw package
+
+cd ..
 #deploying the docker-containers (services) in the background specified in the docker-compose.yml file
 docker-compose build
 docker-compose up -d
