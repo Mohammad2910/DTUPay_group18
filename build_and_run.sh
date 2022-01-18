@@ -18,7 +18,7 @@ chmod u+x build.sh
 ./build.sh
 
 cd ..
-cd Facade
+cd facade
 chmod u+x mvnw
 ./mvnw package
 
