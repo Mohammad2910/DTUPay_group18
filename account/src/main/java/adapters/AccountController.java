@@ -64,6 +64,7 @@ public class AccountController {
         System.out.println("HELLO MERCHANT FROM ACCOUNT----------------------");
         try {
             // Create account
+            System.out.println("WE ARE INSIDE THE TRY-------------------------");
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event
