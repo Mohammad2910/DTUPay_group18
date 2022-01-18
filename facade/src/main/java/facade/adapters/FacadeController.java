@@ -41,8 +41,10 @@ public class FacadeController {
      * @param account
      */
     public void publishCreateMerchant(DTUPayAccount account) {
+        System.out.println("Create Merchant----------------------------------");
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {account});
         queue.publish(createMerchantAccount);
+        System.out.println("Publish to queue---------------------------------");
     }
 
     public void handleMerchantCreated(Event event) {
