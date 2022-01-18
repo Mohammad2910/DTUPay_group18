@@ -1,6 +1,6 @@
-#!/bin/sh
+##!/bin/sh
 #The following need to be run on startup (default)
-set -e
+#set -e
 docker image prune
 
 #build facade
