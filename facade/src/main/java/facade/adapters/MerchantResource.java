@@ -5,13 +5,14 @@ import javax.ws.rs.*;
 import facade.StartUp;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
+import messaging.implementations.RabbitMqQueue;
 
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
 @Path("/merchant")
 public class MerchantResource {
-    public FacadeController facadeController;
+    public FacadeController facadeController = new FacadeController(new RabbitMqQueue("rabbitmq_container"));
 
     private AccountList accountList = AccountList.getInstance();
 /*
