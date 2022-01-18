@@ -8,7 +8,7 @@ public class StartUp {
     }
     private void startUp() {
         System.out.println("startup of account microservice");
-        var mq = new RabbitMqQueue("localhost");
+        var mq = new RabbitMqQueue("rabbitmq_container");
         InMemory memory = InMemory.instance();
         new AccountController(mq, memory);
     }
