@@ -37,5 +37,7 @@ public class MerchantResource {
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<DTUPayAccount> getlist(){return accountList.getAccountList();}
+    public ArrayList<DTUPayAccount> getlist(){
+        return accountList.getAccountList();
+    }
 }
