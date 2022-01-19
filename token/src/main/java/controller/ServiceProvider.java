@@ -1,7 +1,9 @@
 package controller;
 
 import adapters.StorageAdapter;
+import adapters.TokenController;
 import domain.TokenBusinessLogic;
+import messaging.implementations.RabbitMqQueue;
 import storage.TokenStorage;
 
 /**
@@ -21,6 +23,8 @@ public class ServiceProvider {
     public ServiceProvider() {
         storageAdapter = new StorageAdapter(new TokenStorage());
         tokenBusinessLogic = new TokenBusinessLogic(storageAdapter);
+        var mq = new RabbitMqQueue("rabbitmq_container");
+        new TokenController(mq, storageAdapter);
     }
 
     public TokenBusinessLogic getTokenManager() {
