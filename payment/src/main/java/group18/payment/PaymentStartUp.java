@@ -9,7 +9,6 @@ import group18.payment.adapters.payment.PaymentResource;
 import group18.payment.domain.PaymentService;
 import group18.payment.domain.cache.PaymentsCache;
 import group18.payment.domain.cache.impl.PaymentsInMemory;
-import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
 
 public class PaymentStartUp {
