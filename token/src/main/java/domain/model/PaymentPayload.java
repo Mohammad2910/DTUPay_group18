@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenPayload {
-    String cid;
-    String token;
-    int tokenAmount;
+public class PaymentPayload {
+    String merchantId, customerId, token, merchantBankAccountId, customerBankAccountId, amount;
 }

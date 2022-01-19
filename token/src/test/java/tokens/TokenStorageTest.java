@@ -2,6 +2,7 @@ package tokens;
 
 import domain.TokenGenerator;
 import domain.model.TokenSet;
+import exceptions.TokensNotEnoughException;
 import org.junit.jupiter.api.Test;
 import storage.TokenStorage;
 
@@ -94,8 +95,46 @@ class TokenStorageTest {
         storage.addNewEntryToStorage(cid1, tokenSet);
 
         assertTrue(storage.isCustomerTokenValid(cid1, token));
+    }
 
+    @Test
+    void getCustomerByToken(){
+        TokenSet tokenSet = new TokenSet();
+        TokenStorage storage = new TokenStorage();
+        String cid1 = "cid1";
+        String token = generator.generate();
 
+        tokenSet.addToken(generator.generate());
+        tokenSet.addToken(token);
+        tokenSet.addToken(generator.generate());
+        storage.addNewEntryToStorage(cid1, tokenSet);
+
+        assertEquals(cid1,storage.getCustomerByToken(token));
+    }
+
+    @Test
+    void getToken_Success(){
+            TokenSet tokenSet = new TokenSet();
+            TokenStorage storage = new TokenStorage();
+            String cid1 = "cid1";
+            String token = generator.generate();
+
+            tokenSet.addToken(generator.generate());
+            tokenSet.addToken(token);
+            tokenSet.addToken(generator.generate());
+            storage.addNewEntryToStorage(cid1, tokenSet);
+
+            assertEquals(tokenSet.getToken(0), storage.getToken(cid1));
+    }
+
+    @Test
+    void getToken_IsNull(){
+        TokenSet tokenSet = new TokenSet();
+        TokenStorage storage = new TokenStorage();
+        String cid1 = "cid1";
+        storage.addNewEntryToStorage(cid1, tokenSet);
+
+        assertNull(storage.getToken(cid1));
     }
 
     @Test

@@ -23,6 +23,11 @@ public class StorageAdapter implements IStorageAdapter {
     }
 
     @Override
+    public String getCustomerByToken(String token) {
+        return tokenStorage.getCustomerByToken(token);
+    }
+
+    @Override
     public boolean isCustomerCreatedInStorage(String cid) {
         return tokenStorage.isCustomerCreated(cid);
     }
@@ -40,5 +45,10 @@ public class StorageAdapter implements IStorageAdapter {
     @Override
     public void addNewCustomer(String cid, TokenSet tokens) {
         tokenStorage.addNewEntryToStorage(cid, tokens);
+    }
+
+    @Override
+    public String getToken(String cid) {
+        return tokenStorage.getToken(cid);
     }
 }

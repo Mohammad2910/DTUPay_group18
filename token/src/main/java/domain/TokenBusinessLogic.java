@@ -2,10 +2,7 @@ package domain;
 
 import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
-import exceptions.CustomerAlreadyExistsException;
-import exceptions.TokenNotValidException;
-import exceptions.TokenOutOfBoundsException;
-import exceptions.TokensEnoughException;
+import exceptions.*;
 
 /**
  * Class for managing tokens
@@ -68,6 +65,20 @@ public class TokenBusinessLogic {
     }
 
     /**
+     * Method for validating a customer through their token
+     * @param token - that the customer possess
+     * @return the customer id of the token owner
+     * @throws TokenNotValidException - if the no token owner is found
+     */
+    public String validateCustomerFromToken(String token) throws TokenNotValidException {
+        String customer = storageAdapter.getCustomerByToken(token);
+        if (customer != null){
+            return customer;
+        }
+        throw new TokenNotValidException("No customer has that token!");
+    }
+
+    /**
      * Method for generating a tokenSet specified by amount without any checking
      * @param amount of tokens to be generated
      * @return a tokenSet specified by amount
@@ -126,6 +137,14 @@ public class TokenBusinessLogic {
      */
     public void consumeToken(String cid, String token) {
         storageAdapter.consumeToken(cid, token);
+    }
+
+    public String getToken(String cid) throws TokensNotEnoughException {
+        String token = storageAdapter.getToken(cid);
+        if(token != null){
+            return token;
+        }
+        throw new TokensNotEnoughException("Customer ran out of tokens!");
     }
 
 }

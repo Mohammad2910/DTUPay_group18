@@ -1,6 +1,7 @@
 package storage;
 
 import domain.model.TokenSet;
+import exceptions.TokensNotEnoughException;
 
 import java.util.HashMap;
 
@@ -47,11 +48,21 @@ public interface ITokenStorage {
     boolean isCustomerTokenValid(String cid, String token);
 
     /**
+     * Method for getting a customer from a given token
+     * @param token - the token to get a customer from
+     * @return - the customer id of the token owner
+     */
+    String getCustomerByToken(String token);
+
+    /**
      * Method for checking if customer is created in storage
      * @param cid - the id of the customer
      * @return boolean stating if the customer exists
      */
     boolean isCustomerCreated(String cid);
+
+
+    String getToken(String cid);
 
     /**
      * Method for getting the whole hashmap (storage) of all customer-tokenSet mappings
