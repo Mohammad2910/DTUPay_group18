@@ -245,11 +245,14 @@ public class AccountController {
      * @param errorMessage
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
+        System.out.println("inside propogated error");
         // Publish propagated error, if any
-        if (errorMessage == null) {
+        if (errorMessage != null) {
+            System.out.println("error is not null");
             // Publish event
             Event errorPropagated = new Event(eventName, new Object[] {requestId, null, errorMessage});
             queue.publish(errorPropagated);
         }
+        System.out.println("error is null");
     }
 }
