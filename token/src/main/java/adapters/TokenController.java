@@ -124,7 +124,7 @@ public class TokenController {
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
         // Publish propagated error, if any
-        if (errorMessage == null) {
+        if (errorMessage != null) {
             // Publish event
             Event errorPropagated = new Event(eventName, new Object[] {requestId, null, errorMessage});
             queue.publish(errorPropagated);
