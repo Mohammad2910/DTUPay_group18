@@ -91,6 +91,7 @@ public class AccountController {
      * @param event
      */
     public void handleCreateMerchantAccountRequest(Event event) {
+        System.out.println("WE ARE REQUESTING TO CREATE MERCHANT");
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
@@ -105,7 +106,7 @@ public class AccountController {
             Event accCreationFailed = new Event("MerchantAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
         }
-
+        System.out.println("MERCHANT ACCOUNT CREAATED");
         // Publish event for the facade
         Event accCreationSucceeded = new Event("MerchantAccountCreated", new Object[] {requestId, "Merchant Account is successfully created with id: " + account.getId()});
         queue.publish(accCreationSucceeded);
