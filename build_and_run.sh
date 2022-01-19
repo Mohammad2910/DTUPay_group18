@@ -18,6 +18,7 @@ mvn package
 
 cd ..
 cd token
+mvn clean
 mvn package
 
 cd ..
