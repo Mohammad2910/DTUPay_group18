@@ -70,7 +70,7 @@ public class FacadeController {
      */
     public Event publishDeleteMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
-        Event deleteMerchantAccount = new Event("DeleteMerchantAccount", new Object[] {1, account, null});
+        Event deleteMerchantAccount = new Event("DeleteAccount", new Object[] {1, account, null});
         queue.publish(deleteMerchantAccount);
         return registeredMerchant.join();
     }
