@@ -68,6 +68,11 @@ public class AccountController {
         // Publish event for token
         Event tokenAssign = new Event("CustomerTokenSupplied", new Object[] {requestId, account.getId()});
         queue.publish(tokenAssign);
+
+
+        // Publish response event for facade
+        Event accCreationSucceeded = new Event("CustomerAccountCreated", new Object[] {requestId, account, null});
+        queue.publish(accCreationSucceeded);
     }
 
     /**

@@ -47,7 +47,7 @@ public class FacadeController {
      *
      * @param account
      */
-    public DTUPayAccount publishCreateMerchant(DTUPayAccount account) {
+    public Event publishCreateMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
         queue.publish(createMerchantAccount);
