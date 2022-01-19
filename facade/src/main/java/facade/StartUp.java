@@ -13,7 +13,7 @@ public class StartUp {
         //new CustomerResource(f);
         //new MerchantResource(f);
     }*/
-
+// Hello
     public void startUp(FacadeController facadeController) {
         System.out.println("startup");
         var mq = new RabbitMqQueue("rabbitmq_container");
