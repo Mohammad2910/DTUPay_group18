@@ -1,6 +1,3 @@
-package group18.payment;
-
-
 import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceService;
 import group18.payment.adapters.bankTransfer.BankTransferService;
