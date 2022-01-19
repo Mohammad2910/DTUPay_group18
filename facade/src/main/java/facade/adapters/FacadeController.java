@@ -45,17 +45,17 @@ public class FacadeController {
      *
      * @param account
      */
-    public void publishCreateMerchant(DTUPayAccount account) {
+    public DTUPayAccount publishCreateMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
         queue.publish(createMerchantAccount);
-        //return registeredMerchant.join();
+        return registeredMerchant.join();
     }
 
     public void handleMerchantCreated(Event event) {
         String requestId = event.getArgument(0, String.class);
-        String merchantId = event.getArgument(1, String.class);
-        System.out.println("HELLLOOOO MERCHANT WITH ID " + merchantId);
+        var merchantAccount = event.getArgument(1, DTUPayAccount.class);
+        registeredMerchant.complete(merchantAccount);
     }
     public void handleMerchantCreateFailed(Event event) {
         var a = event.getArgument(0, DTUPayAccount.class);

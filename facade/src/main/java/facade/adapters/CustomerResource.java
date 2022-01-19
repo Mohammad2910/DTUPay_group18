@@ -10,7 +10,8 @@ import java.util.ArrayList;
 @Path("/customer")
 public class CustomerResource {
 
-    //FacadeController f;
+    FacadeController facadeController = new FacadeControllerFactory().getService();
+
     private AccountList accountList = AccountList.getInstance();
 
 /*
@@ -23,7 +24,7 @@ public class CustomerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account){
         accountList.addAccount(account);
-        //f.publishCreateCustomer(account);
+        facadeController.publishCreateCustomer(account);
     }
 
     @GET

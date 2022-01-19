@@ -2,17 +2,15 @@ package facade.adapters;
 
 import javax.ws.rs.*;
 
-import facade.StartUp;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
-import messaging.implementations.RabbitMqQueue;
 
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
 @Path("/merchant")
 public class MerchantResource {
-    FacadeController facadeController = new MerchantFactory().getService();
+    FacadeController facadeController = new FacadeControllerFactory().getService();
 
     private AccountList accountList = AccountList.getInstance();
 
@@ -27,11 +25,9 @@ public class MerchantResource {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createAccount(DTUPayAccount account){
-        //accountList.addAccount(account);
-
-        System.out.println(account.getDtuBankAccount());
-        facadeController.publishCreateMerchant(account);
+    public DTUPayAccount createAccount(DTUPayAccount account){
+        System.out.println("Account is created !!!!!!");
+        return facadeController.publishCreateMerchant(account);
     }
 
     // todo: should this be here?
