@@ -77,7 +77,7 @@ public class AccountController {
 
     /**
      *
-     * Consumes events of type CreateMerchantAccount and published an event in queue CustomerAccountCreated
+     * Consumes events of type CreateMerchantAccount and published an event in queue MerchantAccountCreated/MerchantAccountCreateFailed
      *
      * Consumed event arguments:
      * 1. requestId
@@ -116,7 +116,7 @@ public class AccountController {
     }
 
     /**
-     * Consumes events of type DeleteAccount and published an event in queue AccountDeleted
+     * Consumes events of type DeleteAccount and published an event in queue MerchantAccountDeleted/MerchantAccountDeleteFailed
      *
      * Consumed event arguments:
      * 1. requestId

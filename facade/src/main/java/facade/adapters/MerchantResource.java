@@ -16,14 +16,14 @@ public class MerchantResource {
 
 
     @POST
-    @Path("/add")
+//    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createAccount(DTUPayAccount account){
         // Get event
         Event event = facadeController.publishCreateMerchant(account);
 
-        // Get error mes
+        // Get error message, if any
         String error = event.getArgument(2, String.class);
         if (error == null) {
             DTUPayAccount newAccount = event.getArgument(1, DTUPayAccount.class);

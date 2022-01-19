@@ -12,7 +12,7 @@ public class FacadeController {
 
     MessageQueue queue;
     private CompletableFuture<Event> registeredMerchant;
-    private CompletableFuture<DTUPayAccount> registeredCustomer;
+    private CompletableFuture<Event> registeredCustomer;
 
     public FacadeController(MessageQueue q) {
         queue = q;
@@ -37,7 +37,7 @@ public class FacadeController {
      *
      * @param account
      */
-    public DTUPayAccount publishCreateCustomer(DTUPayAccount account) {
+    public Event publishCreateCustomer(DTUPayAccount account) {
         registeredCustomer = new CompletableFuture<>();
         Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
         queue.publish(createCustomerAccount);
@@ -83,6 +83,6 @@ public class FacadeController {
     }
 
     public void handleCustomerCreated(Event event) {
-        var a = event.getArgument(0, DTUPayAccount.class);
+        registeredCustomer.complete(event);
     }
 }
