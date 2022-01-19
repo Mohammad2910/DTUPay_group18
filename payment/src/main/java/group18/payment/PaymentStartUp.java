@@ -12,10 +12,10 @@ import group18.payment.domain.cache.impl.PaymentsInMemory;
 import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
 
-public class StartUp {
+public class PaymentStartUp {
 
     public static void main(String[] args) {
-        new StartUp().startUp();
+        new PaymentStartUp().startUp();
     }
 
     private void startUp() {
