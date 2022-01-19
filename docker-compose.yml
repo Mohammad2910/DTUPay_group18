@@ -25,7 +25,7 @@ services:
 
   rabbitMq:
     image: rabbitmq:3-management
-    container_name: rabbitmq_container
+    container_name: rabbitmq__container
     ports:
       - "5672:5672"
       - "15672:15672"

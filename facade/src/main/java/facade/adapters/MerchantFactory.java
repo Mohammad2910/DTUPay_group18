@@ -11,7 +11,7 @@ public class MerchantFactory {
             return service;
         }
 
-        var mq = new RabbitMqQueue("rabbitmq_container");
+        var mq = new RabbitMqQueue("rabbitmq__container");
         service = new FacadeController(mq);
         return service;
     }
