@@ -2,6 +2,7 @@ package domain;
 
 import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
+import exceptions.CustomerAlreadyExistsException;
 import exceptions.TokenNotValidException;
 import exceptions.TokenOutOfBoundsException;
 import exceptions.TokensEnoughException;
@@ -21,9 +22,13 @@ public class TokenBusinessLogic {
     }
 
 
-    public void createNewCustomer(String cid){
-        TokenSet set = generateTokens(6);
-        addNewCustomer(cid, set);
+    public void createNewCustomer(String cid) throws CustomerAlreadyExistsException{
+        if (!customerExistsInStorage(cid)){
+            TokenSet set = generateTokens(6);
+            addNewCustomer(cid, set);
+        } else {
+            throw new CustomerAlreadyExistsException("Customer already exists!");
+        }
     }
 
     /**
@@ -31,7 +36,7 @@ public class TokenBusinessLogic {
      * @param cid - the id of the customer
      * @param tokens that the customer possess
      */
-    public void addNewCustomer(String cid, TokenSet tokens) {
+    public void addNewCustomer(String cid, TokenSet tokens){
         storageAdapter.addNewCustomer(cid, tokens);
     }
 

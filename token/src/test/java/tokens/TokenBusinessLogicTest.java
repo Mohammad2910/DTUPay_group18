@@ -3,6 +3,7 @@ package tokens;
 import controller.ServiceProvider;
 import domain.TokenGenerator;
 import domain.model.TokenSet;
+import exceptions.CustomerAlreadyExistsException;
 import exceptions.TokenNotValidException;
 import exceptions.TokenOutOfBoundsException;
 import exceptions.TokensEnoughException;
@@ -16,10 +17,25 @@ class TokenBusinessLogicTest {
     ServiceProvider serviceProvider = new ServiceProvider();
 
     @Test
-    void createNewCustomer(){
+    void createNewCustomer_Success() {
         String cid = "cid1";
-        serviceProvider.getTokenManager().createNewCustomer(cid);
-        assertTrue(serviceProvider.getTokenManager().customerExistsInStorage(cid));
+        try {
+            serviceProvider.getTokenManager().createNewCustomer(cid);
+            assertTrue(serviceProvider.getTokenManager().customerExistsInStorage(cid));
+        }catch (CustomerAlreadyExistsException customerAlreadyExistsException){
+            assertThrows(CustomerAlreadyExistsException.class, () -> serviceProvider.getTokenManager().createNewCustomer(cid));
+        }
+    }
+
+    @Test
+    void createNewCustomer_ThrowsCustomerAlreadyExistsException() {
+        String cid = "cid1";
+        try {
+            serviceProvider.getTokenManager().createNewCustomer(cid);
+            serviceProvider.getTokenManager().createNewCustomer(cid);
+        }catch (CustomerAlreadyExistsException customerAlreadyExistsException){
+            assertThrows(CustomerAlreadyExistsException.class, () -> serviceProvider.getTokenManager().createNewCustomer(cid));
+        }
     }
 
     @Test
@@ -36,34 +52,31 @@ class TokenBusinessLogicTest {
 
     @Test
     void validateToken() {
-        try{
-
-            String cid = "cid1";
-            String token1 = "token1";
-            String token2 = "token2";
-            String token3 = "token3";
-            TokenSet set = new TokenSet();
-            set.addToken(token1);
-            set.addToken(token2);
-            set.addToken(token3);
+        String cid = "cid1";
+        String token1 = "token1";
+        String token2 = "token2";
+        String token3 = "token3";
+        TokenSet set = new TokenSet();
+        set.addToken(token1);
+        set.addToken(token2);
+        set.addToken(token3);
+        try {
             serviceProvider.getTokenManager().addNewCustomer(cid, set);
             assertTrue(serviceProvider.getTokenManager().validateToken(cid, token2));
-        } catch (TokenNotValidException exception){
-            exception.printStackTrace();
+        } catch (TokenNotValidException exception) {
+            assertThrows(TokenNotValidException.class, () -> serviceProvider.getTokenManager().validateToken(cid, "token4"));
         }
     }
 
     @Test
-    void validateToken_ThrowsTokenNotValidException(){
+    void validateToken_ThrowsTokenNotValidException() {
         String cid = "cid1";
-        String token1 = "token1";
-        String token2 = "token2";
-        TokenSet set = new TokenSet();
-        set.addToken(token1);
-        set.addToken(token2);
-        String tokenNotAdded = "token3";
-        serviceProvider.getTokenManager().addNewCustomer(cid, set);
-        assertThrows(TokenNotValidException.class, () -> serviceProvider.getTokenManager().validateToken(cid, tokenNotAdded));
+        try{
+            serviceProvider.getTokenManager().createNewCustomer(cid);
+        }catch (CustomerAlreadyExistsException customerAlreadyExistsException){
+           customerAlreadyExistsException.printStackTrace();
+        }
+        assertThrows(TokenNotValidException.class, () -> serviceProvider.getTokenManager().validateToken(cid, "tokenNotAdded"));
     }
 
     @Test
