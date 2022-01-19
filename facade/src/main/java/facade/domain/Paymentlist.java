@@ -15,6 +15,7 @@ public class Paymentlist {
 
 
     public void addPayment(Payment p){list.add(p);}
+
     public ArrayList<Payment> getPaymentList(){ return list;}
 
 
