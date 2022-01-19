@@ -139,21 +139,21 @@ public class AccountController {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("AccountDeleted", requestId, errorMessage);
+        this.publishPropagatedError("AccountDeleteFailed", requestId, errorMessage);
 
         // Delete account
-        String accountId = event.getArgument(1, String.class);
+        DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
         try {
-            DTUPayAccount account = accountLogic.get(accountId);
+            //DTUPayAccount account = accountLogic.get(accountId);
             accountLogic.delete(account);
         } catch (NoSuchAccountException e) {
             // Publish response event for facade with propagated error message
-            Event accDeleteFailed = new Event("MerchantAccountDeleteFailed", new Object[] {requestId, null, e.getMessage()});
+            Event accDeleteFailed = new Event("AccountDeleteFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accDeleteFailed);
         }
 
         // Publish event for facade
-        Event accDeleteSucceeded = new Event("MerchantAccountDeleted", new Object[] {requestId, "Account with id: " + accountId + " is successfully deleted", null});
+        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + account.getId() + " is successfully deleted", null});
         queue.publish(accDeleteSucceeded);
     }
 
