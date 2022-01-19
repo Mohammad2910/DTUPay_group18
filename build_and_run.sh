@@ -18,7 +18,6 @@ mvn package
 
 cd ..
 cd token
-mvn clean
 mvn package
 
 cd ..
@@ -30,4 +29,4 @@ cd ..
 docker-compose build
 docker-compose up -d rabbitMq
 sleep 10
-docker-compose up -d account facade token
+docker-compose up -d account facade payment token
