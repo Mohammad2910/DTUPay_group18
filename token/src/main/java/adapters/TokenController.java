@@ -116,11 +116,11 @@ public class TokenController {
     }
 
     /**
-     * It propagates error messages sent by the consumed events.
      *
-     * @param eventName
-     * @param requestId
-     * @param errorMessage
+     * Method for propagating error messages sent by the consumed events.
+     * @param eventName - The name of the event that was consumed
+     * @param requestId - The id of the event
+     * @param errorMessage - the message to propagate
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
         // Publish propagated error, if any
