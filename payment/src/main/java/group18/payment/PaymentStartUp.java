@@ -24,7 +24,7 @@ public class PaymentStartUp {
         BankTransferService bank = new WsBankTransferService(bankService);
 
         PaymentService paymentService = new PaymentService(cache, bank);
-        MessageQueue messageQueue = new RabbitMqQueue("rabbitmq_container");
+        var messageQueue = new RabbitMqQueue("rabbitmq_container");
 
         new PaymentResource(messageQueue, paymentService);
     }
