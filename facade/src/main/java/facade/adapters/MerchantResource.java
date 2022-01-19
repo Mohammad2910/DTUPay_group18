@@ -12,19 +12,16 @@ import java.util.ArrayList;
 
 @Path("/merchant")
 public class MerchantResource {
-    public FacadeController facadeController = new FacadeController(new RabbitMqQueue("rabbitmq_container"));
+    FacadeController facadeController = new MerchantFactory().getService();
 
     private AccountList accountList = AccountList.getInstance();
-/*
-    public MerchantResource(FacadeController facadeController) {
-        //this.facadeController = facadeController;
-    }
-*/
+
+    /*
     //todo: should implemented better so it works for all resources
     @GET
     public void startUpTest(){
-        new StartUp().startUp(facadeController);
-    }
+        new StartUp().startUp();
+    }*/
 
     @POST
     @Path("/add")
@@ -32,6 +29,7 @@ public class MerchantResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account){
         //accountList.addAccount(account);
+
         System.out.println(account.getDtuBankAccount());
         facadeController.publishCreateMerchant(account);
     }

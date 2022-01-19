@@ -14,9 +14,10 @@ public class StartUp {
         //new MerchantResource(f);
     }*/
 // Hello
-    public void startUp(FacadeController facadeController) {
+    /*public void startUp() {
         System.out.println("startup");
         var mq = new RabbitMqQueue("rabbitmq_container");
-        facadeController = new FacadeController(mq);
-    }
+        FacadeController facadeController = new FacadeController(mq);
+        new MerchantResource(facadeController);
+    }*/
 }

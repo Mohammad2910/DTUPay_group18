@@ -102,7 +102,7 @@ public class AccountController {
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event with propagated error
-            Event accCreationFailed = new Event("MerchantAccountCreated", new Object[] {requestId, null, e.getMessage()});
+            Event accCreationFailed = new Event("MerchantAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
         }
 
