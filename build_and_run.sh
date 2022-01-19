@@ -4,6 +4,7 @@ set -e
 docker image prune
 
 cd messaging-utilities-3.2
+chmod u+x build.sh
 ./build.sh
 
 cd ..
