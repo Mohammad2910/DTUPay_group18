@@ -55,7 +55,6 @@ public class FacadeController {
     public void handleMerchantCreated(Event event) {
         String requestId = event.getArgument(0, String.class);
         String merchantId = event.getArgument(1, String.class);
-        String error = event.getArgument(2, String.class);
         System.out.println("HELLLOOOO MERCHANT WITH ID " + merchantId);
     }
     public void handleMerchantCreateFailed(Event event) {
