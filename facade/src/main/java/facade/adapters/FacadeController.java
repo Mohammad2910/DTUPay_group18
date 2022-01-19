@@ -47,9 +47,9 @@ public class FacadeController {
     }
 
     /**
-     * Publishes an event to the CreateCustomerAccount queue
+     * Publishes an event to the CreateCustomerAccount queue for Account
      *
-     * @param account
+     * @param account - DTUPayAccount sent by customer post request
      */
     public Event publishCreateCustomer(DTUPayAccount account) {
         registeredCustomer = new CompletableFuture<>();
@@ -58,18 +58,28 @@ public class FacadeController {
         return registeredCustomer.join();
     }
 
+    /**
+     * Consumes the successful events for the creation customer account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleCustomerCreated(Event event) {
         registeredCustomer.complete(event);
     }
 
+    /**
+     * Consumes the failed events for the creation customer account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleCustomerCreateFailed(Event event) {
         registeredCustomer.complete(event);
     }
 
     /**
-     * Publishes an event to the CreateMerchantAccount queue
+     * Publishes an event to the CreateMerchantAccount queue for Account
      *
-     * @param account
+     * @param account - DTUPayAccount sent by merchant post request
      */
     public Event publishCreateMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
@@ -87,6 +97,7 @@ public class FacadeController {
 
     /**
      * Publishes the event for deleting a merchant account, and returns an event
+     *
      * @param account - the account we want to delete
      */
     public Event publishDeleteAccount(DTUPayAccount account) {
@@ -96,13 +107,21 @@ public class FacadeController {
         return registeredMerchant.join();
     }
 
+    /**
+     * Consumes the failed events for the creation merchant account
+     *
+     * @param event - event sent by Account
+     */
     public void handleDeleted(Event event) {
         registeredMerchant.complete(event);
     }
+
+    /**
+     * Consumes the failed events for the creation merchant account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleDeleteFailed(Event event) {
         registeredMerchant.complete(event);
     }
-
-
-
 }
