@@ -5,12 +5,7 @@ pom.xml.releaseBackup
 pom.xml.versionsBackup
 release.properties
 
-.idea/libraries
-.idea/workspace.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/compiler.xml
+.idea/
 *.ipr
 *.iml
 *.iws
