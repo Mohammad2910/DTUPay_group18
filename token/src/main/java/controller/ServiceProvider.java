@@ -1,7 +1,7 @@
 package controller;
 
 import adapters.StorageAdapter;
-import domain.TokenManager;
+import domain.TokenBusinessLogic;
 import storage.TokenStorage;
 
 /**
@@ -15,16 +15,16 @@ import storage.TokenStorage;
  */
 public class ServiceProvider {
 
-    private TokenManager tokenManager;
+    private TokenBusinessLogic tokenBusinessLogic;
     private StorageAdapter storageAdapter;
 
     public ServiceProvider() {
         storageAdapter = new StorageAdapter(new TokenStorage());
-        tokenManager = new TokenManager(storageAdapter);
+        tokenBusinessLogic = new TokenBusinessLogic(storageAdapter);
     }
 
-    public TokenManager getTokenManager() {
-        return tokenManager;
+    public TokenBusinessLogic getTokenManager() {
+        return tokenBusinessLogic;
     }
 
     public StorageAdapter getStorageAdapter() {

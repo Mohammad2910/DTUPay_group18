@@ -10,10 +10,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TokenManagerTest {
+class TokenBusinessLogicTest {
 
     TokenGenerator tokenGenerator = new TokenGenerator();
     ServiceProvider serviceProvider = new ServiceProvider();
+
+    @Test
+    void createNewCustomer(){
+        String cid = "cid1";
+        serviceProvider.getTokenManager().createNewCustomer(cid);
+        assertTrue(serviceProvider.getTokenManager().customerExistsInStorage(cid));
+    }
 
     @Test
     void addNewCustomer() {
@@ -28,17 +35,35 @@ class TokenManagerTest {
     }
 
     @Test
-    void validateToken() throws TokenNotValidException {
+    void validateToken() {
+        try{
+
+            String cid = "cid1";
+            String token1 = "token1";
+            String token2 = "token2";
+            String token3 = "token3";
+            TokenSet set = new TokenSet();
+            set.addToken(token1);
+            set.addToken(token2);
+            set.addToken(token3);
+            serviceProvider.getTokenManager().addNewCustomer(cid, set);
+            assertTrue(serviceProvider.getTokenManager().validateToken(cid, token2));
+        } catch (TokenNotValidException exception){
+            exception.printStackTrace();
+        }
+    }
+
+    @Test
+    void validateToken_ThrowsTokenNotValidException(){
         String cid = "cid1";
-        String token = "token2";
+        String token1 = "token1";
+        String token2 = "token2";
         TokenSet set = new TokenSet();
-        set.addToken("token1");
-        set.addToken(token);
-        set.addToken("token3");
+        set.addToken(token1);
+        set.addToken(token2);
+        String tokenNotAdded = "token3";
         serviceProvider.getTokenManager().addNewCustomer(cid, set);
-        assertTrue(serviceProvider.getTokenManager().validateToken(cid, token));
-        //token does not match
-        assertThrows(TokenNotValidException.class, () -> serviceProvider.getTokenManager().validateToken(cid, "token4"));
+        assertThrows(TokenNotValidException.class, () -> serviceProvider.getTokenManager().validateToken(cid, tokenNotAdded));
     }
 
     @Test

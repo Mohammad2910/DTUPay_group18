@@ -11,13 +11,19 @@ import exceptions.TokensEnoughException;
  *
  * @author Renjue, Christian and David
  */
-public class TokenManager {
+public class TokenBusinessLogic {
 
     private TokenGenerator generator = new TokenGenerator();
     private IStorageAdapter storageAdapter;
 
-    public TokenManager(IStorageAdapter storageAdapter) {
+    public TokenBusinessLogic(IStorageAdapter storageAdapter) {
         this.storageAdapter = storageAdapter;
+    }
+
+
+    public void createNewCustomer(String cid){
+        TokenSet set = generateTokens(6);
+        addNewCustomer(cid, set);
     }
 
     /**
