@@ -13,7 +13,7 @@ public class PaymentStartUp {
     public static void main(String[] args) {
         new PaymentStartUp().startUp();
     }
-
+//
     private void startUp() {
         PaymentsCache cache = PaymentsInMemory.instance();
         BankService bankService = new BankServiceService().getBankServicePort();
