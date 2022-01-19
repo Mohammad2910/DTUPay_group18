@@ -34,11 +34,10 @@ public class CustomerResource {
             // Set error in response
             return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
-        //return facadeController.publishCreateMerchant(account);
     }
 
-    @GET
-    @Path("/list")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<DTUPayAccount> getlist(){return accountList.getAccountList();}
 }

@@ -42,7 +42,7 @@ public class MerchantResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAccount(DTUPayAccount account){
         // Get event
-        Event event = facadeController.publishDelete(account);
+        Event event = facadeController.publishDeleteAccount(account);
 
         // Get error message, if any
         String error = event.getArgument(2, String.class);
