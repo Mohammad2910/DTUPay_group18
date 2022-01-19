@@ -58,7 +58,7 @@
                         <index>true</index>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>group18.payment.PaymentStartUp</mainClass>
+                            <mainClass>PaymentStartUp</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
