@@ -2,6 +2,7 @@ package adapters;
 
 import domain.TokenBusinessLogic;
 import domain.ports.IStorageAdapter;
+import exceptions.CustomerAlreadyExistsException;
 import exceptions.TokenNotValidException;
 import exceptions.TokenOutOfBoundsException;
 import exceptions.TokensEnoughException;
@@ -27,14 +28,12 @@ public class TokenController {
         String errorMessage = event.getArgument(2, String.class);
         this.publishPropagatedError("CreateCustomerWithTokens", requestId, errorMessage);
 
-        //todo: argument expects customer id
         try{
-            //todo: Make new exception CustomerAlreadyExistsException
             tokenBusinessLogic.createNewCustomer(event.getArgument(1, String.class));
             Event customerCreated = new Event("CreateCustomerWithTokens", new Object[]{requestId, "Customer created with 6 tokens!"});
             queue.publish(customerCreated);
-        } catch (Exception someKindOfExceptionxD){
-            Event customerAlreadyExists = new Event("CreateCustomerWithTokens", new Object[]{requestId, null, someKindOfExceptionxD.getMessage()});
+        } catch (CustomerAlreadyExistsException customerAlreadyExistsException){
+            Event customerAlreadyExists = new Event("CreateCustomerWithTokens", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});
             queue.publish(customerAlreadyExists);
         }
     }
