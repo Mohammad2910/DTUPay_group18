@@ -23,8 +23,6 @@ import java.util.function.Consumer;
 public class MerchantResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
 
-    public FacadeController facadeController = new FacadeController(new RabbitMqQueue("rabbitmq_container"));
-
     private AccountList accountList = AccountList.getInstance();
 
 
@@ -35,11 +33,6 @@ public class MerchantResource {
         //this.facadeController = facadeController;
     }
 */
-    //todo: should implemented better so it works for all resources
-    @GET
-    public void startUpTest(){
-        new StartUp().startUp(facadeController);
-    }
 
     @POST
 //    @Path("/add")

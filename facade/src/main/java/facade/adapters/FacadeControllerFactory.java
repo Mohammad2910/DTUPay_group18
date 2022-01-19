@@ -11,7 +11,7 @@ public class FacadeControllerFactory {
             return service;
         }
 
-        var mq = new RabbitMqQueue("rabbitmq__container");
+        var mq = new RabbitMqQueue("rabbitmq_container");
         service = new FacadeController(mq);
         return service;
     }
