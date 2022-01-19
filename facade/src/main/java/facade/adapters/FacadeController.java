@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public class FacadeController {
 
     MessageQueue queue;
-    private CompletableFuture<DTUPayAccount> registeredMerchant;
+    private CompletableFuture<Event> registeredMerchant;
     private CompletableFuture<DTUPayAccount> registeredCustomer;
 
     public FacadeController(MessageQueue q) {
@@ -35,9 +35,11 @@ public class FacadeController {
      *
      * @param account
      */
-    public void publishCreateCustomer(DTUPayAccount account) {
-        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {account});
+    public DTUPayAccount publishCreateCustomer(DTUPayAccount account) {
+        registeredCustomer = new CompletableFuture<>();
+        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
         queue.publish(createCustomerAccount);
+        return registeredCustomer.join();
     }
 
     /**
@@ -53,13 +55,12 @@ public class FacadeController {
     }
 
     public void handleMerchantCreated(Event event) {
-        String requestId = event.getArgument(0, String.class);
-        var merchantAccount = event.getArgument(1, DTUPayAccount.class);
-        registeredMerchant.complete(merchantAccount);
+        registeredMerchant.complete(event);
     }
     public void handleMerchantCreateFailed(Event event) {
-        var a = event.getArgument(0, DTUPayAccount.class);
+        registeredMerchant.complete(event);
     }
+
     public void handleCustomerCreated(Event event) {
         var a = event.getArgument(0, DTUPayAccount.class);
     }

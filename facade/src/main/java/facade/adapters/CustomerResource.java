@@ -14,17 +14,12 @@ public class CustomerResource {
 
     private AccountList accountList = AccountList.getInstance();
 
-/*
-    public CustomerResource(FacadeController f) {
-        //this.f = f;
-    }*/
-
     @POST
+    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createAccount(DTUPayAccount account){
-        accountList.addAccount(account);
-        facadeController.publishCreateCustomer(account);
+    public DTUPayAccount createAccount(DTUPayAccount account){
+        return facadeController.publishCreateCustomer(account);
     }
 
     @GET
