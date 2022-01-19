@@ -21,7 +21,6 @@ public class TokenBusinessLogic {
         this.storageAdapter = storageAdapter;
     }
 
-
     /**
      * Method of creating a new customer, which contains:
      *      - calling generateTokens() for token generation

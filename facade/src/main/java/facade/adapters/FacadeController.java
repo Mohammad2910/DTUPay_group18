@@ -78,14 +78,12 @@ public class FacadeController {
         return registeredMerchant.join();
     }
 
-
     public void handleMerchantCreated(Event event) {
         registeredMerchant.complete(event);
     }
     public void handleMerchantCreateFailed(Event event) {
         registeredMerchant.complete(event);
     }
-
 
     /**
      * Publishes the event for deleting a merchant account, and returns an event
