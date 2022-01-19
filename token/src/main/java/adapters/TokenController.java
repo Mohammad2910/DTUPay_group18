@@ -52,7 +52,6 @@ public class TokenController {
         }
     }
 
-
     /**
      * Method for handling the customers request of a new set of tokens
      * @param event - The event for communicating whether new tokens has been supplied or not
@@ -85,6 +84,9 @@ public class TokenController {
         this.publishPropagatedError("ValidateCustomerToken", requestId, errorMessage);
 
         //Todo: Add customerId and token to payload and get those!
+        //Payment will send to Token: PaymentPayload: {String merchantId, token, amount, customerId}
+        //Token will send to Account: PaymentPayload: {String merchantId, token, amount, *customerId*}
+        //Account will send to Payment: PaymentPayload: {String merchantId, token, amount, customerId, *customerAccount*, *merchantAccount*}
         try{
             String dummyToken = "420l33t";
             tokenBusinessLogic.validateToken(event.getArgument(1,String.class), dummyToken);
