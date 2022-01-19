@@ -19,6 +19,7 @@ public class AccountController {
      * @param memory
      */
     public AccountController(MessageQueue queue, InMemory memory) {
+        this.queue = queue;
         accountLogic = new DTUPayAccountBusinessLogic(memory);
         // todo: make handlers for each event Account need to look at
         queue.addHandler("CreateCustomerAccount", this::handleCreateCustomerAccountRequest);
@@ -60,18 +61,23 @@ public class AccountController {
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event with propagated error
-            Event accCreationFailed = new Event("CustomerAccountCreated", new Object[] {requestId, null, e.getMessage()});
+            Event accCreationFailed = new Event("CustomerAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
         }
 
         // Publish event for token
         Event tokenAssign = new Event("CustomerTokenSupplied", new Object[] {requestId, account.getId()});
         queue.publish(tokenAssign);
+
+
+        // Publish response event for facade
+        Event accCreationSucceeded = new Event("CustomerAccountCreated", new Object[] {requestId, account, null});
+        queue.publish(accCreationSucceeded);
     }
 
     /**
      *
-     * Consumes events of type CreateMerchantAccount and published an event in queue CustomerAccountCreated
+     * Consumes events of type CreateMerchantAccount and published an event in queue MerchantAccountCreated/MerchantAccountCreateFailed
      *
      * Consumed event arguments:
      * 1. requestId
@@ -95,24 +101,22 @@ public class AccountController {
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
         this.publishPropagatedError("MerchantAccountCreated", requestId, errorMessage);
-
         // Create account
         DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
         try {
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
             // Publish event with propagated error
-            Event accCreationFailed = new Event("MerchantAccountCreated", new Object[] {requestId, null, e.getMessage()});
+            Event accCreationFailed = new Event("MerchantAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
         }
-
         // Publish event for the facade
-        Event accCreationSucceeded = new Event("MerchantAccountCreated", new Object[] {requestId, "Merchant Account is successfully created with id: " + account.getId()});
+        Event accCreationSucceeded = new Event("MerchantAccountCreated", new Object[] {requestId, account, null});
         queue.publish(accCreationSucceeded);
     }
 
     /**
-     * Consumes events of type DeleteAccount and published an event in queue AccountDeleted
+     * Consumes events of type DeleteAccount and published an event in queue MerchantAccountDeleted/MerchantAccountDeleteFailed
      *
      * Consumed event arguments:
      * 1. requestId
@@ -135,21 +139,21 @@ public class AccountController {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("AccountDeleted", requestId, errorMessage);
+        this.publishPropagatedError("AccountDeleteFailed", requestId, errorMessage);
 
         // Delete account
-        String accountId = event.getArgument(1, String.class);
+        DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
         try {
-            DTUPayAccount account = accountLogic.get(accountId);
+            //DTUPayAccount account = accountLogic.get(accountId);
             accountLogic.delete(account);
         } catch (NoSuchAccountException e) {
             // Publish response event for facade with propagated error message
-            Event accDeleteFailed = new Event("AccountDeleted", new Object[] {requestId, null, e.getMessage()});
+            Event accDeleteFailed = new Event("AccountDeleteFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accDeleteFailed);
         }
 
         // Publish event for facade
-        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + accountId + " is successfully deleted"});
+        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + account.getId() + " is successfully deleted", null});
         queue.publish(accDeleteSucceeded);
     }
 
@@ -239,11 +243,14 @@ public class AccountController {
      * @param errorMessage
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
+        System.out.println("inside propogated error");
         // Publish propagated error, if any
-        if (errorMessage == null) {
+        if (errorMessage != null) {
+            System.out.println("error is not null");
             // Publish event
             Event errorPropagated = new Event(eventName, new Object[] {requestId, null, errorMessage});
             queue.publish(errorPropagated);
         }
+        System.out.println("error is null");
     }
 }

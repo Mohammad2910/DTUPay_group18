@@ -1,8 +1,6 @@
 package facade.adapters;
 
 import javax.ws.rs.*;
-
-import facade.StartUp;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
@@ -10,6 +8,7 @@ import messaging.implementations.RabbitMqQueue;
 
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
+import messaging.Event;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -22,10 +21,12 @@ import java.util.function.Consumer;
 
 @Path("/merchant")
 public class MerchantResource {
+    FacadeController facadeController = new FacadeControllerFactory().getService();
 
     public FacadeController facadeController = new FacadeController(new RabbitMqQueue("rabbitmq_container"));
 
     private AccountList accountList = AccountList.getInstance();
+
 
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -41,21 +42,44 @@ public class MerchantResource {
     }
 
     @POST
-    @Path("/add")
+//    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createAccount(DTUPayAccount account){
-        //accountList.addAccount(account);
-        System.out.println(account.getDtuBankAccount());
-        facadeController.publishCreateMerchant(account);
+    public Response createAccount(DTUPayAccount account){
+        // Get event
+        Event event = facadeController.publishCreateMerchant(account);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            DTUPayAccount newAccount = event.getArgument(1, DTUPayAccount.class);
+            // Set object in response
+           return Response.ok(newAccount).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+        //return facadeController.publishCreateMerchant(account);
     }
 
-    // todo: should this be here?
-    @GET
-    @Path("/list")
+    @DELETE
+    //@Path
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<DTUPayAccount> getlist(){
-        return accountList.getAccountList();
+    public Response deleteAccount(DTUPayAccount account){
+        // Get event
+        Event event = facadeController.publishDeleteAccount(account);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            String successMsg = event.getArgument(1, String.class);
+            // Set object in response
+            return Response.ok(successMsg).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
     }
 
     @POST

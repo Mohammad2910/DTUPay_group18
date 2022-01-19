@@ -1,33 +1,50 @@
 package facade.adapters;
 
-import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
-
+import messaging.Event;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
+import javax.ws.rs.core.Response;
 
 @Path("/customer")
 public class CustomerResource {
-
-    //FacadeController f;
-    private AccountList accountList = AccountList.getInstance();
-
-/*
-    public CustomerResource(FacadeController f) {
-        //this.f = f;
-    }*/
+    FacadeController facadeController = new FacadeControllerFactory().getService();
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createAccount(DTUPayAccount account){
-        accountList.addAccount(account);
-        //f.publishCreateCustomer(account);
+    public Response createAccount(DTUPayAccount account) {
+        // Get event
+        Event event = facadeController.publishCreateCustomer(account);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            DTUPayAccount newAccount = event.getArgument(1, DTUPayAccount.class);
+            // Set object in response
+            return Response.ok(newAccount).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
     }
 
-    @GET
-    @Path("/list")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<DTUPayAccount> getlist(){return accountList.getAccountList();}
+    public Response deleteAccount(DTUPayAccount account){
+        // Get event
+        Event event = facadeController.publishDeleteAccount(account);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            String successMsg = event.getArgument(1, String.class);
+            // Set object in response
+            return Response.ok(successMsg).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+    }
 }

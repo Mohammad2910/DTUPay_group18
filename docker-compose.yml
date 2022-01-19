@@ -4,28 +4,28 @@ services:
   facade:
     build: facade
     image: facade
-    container_name: facade
+    container_name: facadetest
     ports:
       - "8080:8080"
 
   account:
     build: account
     image: account
-    container_name: account
+    container_name: accounttest
 
   payment:
     build: payment
     image: payment
-    container_name: payment
+    container_name: paymenttest
 
   token:
     build: token
     image: token
-    container_name: token
+    container_name: tokentest
 
   rabbitMq:
     image: rabbitmq:3-management
-    container_name: rabbitmq_container
+    container_name: rabbitmq__container
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5673:5672"
+      - "15673:15672"

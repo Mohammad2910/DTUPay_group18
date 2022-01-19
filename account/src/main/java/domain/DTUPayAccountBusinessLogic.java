@@ -42,11 +42,9 @@ public class DTUPayAccountBusinessLogic {
      * @throws DuplicateBankAccountException
      */
     public String createAccount(DTUPayAccount account) throws DuplicateBankAccountException {
-        System.out.println("WE ARE IN CREATEACCOUNTLOGIC");
 
         // check bank account already has been registered
         checkUniqueBankAccount(account);
-        System.out.println("ACCOUNT IS UNIQUE");
 
         // Add account
         String id = UUID.randomUUID().toString();
