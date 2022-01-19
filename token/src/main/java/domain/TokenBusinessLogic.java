@@ -22,6 +22,13 @@ public class TokenBusinessLogic {
     }
 
 
+    /**
+     * Method of creating a new customer, which contains:
+     *      - calling generateTokens() for token generation
+     *      - calling addNewCustomer() for adding a new entry in the external storage
+     * @param cid - the id of the customer
+     * @throws CustomerAlreadyExistsException - if the customer already exists in the external storage
+     */
     public void createNewCustomer(String cid) throws CustomerAlreadyExistsException{
         if (!customerExistsInStorage(cid)){
             TokenSet set = generateTokens(6);
@@ -34,7 +41,7 @@ public class TokenBusinessLogic {
     /**
      * Method for adding a new customer with a specified tokenSet
      * @param cid - the id of the customer
-     * @param tokens that the customer possess
+     * @param tokens - the tokens that has been generated for the customer
      */
     public void addNewCustomer(String cid, TokenSet tokens){
         storageAdapter.addNewCustomer(cid, tokens);
@@ -47,11 +54,12 @@ public class TokenBusinessLogic {
      */
     public boolean customerExistsInStorage(String cid){return storageAdapter.isCustomerCreatedInStorage(cid);}
 
-    /**
+     /**
      * Method for validating a specified customer with a specified token
      * @param cid - the id of the customer
      * @param token that the customer possess
      * @return boolean stating whether the possessed token is valid or not
+     * @throws TokenNotValidException - if the token is not valid
      */
     public boolean validateToken(String cid, String token) throws TokenNotValidException {
         if (storageAdapter.hasToken(cid, token)){
@@ -85,9 +93,12 @@ public class TokenBusinessLogic {
     /**
      * Method for returning the updated tokenSet after a specified customer's request
      * @param cid - the id of the customer
-     * @param amount that the customer request
-     * @throws TokensEnoughException if the customer cannot request the specified amount
+     * @param amount - the amount of tokens that the customer requests
+     * @throws TokensEnoughException if the customer already has enough tokens
+     * @throws TokenOutOfBoundsException - if the customer requests too many tokens
      */
+
+
     public void supplyTokens(String cid, int amount) throws TokensEnoughException, TokenOutOfBoundsException {
         if (checkCustomerTokenSetSize(cid) < 2) {  // the customer has 0 or 1 token
             if (checkCustomerTokenSetSize(cid) + amount < 7) {  // the maximal amount of tokens should not exceed 6
