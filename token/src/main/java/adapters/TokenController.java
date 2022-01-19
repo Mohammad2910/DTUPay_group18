@@ -1,6 +1,7 @@
 package adapters;
 
 import domain.TokenBusinessLogic;
+import domain.model.TokenPayload;
 import domain.ports.IStorageAdapter;
 import exceptions.CustomerAlreadyExistsException;
 import exceptions.TokenNotValidException;
@@ -26,10 +27,10 @@ public class TokenController {
         tokenBusinessLogic = new TokenBusinessLogic(storageAdapter);
         this.queue = queue;
         //todo: make handlers for each event
-        queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens);
-        queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);
-        queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);
-        queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);
+        queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens); // Account Microservice
+        queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);  // Facade Microservice
+        queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);  // Payment Microservice
+        queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);  // Validate then directly consume
     }
 
     /**
@@ -43,10 +44,10 @@ public class TokenController {
 
         try{
             tokenBusinessLogic.createNewCustomer(event.getArgument(1, String.class));
-            Event customerCreated = new Event("CreateCustomerWithTokens", new Object[]{requestId, "Customer created with 6 tokens!"});
+            Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, "Customer created with 6 tokens!", null});
             queue.publish(customerCreated);
         } catch (CustomerAlreadyExistsException customerAlreadyExistsException){
-            Event customerAlreadyExists = new Event("CreateCustomerWithTokens", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});
+            Event customerAlreadyExists = new Event("CustomerWithTokensCreateFailed", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});
             queue.publish(customerAlreadyExists);
         }
     }
@@ -64,12 +65,12 @@ public class TokenController {
         //todo: argument expects customer id
         try{
             //todo: we need to have cid and token amount in the payload
-            int dummyAmount = 5;
-            tokenBusinessLogic.supplyTokens(event.getArgument(1, String.class),dummyAmount);
-            Event tokenSupplied = new Event("CustomerRequestsTokens", new Object[]{requestId, "Customer has been served with " + dummyAmount + "!"});
+            TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
+            tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
+            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, "Customer has been served with " + tokenPayload.getTokenAmount() + "!", null});
             queue.publish(tokenSupplied);
         } catch (TokensEnoughException | TokenOutOfBoundsException tokensException){
-            Event customerHasSufficientTokens = new Event("CustomerRequestsTokens", new Object[]{requestId, null, tokensException.getMessage()});
+            Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
             queue.publish(customerHasSufficientTokens);
         }
     }
@@ -86,11 +87,11 @@ public class TokenController {
         //Todo: Add customerId and token to payload and get those!
         try{
             String dummyToken = "420l33t";
-            tokenBusinessLogic.validateToken(event.getArgument(1,String.class),dummyToken);
-            Event tokenValidated = new Event("ValidateCustomerToken", new Object[] {requestId, "Token is valid!"});
+            tokenBusinessLogic.validateToken(event.getArgument(1,String.class), dummyToken);
+            Event tokenValidated = new Event("CustomerTokenValidated", new Object[] {requestId, "Token is valid!", null});
             queue.publish(tokenValidated);
         } catch (TokenNotValidException tokenException) {
-            Event tokenNotValid = new Event("ValidateCustomerToken", new Object[]{requestId,null, tokenException.getMessage()});
+            Event tokenNotValid = new Event("CustomerTokenValidateFailed", new Object[]{requestId,null, tokenException.getMessage()});
             queue.publish(tokenNotValid);
         }
     }
@@ -107,10 +108,10 @@ public class TokenController {
         try{
             String dummyToken = "420l33t";
             tokenBusinessLogic.validateToken(event.getArgument(1,String.class),dummyToken);
-            Event tokenConsumed = new Event("ConsumeCustomerToken", new Object[]{requestId, "Token is consumed!"});
+            Event tokenConsumed = new Event("CustomerTokenConsumed", new Object[]{requestId, "Token is consumed!", null});
             queue.publish(tokenConsumed);
         } catch (TokenNotValidException tokenException) {
-            Event tokenNotConsumed = new Event("ConsumeCustomerToken", new Object[]{requestId, "Token is not valid, and therefore not consumed!"});
+            Event tokenNotConsumed = new Event("CustomerTokenConsumeFailed", new Object[]{requestId, "Token is not valid, and therefore not consumed!"});
             queue.publish(tokenNotConsumed);
         }
     }
