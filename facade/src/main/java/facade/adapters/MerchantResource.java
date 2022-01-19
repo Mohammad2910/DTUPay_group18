@@ -14,6 +14,7 @@ public class MerchantResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
     private AccountList accountList = AccountList.getInstance();
 
+
     @POST
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,11 +36,24 @@ public class MerchantResource {
         //return facadeController.publishCreateMerchant(account);
     }
 
-    // todo: should this be here?
-    @GET
-    @Path("/list")
+    @DELETE
+    //@Path
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<DTUPayAccount> getlist(){
-        return accountList.getAccountList();
+    public Response deleteAccount(DTUPayAccount account){
+        // Get event
+        Event event = facadeController.publishDeleteMerchant(account);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            String successMsg = event.getArgument(1, String.class);
+            // Set object in response
+            return Response.ok(successMsg).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
     }
+
 }

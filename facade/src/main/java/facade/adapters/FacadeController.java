@@ -20,6 +20,8 @@ public class FacadeController {
         queue.addHandler("PaymentRequested", this::handlePaymentRequest);
         queue.addHandler("MerchantAccountCreated", this::handleMerchantCreated);
         queue.addHandler("MerchantAccountCreateFailed", this::handleMerchantCreateFailed);
+        queue.addHandler("MerchantAccountDeleted", this::handleMerchantDeleted);
+        queue.addHandler("MerchantAccountDeleteFailed", this::handleMerchantDeleteFailed);
         queue.addHandler("CustomerAccountCreated", this::handleCustomerCreated);
     }
 
@@ -58,6 +60,25 @@ public class FacadeController {
         registeredMerchant.complete(event);
     }
     public void handleMerchantCreateFailed(Event event) {
+        registeredMerchant.complete(event);
+    }
+
+
+    /**
+     * Publishes the event for deleting a merchant account, and returns an event
+     * @param account - the account we want to delete
+     */
+    public Event publishDeleteMerchant(DTUPayAccount account) {
+        registeredMerchant = new CompletableFuture<>();
+        Event deleteMerchantAccount = new Event("DeleteMerchantAccount", new Object[] {1, account, null});
+        queue.publish(deleteMerchantAccount);
+        return registeredMerchant.join();
+    }
+
+    public void handleMerchantDeleted(Event event) {
+        registeredMerchant.complete(event);
+    }
+    public void handleMerchantDeleteFailed(Event event) {
         registeredMerchant.complete(event);
     }
 

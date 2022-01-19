@@ -148,12 +148,12 @@ public class AccountController {
             accountLogic.delete(account);
         } catch (NoSuchAccountException e) {
             // Publish response event for facade with propagated error message
-            Event accDeleteFailed = new Event("AccountDeleted", new Object[] {requestId, null, e.getMessage()});
+            Event accDeleteFailed = new Event("MerchantAccountDeleteFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accDeleteFailed);
         }
 
         // Publish event for facade
-        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + accountId + " is successfully deleted"});
+        Event accDeleteSucceeded = new Event("MerchantAccountDeleted", new Object[] {requestId, "Account with id: " + accountId + " is successfully deleted", null});
         queue.publish(accDeleteSucceeded);
     }
 
