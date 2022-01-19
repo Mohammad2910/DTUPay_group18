@@ -4,7 +4,6 @@ import javax.ws.rs.*;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
 import messaging.Event;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
