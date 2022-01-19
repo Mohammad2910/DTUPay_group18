@@ -8,6 +8,6 @@ public class TokenStartUp {
     }
     public void startUp(){
         System.out.println("Token startup has been initiated!");
-        ServiceProvider serviceProvider = new ServiceProvider();
+        new ServiceProvider();
     }
 }
