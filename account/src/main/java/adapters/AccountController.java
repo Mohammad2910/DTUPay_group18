@@ -94,17 +94,22 @@ public class AccountController {
         System.out.println("WE ARE REQUESTING TO CREATE MERCHANT");
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
+        System.out.println("WE ARE REQUESTING rID");
         String errorMessage = event.getArgument(2, String.class);
+        System.out.println("WE ARE REQUESTING ERROR");
         this.publishPropagatedError("MerchantAccountCreated", requestId, errorMessage);
-
+        System.out.println("WE ARE PROPOGATING ERROR MESSAGE");
         // Create account
         DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
         try {
+            System.out.println("WE ARE INSIDE TRY");
             accountLogic.createAccount(account);
         } catch (DuplicateBankAccountException e) {
+            System.out.println("WE ARE INSIDE CATCH");
             // Publish event with propagated error
             Event accCreationFailed = new Event("MerchantAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
+            System.out.println("EVENT FAILED PUBLISHED");
         }
         System.out.println("MERCHANT ACCOUNT CREAATED");
         // Publish event for the facade
