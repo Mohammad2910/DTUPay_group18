@@ -16,6 +16,7 @@ public class FacadeController {
     MessageQueue queue;
     private CompletableFuture<Event> registeredMerchant;
     private CompletableFuture<Event> registeredCustomer;
+    private CompletableFuture<Event> requestedTokens;
 
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
@@ -28,6 +29,8 @@ public class FacadeController {
         queue.addHandler("AccountDeleteFailed", this::handleDeleteFailed);
         queue.addHandler("CustomerAccountCreated", this::handleCustomerCreated);
         queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreateFailed);
+        queue.addHandler("CustomerTokensRequested", this::handleCustomerTokenRequested);
+        queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequestFailed);
     }
 
     public void handlePaymentResponseProvided(Event event) {
@@ -123,5 +126,20 @@ public class FacadeController {
      */
     public void handleDeleteFailed(Event event) {
         registeredMerchant.complete(event);
+    }
+
+    public Event handleCustomerRequestsTokens(String cid, int amount){
+        TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
+        requestedTokens = new CompletableFuture<>();
+        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
+        queue.publish(requestTokens);
+        return requestedTokens.join();
+    }
+
+    public void handleCustomerTokenRequested(Event event) {
+        requestedTokens.complete(event);
+    }
+    public void handleCustomerTokenRequestFailed(Event event) {
+        requestedTokens.complete(event);
     }
 }
