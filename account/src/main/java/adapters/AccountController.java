@@ -19,6 +19,7 @@ public class AccountController {
      * @param memory
      */
     public AccountController(MessageQueue queue, InMemory memory) {
+        this.queue = queue;
         accountLogic = new DTUPayAccountBusinessLogic(memory);
         // todo: make handlers for each event Account need to look at
         queue.addHandler("CreateCustomerAccount", this::handleCreateCustomerAccountRequest);
