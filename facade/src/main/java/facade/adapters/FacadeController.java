@@ -14,9 +14,9 @@ import java.util.concurrent.CompletableFuture;
 public class FacadeController {
 
     MessageQueue queue;
-    private CompletableFuture<Event> registeredMerchant;
-    private CompletableFuture<Event> registeredCustomer;
-    private CompletableFuture<Event> requestedTokens;
+    private Map<String, CompletableFuture<Event>> registeredAccounts = new HashMap<>();
+    private Map<String, CompletableFuture<Event>> deletedAccounts = new HashMap<>();
+    private Map<String, CompletableFuture<Event>> requestedTokens = new HashMap<>();
 
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
@@ -24,13 +24,13 @@ public class FacadeController {
         // todo: make handlers for each event Facade need to look at
         queue.addHandler("PaymentResponseProvided", this::handlePaymentResponseProvided);
         queue.addHandler("MerchantAccountCreated", this::handleMerchantCreated);
-        queue.addHandler("MerchantAccountCreateFailed", this::handleMerchantCreateFailed);
+        queue.addHandler("MerchantAccountCreateFailed", this::handleMerchantCreated);
         queue.addHandler("AccountDeleted", this::handleDeleted);
-        queue.addHandler("AccountDeleteFailed", this::handleDeleteFailed);
+        queue.addHandler("AccountDeleteFailed", this::handleDeleted);
         queue.addHandler("CustomerAccountCreated", this::handleCustomerCreated);
-        queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreateFailed);
+        queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreated);
         queue.addHandler("CustomerTokensRequested", this::handleCustomerTokenRequested);
-        queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequestFailed);
+        queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequested);
     }
 
     public void handlePaymentResponseProvided(Event event) {
@@ -54,35 +54,24 @@ public class FacadeController {
      *
      * @param account - DTUPayAccount sent by customer post request
      */
-    //TODO when you do join() you block the Main thread.
-    // If something wrong happens with the Account micro (micro is down, rabbitMQ down etc.)
-    // you will never release the Main thread and it will be blocked (all the functionality of the Facade works in Main thread) until you restart the app or repair Account
-    // so I would suggest to execute it in new thread or better in threadPool
-    public Event publishCreateCustomer(DTUPayAccount account) {
-        registeredCustomer = new CompletableFuture<>();
+    public CompletableFuture<Event> publishCreateCustomer(DTUPayAccount account) {
+        String requestId = UUID.randomUUID().toString();
+        registeredAccounts.put(requestId, new CompletableFuture<>());
         Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
         queue.publish(createCustomerAccount);
-        return registeredCustomer.join();
+        return registeredAccounts.get(requestId);
     }
 
     /**
-     * Consumes the successful events for the creation customer account
+     * Consumes the events for the creation customer account
      *
      * @param event - Event sent by Account
      */
     //TODO Important: should complete this future for specific customer. What if multiple customers use the app, so for which customer future completes here?
     public void handleCustomerCreated(Event event) {
-        registeredCustomer.complete(event);
-    }
-
-    /**
-     * Consumes the failed events for the creation customer account
-     *
-     * @param event - Event sent by Account
-     */
-    //TODO Important: should complete this future for specific customer. What if multiple customers use the app, so for which customer future completes here?
-    public void handleCustomerCreateFailed(Event event) {
-        registeredCustomer.complete(event);
+        String requestId = event.getArgument(0, String.class);
+        registeredAccounts.get(requestId).complete(event);
+        registeredAccounts.remove(requestId);
     }
 
     /**
@@ -90,25 +79,18 @@ public class FacadeController {
      *
      * @param account - DTUPayAccount sent by merchant post request
      */
-    //TODO when you do join() you block the Main thread.
-    // If something wrong happens with the Account micro (micro is down, rabbitMQ down etc.)
-    // you will never release the Main thread (the app freezes "forever") and it will be blocked (all the functionality of the Facade works in Main thread) until you restart the app or repair Account
-    // so I would suggest to execute it in new thread or better in threadPool
-    public Event publishCreateMerchant(DTUPayAccount account) {
-        registeredMerchant = new CompletableFuture<>();
+    public CompletableFuture<Event> publishCreateMerchant(DTUPayAccount account) {
+        String requestId = UUID.randomUUID().toString();
+        registeredAccounts.put(requestId, new CompletableFuture<>());
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
         queue.publish(createMerchantAccount);
-        return registeredMerchant.join();
+        return registeredAccounts.get(requestId);
     }
 
-    //TODO Important: should complete this future for specific merchant. What if multiple merchants use the app, so for which merchant future completes here?
     public void handleMerchantCreated(Event event) {
-        registeredMerchant.complete(event);
-    }
-
-    //TODO Important: should complete this future for specific merchant. What if multiple merchants use the app, so for which merchant future completes here?
-    public void handleMerchantCreateFailed(Event event) {
-        registeredMerchant.complete(event);
+        String requestId = event.getArgument(0, String.class);
+        registeredAccounts.get(requestId).complete(event);
+        registeredAccounts.remove(requestId);
     }
 
     /**
@@ -116,43 +98,39 @@ public class FacadeController {
      *
      * @param account - the account we want to delete
      */
-    public Event publishDeleteAccount(DTUPayAccount account) {
-        registeredMerchant = new CompletableFuture<>();
-        Event deleteAccount = new Event("DeleteAccount", new Object[] {1, account, null});
+    public CompletableFuture<Event> publishDeleteAccount(DTUPayAccount account) {
+        String requestId = UUID.randomUUID().toString();
+        deletedAccounts.put(requestId, new CompletableFuture<>());
+        Event deleteAccount = new Event("DeleteAccount", new Object[] {requestId, account, null});
         queue.publish(deleteAccount);
-        return registeredMerchant.join();
+        return deletedAccounts.get(requestId);
     }
 
     /**
-     * Consumes the failed events for the creation merchant account
+     * Consumes the events for the deleting merchant account
      *
      * @param event - event sent by Account
      */
     public void handleDeleted(Event event) {
-        registeredMerchant.complete(event);
+        String requestId = event.getArgument(0, String.class);
+        deletedAccounts.get(requestId).complete(event);
+        deletedAccounts.remove(requestId);
     }
 
-    /**
-     * Consumes the failed events for the creation merchant account
-     *
-     * @param event - Event sent by Account
-     */
-    public void handleDeleteFailed(Event event) {
-        registeredMerchant.complete(event);
-    }
 
-    public Event handleCustomerRequestsTokens(String cid, int amount){
+    public CompletableFuture<Event> publishCustomerRequestsTokens(String cid, int amount){
         TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
-        requestedTokens = new CompletableFuture<>();
+        String requestId = UUID.randomUUID().toString();
+        requestedTokens.put(requestId, new CompletableFuture<>());
         Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
         queue.publish(requestTokens);
-        return requestedTokens.join();
+        return requestedTokens.get(requestId);
     }
 
     public void handleCustomerTokenRequested(Event event) {
-        requestedTokens.complete(event);
+        String requestId = event.getArgument(0, String.class);
+        requestedTokens.get(requestId).complete(event);
+        requestedTokens.remove(requestId);
     }
-    public void handleCustomerTokenRequestFailed(Event event) {
-        requestedTokens.complete(event);
-    }
+
 }
