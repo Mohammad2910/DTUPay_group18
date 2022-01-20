@@ -6,6 +6,7 @@ import dtu.ws.fastmoney.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -46,7 +47,14 @@ public class CustomerSteps {
 
     @Then("the customer is added on DTUPay")
     public void itIsAddedOnTheAccountList() {
-        service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
+        String message = service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
+        // 404
+        Assertions.assertNotEquals("An account with given bank account number already exists", message);
+        // 500
+        Assertions.assertNotEquals("Internal server error", message);
+        // default
+        Assertions.assertNotEquals("Failed due to unknown error", message);
+
     }
 
     @And("Cleanup")

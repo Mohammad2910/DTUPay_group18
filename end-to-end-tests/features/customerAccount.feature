@@ -5,3 +5,4 @@ Feature: Customer account
     And a customer DTUBank account
     Then the customer is added on DTUPay
     And Cleanup
+
