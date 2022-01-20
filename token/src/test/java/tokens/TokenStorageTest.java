@@ -110,7 +110,7 @@ class TokenStorageTest {
     }
 
     @Test
-    void getToken_Success() {
+    void getTokens_Success() {
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
@@ -121,17 +121,17 @@ class TokenStorageTest {
         tokenSet.addToken(generator.generate());
         storage.addNewEntryToStorage(cid1, tokenSet);
 
-        assertEquals(tokenSet.getToken(0), storage.getToken(cid1));
+        assertEquals(tokenSet.getToken(0), storage.getTokens(cid1));
     }
 
     @Test
-    void getToken_IsNull() {
+    void getTokens_IsNull() {
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
         storage.addNewEntryToStorage(cid1, tokenSet);
 
-        assertNull(storage.getToken(cid1));
+        assertNull(storage.getTokens(cid1));
     }
 
     @Test
