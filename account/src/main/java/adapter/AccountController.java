@@ -77,9 +77,8 @@ public class AccountController {
         queue.publish(accCreationSucceeded);
 
         // Publish event for token
-        /*
         Event tokenAssign = new Event("CreateCustomerWithTokens", new Object[] {requestId, account.getId(), null});
-        queue.publish(tokenAssign);*/
+        queue.publish(tokenAssign);
 
     }
 
