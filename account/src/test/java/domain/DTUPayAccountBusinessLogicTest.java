@@ -92,8 +92,7 @@ class DTUPayAccountBusinessLogicTest {
     @Test
     public void testDeleteAccount_ThrowsNoSuchAccountException () {
         assertThrows(NoSuchAccountException.class, () -> {
-            DTUPayAccount account = new DTUPayAccount("unknown", "name", "cpr", "bank identifier");
-            businessLogic.delete(account);
+            businessLogic.delete("unknown");
         });
     }
 
@@ -110,8 +109,7 @@ class DTUPayAccountBusinessLogicTest {
             businessLogic.createAccount(account);
 
             // Delete account
-            account.setId(account.getId());
-            businessLogic.delete(account);
+            businessLogic.delete(account.getId());
             result = true;
         } catch (NoSuchAccountException|DuplicateBankAccountException e) {
             System.out.println(e.getMessage());

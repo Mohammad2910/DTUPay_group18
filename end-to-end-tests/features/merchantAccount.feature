@@ -11,3 +11,6 @@ Feature: Merchant account
     And merchant is registered to DTU Pay
     And the merchant wants to delete their account
     Then the merchant's account is deleted and gets a response
+
+    Scenario: Create merchant bank account
+      When something

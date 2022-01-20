@@ -4,8 +4,6 @@ import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
 import messaging.MessageQueue;
 import messaging.Event;
-
-import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -91,7 +89,7 @@ public class FacadeController {
     public CompletableFuture<Event> publishCreateCustomer(DTUPayAccount account) {
         String requestId = UUID.randomUUID().toString();
         registeredAccounts.put(requestId, new CompletableFuture<>());
-        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
+        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {requestId, account, null});
         queue.publish(createCustomerAccount);
         return registeredAccounts.get(requestId);
     }
@@ -131,7 +129,7 @@ public class FacadeController {
     public CompletableFuture<Event> publishCreateMerchant(DTUPayAccount account) {
         String requestId = UUID.randomUUID().toString();
         registeredAccounts.put(requestId, new CompletableFuture<>());
-        Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
+        Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {requestId, account, null});
         queue.publish(createMerchantAccount);
         return registeredAccounts.get(requestId);
     }
@@ -150,12 +148,12 @@ public class FacadeController {
     /**
      * Publishes the event for deleting a merchant account, and returns an event
      *
-     * @param account - the account we want to delete
+     * @param customerId - the account we want to delete
      */
-    public CompletableFuture<Event> publishDeleteAccount(DTUPayAccount account) {
+    public CompletableFuture<Event> publishDeleteAccount(String customerId) {
         String requestId = UUID.randomUUID().toString();
         deletedAccounts.put(requestId, new CompletableFuture<>());
-        Event deleteAccount = new Event("DeleteAccount", new Object[] {requestId, account, null});
+        Event deleteAccount = new Event("DeleteAccount", new Object[] {requestId, customerId, null});
         queue.publish(deleteAccount);
         return deletedAccounts.get(requestId);
     }
@@ -181,7 +179,7 @@ public class FacadeController {
         TokenPayload tokenPayload = new TokenPayload(cid, null, null, amount);
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
-        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
+        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {requestId, tokenPayload, null});
         queue.publish(requestTokens);
         return requestedTokens.get(requestId);
     }
@@ -206,7 +204,7 @@ public class FacadeController {
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
         TokenPayload tokenPayload = new TokenPayload(cid, null, null, 0);
-        Event requestTokens = new Event("RetrieveCustomerTokens", new Object[] {1, tokenPayload, null});
+        Event requestTokens = new Event("RetrieveCustomerTokens", new Object[] {requestId, tokenPayload, null});
         queue.publish(requestTokens);
         return requestedTokens.get(requestId);
     }

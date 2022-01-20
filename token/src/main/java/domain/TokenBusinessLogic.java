@@ -107,8 +107,6 @@ public class TokenBusinessLogic {
      * @throws TokensEnoughException if the customer already has enough tokens
      * @throws TokenOutOfBoundsException - if the customer requests too many tokens
      */
-
-
     public void supplyTokens(String cid, int amount) throws TokensEnoughException, TokenOutOfBoundsException {
         if (checkCustomerTokenSetSize(cid) < 2) {  // the customer has 0 or 1 token
             if (checkCustomerTokenSetSize(cid) + amount < 7) {  // the maximal amount of tokens should not exceed 6
@@ -139,9 +137,22 @@ public class TokenBusinessLogic {
         storageAdapter.consumeToken(cid, token);
     }
 
+
+    /**
+     * Method for getting a list of tokens from a specified customer
+     * @param cid of the specified customer
+     * @return a list of tokens
+     * @throws TokensNotEnoughException when there is no token in the list
+     */
     public String[] getTokens(String cid) throws TokensNotEnoughException {
         String[] tokens = storageAdapter.getTokens(cid);
-        if(tokens != null){
+        int countNumOfTokens = 0;
+        for(String token : tokens){
+            if(token != null){
+                countNumOfTokens += 1;
+            }
+        }
+        if(countNumOfTokens != 0){
             return tokens;
         }
         throw new TokensNotEnoughException("Customer ran out of tokens!");
