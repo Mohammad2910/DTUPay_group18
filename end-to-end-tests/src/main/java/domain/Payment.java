@@ -1,4 +1,4 @@
-package customer.domain;
+package domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
