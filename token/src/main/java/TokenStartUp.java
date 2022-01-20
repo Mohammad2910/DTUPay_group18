@@ -1,5 +1,8 @@
-import controller.ServiceProvider;
-
+import adapters.StorageAdapter;
+import adapters.TokenController;
+import domain.TokenBusinessLogic;
+import messaging.implementations.RabbitMqQueue;
+import storage.TokenStorage;
 
 
 public class TokenStartUp {
@@ -8,6 +11,9 @@ public class TokenStartUp {
     }
     public void startUp(){
         System.out.println("Token startup has been initiated!");
-        ServiceProvider serviceProvider = new ServiceProvider();
+        StorageAdapter storageAdapter = new StorageAdapter(new TokenStorage());
+        TokenBusinessLogic tokenBusinessLogic = new TokenBusinessLogic(storageAdapter);
+        var mq = new RabbitMqQueue("rabbitmq_container");
+        new TokenController(mq, storageAdapter);
     }
 }
