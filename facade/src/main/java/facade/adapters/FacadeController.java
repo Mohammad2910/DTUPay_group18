@@ -54,6 +54,10 @@ public class FacadeController {
      *
      * @param account - DTUPayAccount sent by customer post request
      */
+    //TODO when you do join() you block the Main thread.
+    // If something wrong happens with the Account micro (micro is down, rabbitMQ down etc.)
+    // you will never release the Main thread and it will be blocked (all the functionality of the Facade works in Main thread) until you restart the app or repair Account
+    // so I would suggest to execute it in new thread or better in threadPool
     public Event publishCreateCustomer(DTUPayAccount account) {
         registeredCustomer = new CompletableFuture<>();
         Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
@@ -66,6 +70,7 @@ public class FacadeController {
      *
      * @param event - Event sent by Account
      */
+    //TODO Important: should complete this future for specific customer. What if multiple customers use the app, so for which customer future completes here?
     public void handleCustomerCreated(Event event) {
         registeredCustomer.complete(event);
     }
@@ -75,6 +80,7 @@ public class FacadeController {
      *
      * @param event - Event sent by Account
      */
+    //TODO Important: should complete this future for specific customer. What if multiple customers use the app, so for which customer future completes here?
     public void handleCustomerCreateFailed(Event event) {
         registeredCustomer.complete(event);
     }
@@ -84,6 +90,10 @@ public class FacadeController {
      *
      * @param account - DTUPayAccount sent by merchant post request
      */
+    //TODO when you do join() you block the Main thread.
+    // If something wrong happens with the Account micro (micro is down, rabbitMQ down etc.)
+    // you will never release the Main thread (the app freezes "forever") and it will be blocked (all the functionality of the Facade works in Main thread) until you restart the app or repair Account
+    // so I would suggest to execute it in new thread or better in threadPool
     public Event publishCreateMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
         Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
@@ -91,9 +101,12 @@ public class FacadeController {
         return registeredMerchant.join();
     }
 
+    //TODO Important: should complete this future for specific merchant. What if multiple merchants use the app, so for which merchant future completes here?
     public void handleMerchantCreated(Event event) {
         registeredMerchant.complete(event);
     }
+
+    //TODO Important: should complete this future for specific merchant. What if multiple merchants use the app, so for which merchant future completes here?
     public void handleMerchantCreateFailed(Event event) {
         registeredMerchant.complete(event);
     }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Path("/merchant")
@@ -75,18 +76,28 @@ public class MerchantResource {
         }
     }
 
+    /*
+        @Author Aidana
+     */
     @POST
     @Path("/pay")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void createPayment(Payment payment, final @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
-            var result = facadeController.publishPaymentRequested(payment).join();
-            if(result == null) {
-                asyncResponse.resume(Response.status(Response.Status.OK).build());
-            } else {
-                asyncResponse.resume(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).header("errMsg", result).build());
-            }
+            facadeController.publishPaymentRequested(payment)
+                    .orTimeout(10, TimeUnit.SECONDS)
+                    .whenComplete((result, error) -> {
+                        if(error != null) {
+                            asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
+                        } else {
+                            if(result == null) {
+                                asyncResponse.resume(Response.status(Response.Status.OK).build());
+                            } else {
+                                asyncResponse.resume(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).header("errMsg", result).build());
+                            }
+                        }
+                    });
         });
     }
 

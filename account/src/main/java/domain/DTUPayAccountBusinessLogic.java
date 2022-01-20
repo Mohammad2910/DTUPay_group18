@@ -77,7 +77,7 @@ public class DTUPayAccountBusinessLogic {
         // Get accounts
         Map<String, DTUPayAccount> dtuPayAccounts = memory.getAccounts();
 
-        // Check account exists
+        // Check account existsF
         for (Map.Entry<String, DTUPayAccount> a : dtuPayAccounts.entrySet()) {
             if (a.getValue().getDtuBankAccount().equals(account.getDtuBankAccount())) {
                 throw new DuplicateBankAccountException("An account with given bank account number already exists");
