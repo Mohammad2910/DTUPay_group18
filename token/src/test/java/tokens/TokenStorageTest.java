@@ -10,15 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TokenStorageTest {
 
-
     TokenGenerator generator = new TokenGenerator();
 
-    private void setup(TokenSet tokenSet){
-
-        for(int i = 0; i < 6; i++ ){
+    private void setup(TokenSet tokenSet) {
+        for (int i = 0; i < 6; i++) {
             tokenSet.addToken(generator.generate());
         }
-
     }
 
     @Test
@@ -98,7 +95,7 @@ class TokenStorageTest {
     }
 
     @Test
-    void getCustomerByToken(){
+    void getCustomerByToken() {
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
@@ -109,26 +106,26 @@ class TokenStorageTest {
         tokenSet.addToken(generator.generate());
         storage.addNewEntryToStorage(cid1, tokenSet);
 
-        assertEquals(cid1,storage.getCustomerByToken(token));
+        assertEquals(cid1, storage.getCustomerByToken(token));
     }
 
     @Test
-    void getToken_Success(){
-            TokenSet tokenSet = new TokenSet();
-            TokenStorage storage = new TokenStorage();
-            String cid1 = "cid1";
-            String token = generator.generate();
+    void getToken_Success() {
+        TokenSet tokenSet = new TokenSet();
+        TokenStorage storage = new TokenStorage();
+        String cid1 = "cid1";
+        String token = generator.generate();
 
-            tokenSet.addToken(generator.generate());
-            tokenSet.addToken(token);
-            tokenSet.addToken(generator.generate());
-            storage.addNewEntryToStorage(cid1, tokenSet);
+        tokenSet.addToken(generator.generate());
+        tokenSet.addToken(token);
+        tokenSet.addToken(generator.generate());
+        storage.addNewEntryToStorage(cid1, tokenSet);
 
-            assertEquals(tokenSet.getToken(0), storage.getToken(cid1));
+        assertEquals(tokenSet.getToken(0), storage.getToken(cid1));
     }
 
     @Test
-    void getToken_IsNull(){
+    void getToken_IsNull() {
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
@@ -138,7 +135,7 @@ class TokenStorageTest {
     }
 
     @Test
-    void isCustomerCreated(){
+    void isCustomerCreated() {
 
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
@@ -150,7 +147,7 @@ class TokenStorageTest {
     }
 
     @Test
-    void getTokenHashMap(){
+    void getTokenHashMap() {
         TokenStorage storage = new TokenStorage();
         assertNotNull(storage.getAllTokens());
     }
