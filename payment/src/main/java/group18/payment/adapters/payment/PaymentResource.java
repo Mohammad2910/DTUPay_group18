@@ -16,7 +16,7 @@ import messaging.MessageQueue;
 public class PaymentResource {
 
     private static final String BANK_ACCOUNTS_EXPORTED = "BankAccountsExported";
-    private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportedFailed";
+    private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportFailed";
     private static final String PAYMENT_REQUESTED = "PaymentRequested";
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
     private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
