@@ -3,9 +3,7 @@ package domain;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import domain.model.DTUPayAccount;
-import adapters.storage.InMemory;
 import port.StorageInterface;
-
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,8 +20,8 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Get an account by id
      *
-     * @param id
-     * @return
+     * @param id - String
+     * @return DTUPayAccount
      * @throws NoSuchAccountException
      */
     public DTUPayAccount get(String id) throws NoSuchAccountException {
@@ -39,7 +37,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Create a DTUPay account
      *
-     * @param account
+     * @param account - DTUPayAccount
      * @throws DuplicateBankAccountException
      */
     public String createAccount(DTUPayAccount account) throws DuplicateBankAccountException {
@@ -58,7 +56,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Delete a DTUPay account
      *
-     * @param account
+     * @param account - DTUPayAccount
      * @throws NoSuchAccountException
      */
     public void delete(DTUPayAccount account) throws NoSuchAccountException {
@@ -70,11 +68,10 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Check a DTUBank account is already registered to a DTUPay account
      *
-     * @param account
+     * @param account - DTUPayAccount
      * @throws DuplicateBankAccountException
      */
     public void checkUniqueBankAccount(DTUPayAccount account) throws DuplicateBankAccountException {
-        System.out.println("CHECKING FOR UNIQUE ACCOUNT");
         // Get accounts
         Map<String, DTUPayAccount> dtuPayAccounts = memory.getAccounts();
 

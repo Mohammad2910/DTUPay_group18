@@ -1,12 +1,10 @@
-package adapters.storage;
+package storage;
 
 import domain.model.DTUPayAccount;
-import port.StorageInterface;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemory implements StorageInterface{
+public class InMemory {
 
     // key: value -> id: dtuBankAccount
     private final Map<String, DTUPayAccount> dtuPayAccounts = new HashMap<>();

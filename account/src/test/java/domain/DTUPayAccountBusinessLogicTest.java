@@ -1,19 +1,20 @@
 package domain;
 
+import adapter.StorageAdapter;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import domain.model.DTUPayAccount;
-import adapters.storage.InMemory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import port.StorageInterface;
-
+import storage.InMemory;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DTUPayAccountBusinessLogicTest {
-    StorageInterface memory = InMemory.instance();
-    DTUPayAccountBusinessLogic businessLogic = new DTUPayAccountBusinessLogic(memory);
+    InMemory memory = InMemory.instance();
+    StorageInterface storage = new StorageAdapter(memory);
+    DTUPayAccountBusinessLogic businessLogic = new DTUPayAccountBusinessLogic(storage);
 
     // Get - Fail
     @Test
