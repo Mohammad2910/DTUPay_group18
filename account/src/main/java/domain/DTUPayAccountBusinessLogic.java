@@ -3,18 +3,19 @@ package domain;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import domain.model.DTUPayAccount;
-import domain.storage.InMemory;
+import adapters.storage.InMemory;
+import port.StorageInterface;
 
 import java.util.Map;
 import java.util.UUID;
 
 public class DTUPayAccountBusinessLogic {
-    private InMemory memory;
+    private StorageInterface memory;
 
     /**
      * Constructor of DTUPayAccountBusinessLogic class
      */
-    public DTUPayAccountBusinessLogic(InMemory memory) {
+    public DTUPayAccountBusinessLogic(StorageInterface memory) {
         this.memory = memory;
     }
 

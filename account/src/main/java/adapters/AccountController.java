@@ -1,12 +1,13 @@
 package adapters;
 
 import domain.model.*;
-import domain.storage.InMemory;
+import adapters.storage.InMemory;
 import domain.DTUPayAccountBusinessLogic;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import messaging.Event;
 import messaging.MessageQueue;
+import port.StorageInterface;
 
 public class AccountController {
     MessageQueue queue;
@@ -18,7 +19,7 @@ public class AccountController {
      * @param queue
      * @param memory
      */
-    public AccountController(MessageQueue queue, InMemory memory) {
+    public AccountController(MessageQueue queue, StorageInterface memory) {
         this.queue = queue;
         accountLogic = new DTUPayAccountBusinessLogic(memory);
 

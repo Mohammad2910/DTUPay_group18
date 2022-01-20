@@ -3,15 +3,16 @@ package domain;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import domain.model.DTUPayAccount;
-import domain.storage.InMemory;
+import adapters.storage.InMemory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import port.StorageInterface;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DTUPayAccountBusinessLogicTest {
-    InMemory memory = InMemory.instance();
+    StorageInterface memory = InMemory.instance();
     DTUPayAccountBusinessLogic businessLogic = new DTUPayAccountBusinessLogic(memory);
 
     // Get - Fail

@@ -1,6 +1,7 @@
 import  adapters.AccountController;
-import domain.storage.InMemory;
+import adapters.storage.InMemory;
 import messaging.implementations.RabbitMqQueue;
+import port.StorageInterface;
 
 public class StartUp {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class StartUp {
     private void startUp() {
         System.out.println("startup of account microservice");
         var mq = new RabbitMqQueue("rabbitmq_container");
-        InMemory memory = InMemory.instance();
+        StorageInterface memory = InMemory.instance();
         new AccountController(mq, memory);
     }
 }
