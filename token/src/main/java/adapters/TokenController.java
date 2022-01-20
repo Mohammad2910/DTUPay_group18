@@ -46,7 +46,8 @@ public class TokenController {
         this.publishPropagatedError("CreateCustomerWithTokens", requestId, errorMessage);
 
         try {
-            tokenBusinessLogic.createNewCustomer(event.getArgument(1, String.class));
+            String customerId = event.getArgument(1, String.class);
+            tokenBusinessLogic.createNewCustomer(customerId);
             Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, "Customer created with 6 tokens!", null});
             queue.publish(customerCreated);
         } catch (CustomerAlreadyExistsException customerAlreadyExistsException) {
