@@ -15,9 +15,6 @@ public class WsBankTransferService implements BankTransferService {
 
     @Override
     public void transferMoneyFromTo(String merchantBankAccount, String customerBankAccount, BigDecimal amount) throws BankServiceException_Exception {
-        System.out.println("---------------------------------------");
-        System.out.println("transferMoneyFromTo.DEBTOR: " + customerBankAccount);
-        System.out.println("transferMoneyFromTo.CREDITOR: " + merchantBankAccount);
-        bankService.transferMoneyFromTo(customerBankAccount, merchantBankAccount, amount,"");
+        bankService.transferMoneyFromTo(customerBankAccount, merchantBankAccount, amount,"dtu.group18.payment");
     }
 }
