@@ -1,12 +1,12 @@
-Feature: customer account
+#Feature: customer account
 
-  Scenario: Create account
-    Given an unregistered customer with name "Karsten", cpr "101010" and bank account ID "0000"
-    And the customer requests to be registered in DTU Pay
-    Then a customer DTU Pay account is created with name "Karsten" an ID and bank account ID "0000"
+ # Scenario: Create account
+  #  Given an unregistered customer with name "Karsten", cpr "101010" and bank account ID "0000"
+   # And the customer requests to be registered in DTU Pay
+    #Then a customer DTU Pay account is created with name "Karsten" an ID and bank account ID "0000"
 
-  Scenario: Delete account
-    Given a customer has created a DTU Pay account with name "Karsten", cpr "101010 and bank account ID "0000"
-    And a request to delete the account is made
-    Then the account is deleted
+ # Scenario: Delete account
+  #  Given a customer has created a DTU Pay account with name "Karsten", cpr "101010 and bank account ID "0000"
+   # And a request to delete the account is made
+    #Then the account is deleted
 

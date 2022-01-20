@@ -1,8 +1,6 @@
-package services;
-
-import dtu.ws.fastmoney.*;
-import customer.domain.CustomerAccount;
 import customer.CustomerService;
+import customer.domain.CustomerAccount;
+import dtu.ws.fastmoney.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,9 +12,9 @@ public class CustomerSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
     CustomerAccount account = new CustomerAccount();
     CustomerService service = new CustomerService();
-
+    
     @When("A customer wants to register to DTU Pay with name {string}")
-    public void weRegisterCustomerWithName(String name) {
+    public void aCustomerWantsToRegisterToDTUPayWithName(String name) {
         account.setName(name);
     }
 
@@ -42,13 +40,14 @@ public class CustomerSteps {
         }
     }
 
+
     @Then("It is added on the account list")
     public void itIsAddedOnTheAccountList() {
         service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
     }
 
     @And("Cleanup")
-    public void tearDown() {
+    public void cleanup() {
         System.out.println("Running: tearDown");
         //BankService dtuBank = new BankServiceService().getBankServicePort();
         try {
@@ -65,10 +64,5 @@ public class CustomerSteps {
         } catch (Exception bsException) {
             System.out.println(bsException.getMessage());
         }
-    }
-
-    @When("A merchant wants to register to DTU Pay with name {string}")
-    public void aMerchantWantsToRegisterToDTUPayWithName(String name) {
-        account.setName(name);
     }
 }
