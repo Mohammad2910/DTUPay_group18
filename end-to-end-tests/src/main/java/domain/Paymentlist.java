@@ -1,4 +1,4 @@
-package customer.domain;
+package domain;
 
 import java.util.ArrayList;
 

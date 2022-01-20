@@ -23,10 +23,13 @@ public class AccountController {
         accountLogic = new DTUPayAccountBusinessLogic(storage);
 
         // Handlers for each event that Account needs to look consume
+        // Events published by Facade for Account
         queue.addHandler("CreateCustomerAccount", this::handleCreateCustomerAccountRequest);
         queue.addHandler("CreateMerchantAccount", this::handleCreateMerchantAccountRequest);
-        queue.addHandler("ExportBankAccounts", this::handleExportBankAccountsRequest);
         queue.addHandler("DeleteAccount", this::handleDeleteAccountRequest);
+
+        // Events published by Token for Account
+        queue.addHandler("CustomerTokenValidated", this::handleCustomerTokenValidatedRequest);
     }
 
     /**
@@ -172,7 +175,7 @@ public class AccountController {
     }
 
     /**
-     * Consumes events of type ExtractBankAccounts and published an event in queue BankAccountsExported/BankAccountsExportFailed
+     * Consumes events of type CustomerTokenValidated and published an event in queue BankAccountsExported/BankAccountsExportFailed
      *
      *  Consumed event arguments:
      * 1. requestId
@@ -191,7 +194,7 @@ public class AccountController {
      * @author s184174
      * @param event - Event
      */
-    public void handleExportBankAccountsRequest(Event event) {
+    public void handleCustomerTokenValidatedRequest(Event event) {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
