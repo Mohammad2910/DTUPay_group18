@@ -42,7 +42,7 @@ public class TokenController {
     public void handleCreateCustomerWithTokens(Event event) {
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("CreateCustomerWithTokens", requestId, errorMessage);
+        this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
 
         try {
             String customerId = event.getArgument(1, String.class);
@@ -140,7 +140,7 @@ public class TokenController {
     public void handleRetrieveCustomerTokens(Event event){
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("RetrieveCustomerTokenFailed", requestId, errorMessage);
+        this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, errorMessage);
 
         try {
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
