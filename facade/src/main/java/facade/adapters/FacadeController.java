@@ -89,6 +89,7 @@ public class FacadeController {
     public CompletableFuture<Event> publishCreateCustomer(DTUPayAccount account) {
         String requestId = UUID.randomUUID().toString();
         registeredAccounts.put(requestId, new CompletableFuture<>());
+        System.out.println("publishCreateCustomer with requestID: " + requestId);
         Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {requestId, account, null});
         queue.publish(createCustomerAccount);
         return registeredAccounts.get(requestId);
@@ -116,8 +117,11 @@ public class FacadeController {
      * @param event - Event sent by Token
      */
     public void handleCustomerWithTokensCreated(Event event) {
+        System.out.println("inside handleCustomerWithTokensCreated...");
         String requestId = event.getArgument(0, String.class);
+        System.out.println("trying to find future for requestID: " + requestId);
         registeredAccounts.get(requestId).complete(event);
+        System.out.println("COMPLETED!!!");
         registeredAccounts.remove(requestId);
     }
 
