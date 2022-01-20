@@ -1,8 +1,8 @@
 import adapter.AccountController;
 import adapter.StorageAdapter;
 import messaging.implementations.RabbitMqQueue;
-import port.StorageInterface;
 import storage.InMemory;
+import port.StorageInterface;
 
 public class StartUp {
     public static void main(String[] args) {
