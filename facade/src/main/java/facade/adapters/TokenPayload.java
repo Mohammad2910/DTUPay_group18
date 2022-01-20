@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class TokenPayload {
     String cid;
     String token;
+    String[] tokens;
     int tokenAmount;
 }

@@ -101,14 +101,8 @@ public class TokenStorage {
      * @param cid - the id of the customer
      * @return the first available token from the customer
      */
-    public String getToken(String cid){
-        TokenSet tokenSet = tokenHashMap.get(cid);
-        for (String item : tokenSet.getTokenSet()) {
-            if (item != null) {
-                return item;
-            }
-        }
-        return null;
+    public String[] getTokens(String cid){
+        return tokenHashMap.get(cid).getTokenSet();
     }
 
     /**

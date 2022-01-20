@@ -139,10 +139,10 @@ public class TokenBusinessLogic {
         storageAdapter.consumeToken(cid, token);
     }
 
-    public String getToken(String cid) throws TokensNotEnoughException {
-        String token = storageAdapter.getToken(cid);
-        if(token != null){
-            return token;
+    public String[] getTokens(String cid) throws TokensNotEnoughException {
+        String[] tokens = storageAdapter.getTokens(cid);
+        if(tokens != null){
+            return tokens;
         }
         throw new TokensNotEnoughException("Customer ran out of tokens!");
     }

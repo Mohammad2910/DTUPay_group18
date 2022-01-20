@@ -117,9 +117,14 @@ public class FacadeController {
         deletedAccounts.remove(requestId);
     }
 
-
+    /**
+     *  Publishes an event on the CustomerRequestTokens queue for Token
+     *
+     * @param cid - the cid of the customer that requests new tokens
+     * @param amount - the amount of tokens the customer requires
+     */
     public CompletableFuture<Event> publishCustomerRequestsTokens(String cid, int amount){
-        TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
+        TokenPayload tokenPayload = new TokenPayload(cid, null, null, amount);
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
         Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
@@ -127,6 +132,11 @@ public class FacadeController {
         return requestedTokens.get(requestId);
     }
 
+    /**
+     * Consumes the successful events for the request of new tokens
+     *
+     * @param event - Event sent by Token
+     */
     public void handleCustomerTokenRequested(Event event) {
         String requestId = event.getArgument(0, String.class);
         requestedTokens.get(requestId).complete(event);

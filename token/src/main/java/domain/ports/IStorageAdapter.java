@@ -63,5 +63,5 @@ public interface IStorageAdapter {
     void addNewCustomer(String cid, TokenSet tokens);
 
 
-    String getToken(String cid);
+    String[] getTokens(String cid);
 }

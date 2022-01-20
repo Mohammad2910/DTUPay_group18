@@ -48,7 +48,7 @@ public class StorageAdapter implements IStorageAdapter {
     }
 
     @Override
-    public String getToken(String cid) {
-        return tokenStorage.getToken(cid);
+    public String[] getTokens(String cid) {
+        return tokenStorage.getTokens(cid);
     }
 }
