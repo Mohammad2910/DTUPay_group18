@@ -63,5 +63,10 @@ public interface IStorageAdapter {
     void addNewCustomer(String cid, TokenSet tokens);
 
 
+    /**
+     * Method for getting a list of tokens from a specified customer
+     * @param cid of the specified customer
+     * @return a list of tokens of the customer
+     */
     String[] getTokens(String cid);
 }

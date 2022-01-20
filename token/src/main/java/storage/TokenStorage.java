@@ -99,7 +99,7 @@ public class TokenStorage {
     /**
      * Method for getting a token by a customerId
      * @param cid - the id of the customer
-     * @return the first available token from the customer
+     * @return a list of tokens that the customer possess
      */
     public String[] getTokens(String cid){
         return tokenHashMap.get(cid).getTokenSet();

@@ -1,9 +1,6 @@
 package services;
 
-import dtu.ws.fastmoney.BankService;
-import dtu.ws.fastmoney.BankServiceException_Exception;
-import dtu.ws.fastmoney.BankServiceService;
-import dtu.ws.fastmoney.User;
+import dtu.ws.fastmoney.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,6 +9,7 @@ import merchant.domain.MerchantAccount;
 import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class MerchantSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
@@ -102,5 +100,41 @@ public class MerchantSteps {
     @Then("the merchant's account is deleted and gets a response")
     public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId() {
         Assertions.assertEquals("Account with id: " + account.getId() + " is successfully deleted",message);
+    }
+
+    @When("something")
+    public void something() {
+        try {
+            List<AccountInfo> list = dtuBank.getAccounts();
+            for (AccountInfo a : list) {
+//                System.out.println(a.getAccountId());
+//                System.out.println(a.getUser().getCprNumber());
+//                System.out.println(a.getUser().getFirstName());
+//                System.out.println(a.getUser().getLastName());
+                if ((a.getUser().getCprNumber().equals("123455-1234"))) {
+                    dtuBank.retireAccount(a.getAccountId());
+                }
+            }
+        } catch (Exception bsException) {
+            System.out.println(bsException.getMessage());
+        }
+
+        String merchantAccountIdentifier ="";
+        account.setName("Merchant");
+        account.setCpr("123455-1234");
+
+        User user = new User();
+        user.setCprNumber(account.getCpr());
+        user.setFirstName(account.getName());
+        user.setLastName("Tester");
+        try {
+            // Create customer with balance
+            BigDecimal bigBalance = new BigDecimal(10000);
+            merchantAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
+            account.setDtuBankAccount(merchantAccountIdentifier);
+        } catch (BankServiceException_Exception bsException) {
+            bsException.printStackTrace();
+        }
+        System.out.println(merchantAccountIdentifier);
     }
 }

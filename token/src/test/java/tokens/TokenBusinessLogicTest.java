@@ -5,10 +5,7 @@ import domain.TokenBusinessLogic;
 import domain.TokenGenerator;
 import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
-import exceptions.CustomerAlreadyExistsException;
-import exceptions.TokenNotValidException;
-import exceptions.TokenOutOfBoundsException;
-import exceptions.TokensEnoughException;
+import exceptions.*;
 import org.junit.jupiter.api.Test;
 import storage.TokenStorage;
 
@@ -174,6 +171,57 @@ class TokenBusinessLogicTest {
         assertEquals(2, tokenBusinessLogic.checkCustomerTokenSetSize(cid));
         tokenBusinessLogic.consumeToken(cid, token1);
         assertEquals(1, tokenBusinessLogic.checkCustomerTokenSetSize(cid));
+    }
+
+    @Test
+    void validateCustomerFromToken_Success() throws TokenNotValidException {
+        String cid = "cid1";
+        TokenSet set = new TokenSet();
+        String token1 = tokenGenerator.generate();
+        String token2 = tokenGenerator.generate();
+        set.addToken(token1);
+        set.addToken(token2);
+        tokenBusinessLogic.addNewCustomer(cid, set);
+        assertEquals(cid, tokenBusinessLogic.validateCustomerFromToken(token1));
+        assertEquals(cid, tokenBusinessLogic.validateCustomerFromToken(token2));
+    }
+
+    @Test
+    void validateCustomerFromToken_ThrowsTokenNotValidException(){
+        String cid = "cid1";
+        TokenSet set = new TokenSet();
+        String token1 = tokenGenerator.generate();
+        String token2 = tokenGenerator.generate();
+        set.addToken(token1);
+        set.addToken(token2);
+        tokenBusinessLogic.addNewCustomer(cid, set);
+        assertThrows(TokenNotValidException.class, () -> tokenBusinessLogic.validateCustomerFromToken("token1"));
+
+    }
+
+    @Test
+    void getTokens_Success() throws TokensNotEnoughException {
+        String cid = "cid1";
+        TokenSet set = new TokenSet();
+        String token1 = tokenGenerator.generate();
+        String token2 = tokenGenerator.generate();
+        set.addToken(token1);
+        set.addToken(token2);
+        tokenBusinessLogic.addNewCustomer(cid, set);
+        assertEquals(token1, tokenBusinessLogic.getTokens(cid)[0]);
+        assertEquals(token2, tokenBusinessLogic.getTokens(cid)[1]);
+        assertNull(tokenBusinessLogic.getTokens(cid)[2]);
+        assertNull(tokenBusinessLogic.getTokens(cid)[3]);
+        assertNull(tokenBusinessLogic.getTokens(cid)[4]);
+        assertNull(tokenBusinessLogic.getTokens(cid)[5]);
+    }
+
+    @Test
+    void getTokens_ThrowsTokenNotEnoughException() {
+        String cid = "cid1";
+        TokenSet set = new TokenSet();
+        tokenBusinessLogic.addNewCustomer(cid, set);
+        assertThrows(TokensNotEnoughException.class, () -> tokenBusinessLogic.getTokens(cid));
     }
 }
 
