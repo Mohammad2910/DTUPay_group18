@@ -19,7 +19,7 @@ public class PaymentResource {
     private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportedFailed";
     private static final String PAYMENT_REQUESTED = "PaymentRequested";
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
-    private static final String TOKEN_VALIDATION_REQUESTED = "TokenValidationRequested";
+    private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
     private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
 
     private final PaymentService paymentService;
