@@ -29,9 +29,9 @@ public class TokenController {
         //todo: make handlers for each event
         queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens); // Account Microservice
         queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);  // Facade Microservice
-        queue.addHandler("TokenValidationRequested", this::handleValidateCustomerToken);  // Payment Microservice
+        queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);  // Payment Microservice
         queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);  // Validate then directly consume
-        queue.addHandler("RetrieveCustomerToken", this::handleRetrieveCustomerToken);  // Facade Microservice
+        queue.addHandler("RetrieveCustomerToken", this::handleRetrieveCustomerTokens);  // Facade Microservice
 
     }
 
@@ -71,7 +71,7 @@ public class TokenController {
             //todo: we need to have cid and token amount in the payload
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
             tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
-            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, "Customer has been served with " + tokenPayload.getTokenAmount() + "!", null});
+            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, "Customer has been served with " + tokenPayload.getTokens() + "!", null});
             queue.publish(tokenSupplied);
         } catch (TokensEnoughException | TokenOutOfBoundsException tokensException) {
             Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
@@ -93,7 +93,6 @@ public class TokenController {
             PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
             String cid = tokenBusinessLogic.validateCustomerFromToken(paymentPayload.getToken());
             paymentPayload.setCustomerId(cid);
-            //TODO should rename to ban
             Event tokenValidated = new Event("CustomerTokenValidated", new Object[]{requestId, paymentPayload, null});
             queue.publish(tokenValidated);
         } catch (TokenNotValidException tokenException) {
@@ -113,10 +112,7 @@ public class TokenController {
         this.publishPropagatedError("CustomerTokenConsumeFailed", requestId, errorMessage);
 
         try {
-            // todo maybe change the consumeToken in BusinessLogic
-            String cid = tokenBusinessLogic.validateCustomerFromToken(event.getArgument(1, String.class));
-            String validatedToken = event.getArgument(1, String.class);  // the token has already been validated by ValidateCustomerToken
-            tokenBusinessLogic.consumeToken(cid, validatedToken);
+            tokenBusinessLogic.validateCustomerFromToken(event.getArgument(1, String.class));
             Event tokenConsumed = new Event("CustomerTokenConsumed", new Object[]{requestId, "Token is consumed!", null});
             queue.publish(tokenConsumed);
         } catch (TokenNotValidException tokenException) {
@@ -126,18 +122,19 @@ public class TokenController {
     }
 
     /**
-     * Method for handling the get of a customer token
+     * Method for handling the get of a customers tokens
+     *
      * @param event - The event for communicating whether the token is retrieved or not
      */
-    public void handleRetrieveCustomerToken(Event event){
+    public void handleRetrieveCustomerTokens(Event event){
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
         this.publishPropagatedError("RetrieveCustomerTokenFailed", requestId, errorMessage);
 
         try {
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
-            String token = tokenBusinessLogic.getToken(tokenPayload.getCid());
-            tokenPayload.setToken(token);
+            String[] tokens = tokenBusinessLogic.getTokens(tokenPayload.getCid());
+            tokenPayload.setTokens(tokens);
             Event tokenRetrieved = new Event("RetrievedCustomerToken", new Object[]{requestId, tokenPayload, null});
             queue.publish(tokenRetrieved);
         } catch (TokensNotEnoughException tokenException) {

@@ -87,9 +87,9 @@ public class CustomerResource {
                                 // Get error message, if any
                                 String error = event.getArgument(2, String.class);
                                 if (error == null) {
-                                    String successMsg = event.getArgument(1, String.class);
+                                    TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
                                     // Set object in response
-                                    asyncResponse.resume(Response.ok(successMsg).build());
+                                    asyncResponse.resume(Response.ok(tokenPayload.getTokens()).build());
                                 } else {
                                     // Set error in response
                                     asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
@@ -100,24 +100,4 @@ public class CustomerResource {
         });
 
     }
-
-    @GET
-    @Path("/token/{cid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getToken(@PathParam("cid") String customerId){
-        Event event = facadeController.handleRetrieveToken(customerId);
-
-        // Get error message, if any
-        String error = event.getArgument(2, String.class);
-        if (error == null) {
-            String successMsg = event.getArgument(1, String.class);
-            // Set object in response
-            return Response.ok(successMsg).build();
-        } else {
-            // Set error in response
-            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-        }
-    }
-
-
 }

@@ -124,7 +124,7 @@ public class FacadeController {
      * @param amount - the amount of tokens the customer requires
      */
     public CompletableFuture<Event> publishCustomerRequestsTokens(String cid, int amount){
-        TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
+        TokenPayload tokenPayload = new TokenPayload(cid, null, null, amount);
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
         Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});

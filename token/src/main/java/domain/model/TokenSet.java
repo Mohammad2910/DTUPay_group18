@@ -93,6 +93,6 @@ public class TokenSet {
      * Getter for the actual set
      * @return String array of tokens
      */
-    public String[] getTokenSet(){return tokenSet;}
+    public String[] getTokenSet(){ return tokenSet; }
 
 }
