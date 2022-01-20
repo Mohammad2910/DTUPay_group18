@@ -19,12 +19,9 @@ public class MerchantService {
     /**
      * Add merchant DTUPay account
      *
-     * @param name
-     * @param cpr
-     * @param bankAccount
+     * @param account
      */
-    public String add(String name, String cpr, String bankAccount) {
-        MerchantAccount account = new MerchantAccount("", name, cpr, bankAccount);
+    public String add(MerchantAccount account) {
 
         Response response  = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -33,6 +30,21 @@ public class MerchantService {
         switch (response.getStatus()) {
             case 200:
                 return "Successfully created customer with ID: " + response.readEntity(CustomerAccount.class).getId();
+            case 404:
+                return response.readEntity(String.class);
+            case 500:
+                return "Internal server error";
+            default:
+                return "Failed due to unknown error";
+        }
+    }
+
+    public String delete(String id) {
+        Response response = target.path(id).request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON).delete();
+
+        switch (response.getStatus()) {
+            case 200:
             case 404:
                 return response.readEntity(String.class);
             case 500:
