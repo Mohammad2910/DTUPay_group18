@@ -6,3 +6,8 @@ Feature: Customer account
     Then the customer is added on DTUPay
     And Cleanup
 
+  Scenario: Delete a customer account from DTU Pay
+    When a customer's name is "John", cpr is "123456-1234" and has a DTUBank account
+    And is registered to DTU Pay
+    And the customer wants delete their account
+    Then the customer's account is deleted and gets following message "Account with id: " + account.getId() + " is successfully deleted"

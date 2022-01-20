@@ -47,7 +47,7 @@ public class CustomerSteps {
 
     @Then("the customer is added on DTUPay")
     public void itIsAddedOnTheAccountList() {
-        String message = service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
+        String message = service.add(account);
         // 404
         Assertions.assertNotEquals("An account with given bank account number already exists", message);
         // 500
@@ -75,5 +75,47 @@ public class CustomerSteps {
         } catch (Exception bsException) {
             System.out.println(bsException.getMessage());
         }
+    }
+
+
+    @When("a customer's name is {string}, cpr is {string} and has a DTUBank account")
+    public void aCustomerSNameIsCprIsAndHasADTUBankAccount(String name, String cpr) {
+        account.setName(name);
+        account.setCpr(cpr);
+
+        User user = new User();
+        user.setCprNumber(account.getCpr());
+        user.setFirstName(account.getName());
+        user.setLastName("Mister");
+
+        try {
+            // Create customer with balance
+            BigDecimal bigBalance = new BigDecimal(10000);
+            String customerAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
+            account.setDtuBankAccount(customerAccountIdentifier);
+        } catch (BankServiceException_Exception bsException) {
+            bsException.printStackTrace();
+        }
+    }
+
+    @And("is registered to DTU Pay")
+    public void isRegisteredToDTUPay() {
+        String message = service.add(account);
+        // 404
+        Assertions.assertNotEquals("An account with given bank account number already exists", message);
+        // 500
+        Assertions.assertNotEquals("Internal server error", message);
+        // default
+        Assertions.assertNotEquals("Failed due to unknown error", message);
+    }
+
+    @And("the customer wants delete their account")
+    public void theCustomerWantsDeleteTheirAccount() {
+        String deleteMsg = service.delete(account);
+    }
+
+    @Then("the customer's account is deleted and gets following message {string} + account.getId\\() + {string}")
+    public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId(String arg0, String arg1) {
+        //Assertions.assertEquals("Account with id:"+  +" is successfully deleted",arg0 + account.getId() + arg1);
     }
 }

@@ -9,6 +9,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import merchant.MerchantService;
 import merchant.domain.MerchantAccount;
+import org.junit.jupiter.api.Assertions;
 
 import java.math.BigDecimal;
 
@@ -48,6 +49,12 @@ public class MerchantSteps {
 
     @Then("the merchant is added on DTU Pay")
     public void theMerchantIsAddedOnDTUPay() {
-        service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
+        String message = service.add(account.getName(),account.getCpr(), account.getDtuBankAccount());
+        // 404
+        Assertions.assertNotEquals("An account with given bank account number already exists", message);
+        // 500
+        Assertions.assertNotEquals("Internal server error", message);
+        // default
+        Assertions.assertNotEquals("Failed due to unknown error", message);
     }
 }
