@@ -56,12 +56,12 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Delete a DTUPay account
      *
-     * @param account - DTUPayAccount
+     * @param id - String
      * @throws NoSuchAccountException
      */
-    public void delete(DTUPayAccount account) throws NoSuchAccountException {
-        if (this.get(account.getId()) != null) {
-            memory.deleteAccount(account.getId());
+    public void delete(String id) throws NoSuchAccountException {
+        if (this.get(id) != null) {
+            memory.deleteAccount(id);
         }
     }
 
