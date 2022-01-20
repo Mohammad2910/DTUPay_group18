@@ -4,23 +4,24 @@ set -e
 docker image prune
 
 pushd messaging-utilities-3.2
+chmod u+x build.sh
 ./build.sh
 popd
 
 pushd facade
-./build.sh
+ bash build.sh
 popd
 
 pushd account
-./build.sh
+bash build.sh
 popd
 
 pushd token
-./build.sh
+bash build.sh
 popd
 
 pushd payment
-./build.sh
+bash build.sh
 popd
 
 #deploying the docker-containers (services) in the background specified in the docker-compose.yml file
