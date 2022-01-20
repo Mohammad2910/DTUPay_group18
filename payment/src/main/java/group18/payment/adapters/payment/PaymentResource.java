@@ -67,7 +67,7 @@ public class PaymentResource {
                 return;
             }
             PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
-            Payment payment = new Payment(p.getMerchantBankAccountId(), p.getCustomerBankAccountId(), p.getAmount(), requestId);
+            Payment payment = new Payment(p.getCustomerBankAccount(), p.getMerchantBankAccount(), p.getAmount(), requestId);
             //transfer money
             paymentService.transferMoney(payment);
             Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId});
