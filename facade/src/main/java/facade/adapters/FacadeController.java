@@ -21,18 +21,32 @@ public class FacadeController {
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
         queue = q;
-        // todo: make handlers for each event Facade need to look at
+
+        // From Payment
         queue.addHandler("PaymentResponseProvided", this::handlePaymentResponseProvided);
+
+        // From Account
         queue.addHandler("MerchantAccountCreated", this::handleMerchantCreated);
         queue.addHandler("MerchantAccountCreateFailed", this::handleMerchantCreated);
         queue.addHandler("AccountDeleted", this::handleDeleted);
         queue.addHandler("AccountDeleteFailed", this::handleDeleted);
         queue.addHandler("CustomerAccountCreated", this::handleCustomerCreated);
         queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreated);
+
+        // From Tokens
         queue.addHandler("CustomerTokensRequested", this::handleCustomerTokenRequested);
         queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequested);
+        queue.addHandler("CustomerTokenRetrieved", this::handleCustomerTokenRetrieved);
+        queue.addHandler("CustomerTokenRetrievedFailed", this::handleCustomerTokenRetrieved);
+         queue.addHandler("CustomerWithTokensCreated", this::handleCustomerWithTokensCreated);
+         queue.addHandler("CustomerWithTokensCreateFailed", this::handleCustomerWithTokensCreated);
     }
 
+    /**
+     * Consumes an event for the payment completion
+     *
+     * @param event - Event
+     */
     public void handlePaymentResponseProvided(Event event) {
         var result = event.getArgument(1, String.class);
         var requestId = event.getArgument(0, String.class);
@@ -40,6 +54,12 @@ public class FacadeController {
         initiatedPayments.remove(requestId);
     }
 
+    /**
+     * Publishes an event to the PaymentRequested queue for the Payment
+     *
+     * @param payment - Payment
+     * @return CompletableFuture
+     */
     public CompletableFuture<String> publishPaymentRequested(Payment payment) {
         String requestId = UUID.randomUUID().toString();
         PaymentPayload p = new PaymentPayload(payment.getMid(), payment.getToken(), payment.getAmount());
@@ -67,8 +87,23 @@ public class FacadeController {
      *
      * @param event - Event sent by Account
      */
-    //TODO Important: should complete this future for specific customer. What if multiple customers use the app, so for which customer future completes here?
     public void handleCustomerCreated(Event event) {
+        String requestId = event.getArgument(0, String.class);
+
+        // Check if account failed and complete completable
+        String error = event.getArgument(2, String.class);
+        if (error != null){
+            registeredAccounts.get(requestId).complete(event);
+            registeredAccounts.remove(requestId);
+        }
+    }
+
+    /**
+     * Consumes the events for the token supply of the newly created account
+     *
+     * @param event - Event sent by Token
+     */
+    public void handleCustomerWithTokensCreated(Event event) {
         String requestId = event.getArgument(0, String.class);
         registeredAccounts.get(requestId).complete(event);
         registeredAccounts.remove(requestId);
@@ -87,6 +122,11 @@ public class FacadeController {
         return registeredAccounts.get(requestId);
     }
 
+    /**
+     * Consumes an event for the creation merchant account
+     *
+     * @param event - event by Account
+     */
     public void handleMerchantCreated(Event event) {
         String requestId = event.getArgument(0, String.class);
         registeredAccounts.get(requestId).complete(event);
@@ -143,4 +183,28 @@ public class FacadeController {
         requestedTokens.remove(requestId);
     }
 
+    /**
+     *  Publishes an event on the CustomerRequestTokens queue for Token
+     *
+     * @param cid - the cid of the customer that requests new tokens
+     */
+    public CompletableFuture<Event> publishRetrieveCustomerTokens(String cid){
+        String requestId = UUID.randomUUID().toString();
+        requestedTokens.put(requestId, new CompletableFuture<>());
+        TokenPayload tokenPayload = new TokenPayload(cid, null, null, 0);
+        Event requestTokens = new Event("RetrieveCustomerTokens", new Object[] {1, tokenPayload, null});
+        queue.publish(requestTokens);
+        return requestedTokens.get(requestId);
+    }
+
+    /**
+     * Consumes and event for the token retrieval
+     *
+     * @param event - Event sent from Token
+     */
+    public void handleCustomerTokenRetrieved(Event event) {
+        String requestId = event.getArgument(0, String.class);
+        requestedTokens.get(requestId).complete(event);
+        requestedTokens.remove(requestId);
+    }
 }

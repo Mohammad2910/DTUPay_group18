@@ -3,6 +3,7 @@ package adapters;
 import domain.TokenBusinessLogic;
 import domain.model.PaymentPayload;
 import domain.model.TokenPayload;
+import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
 import exceptions.*;
 import messaging.Event;
@@ -26,13 +27,11 @@ public class TokenController {
     public TokenController(MessageQueue queue, IStorageAdapter storageAdapter) {
         tokenBusinessLogic = new TokenBusinessLogic(storageAdapter);
         this.queue = queue;
-        //todo: make handlers for each event
         queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens); // Account Microservice
         queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);  // Facade Microservice
         queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);  // Payment Microservice
         queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);  // Validate then directly consume
-        queue.addHandler("RetrieveCustomerToken", this::handleRetrieveCustomerTokens);  // Facade Microservice
-
+        queue.addHandler("RetrieveCustomerTokens", this::handleRetrieveCustomerTokens);  // Facade Microservice
     }
 
     /**
@@ -71,9 +70,15 @@ public class TokenController {
             //todo: we need to have cid and token amount in the payload
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
             tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
-            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, "Customer has been served with " + tokenPayload.getTokens() + "!", null});
+
+            // Get newly created tokens for customer
+            String[] tokenSet = tokenBusinessLogic.getTokens(tokenPayload.getCid());
+
+            // Set tokens to payload
+            tokenPayload.setTokens(tokenSet);
+            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, tokenPayload + "!", null});
             queue.publish(tokenSupplied);
-        } catch (TokensEnoughException | TokenOutOfBoundsException tokensException) {
+        } catch (TokensEnoughException | TokenOutOfBoundsException | TokensNotEnoughException tokensException) {
             Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
             queue.publish(customerHasSufficientTokens);
         }
@@ -135,10 +140,10 @@ public class TokenController {
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
             String[] tokens = tokenBusinessLogic.getTokens(tokenPayload.getCid());
             tokenPayload.setTokens(tokens);
-            Event tokenRetrieved = new Event("RetrievedCustomerToken", new Object[]{requestId, tokenPayload, null});
+            Event tokenRetrieved = new Event("CustomerTokenRetrieved", new Object[]{requestId, tokenPayload, null});
             queue.publish(tokenRetrieved);
         } catch (TokensNotEnoughException tokenException) {
-            Event tokenNotRetrieved = new Event("RetrieveCustomerTokenFailed", new Object[]{requestId, tokenException.getMessage()});
+            Event tokenNotRetrieved = new Event("CustomerTokenRetrievedFailed", new Object[]{requestId, tokenException.getMessage()});
             queue.publish(tokenNotRetrieved);
         }
     }

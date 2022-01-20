@@ -71,10 +71,9 @@ public class CustomerResource {
         });
     }
 
-    @GET
+    @POST
     @Path("/token/{cid}/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    //TODO should return a list of tokens
     public void requestTokens(@PathParam("cid") String customerId, @PathParam("amount") int amount, @Suspended AsyncResponse asyncResponse){
         threadPool.submit(() -> {
             facadeController.publishCustomerRequestsTokens(customerId, amount)
@@ -87,7 +86,9 @@ public class CustomerResource {
                                 // Get error message, if any
                                 String error = event.getArgument(2, String.class);
                                 if (error == null) {
+                                    // Return a String[] of Tokens
                                     TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
+
                                     // Set object in response
                                     asyncResponse.resume(Response.ok(tokenPayload.getTokens()).build());
                                 } else {
@@ -98,6 +99,35 @@ public class CustomerResource {
                         }
                     });
         });
+    }
 
+    @GET
+    @Path("/token/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void retrieveTokens(@PathParam("cid") String customerId, @Suspended AsyncResponse asyncResponse){
+        threadPool.submit(() -> {
+            facadeController.publishRetrieveCustomerTokens(customerId)
+                    .orTimeout(10, TimeUnit.SECONDS)
+                    .whenComplete((event, timeoutErr) -> {
+                        if (timeoutErr != null) {
+                            asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
+                        } else {
+                            if (event != null) {
+                                // Get error message, if any
+                                String error = event.getArgument(2, String.class);
+                                if (error == null) {
+                                    // Return a String[] of Tokens
+                                    TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
+
+                                    // Set object in response
+                                    asyncResponse.resume(Response.ok(tokenPayload.getTokens()).build());
+                                } else {
+                                    // Set error in response
+                                    asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
+                                }
+                            }
+                        }
+                    });
+        });
     }
 }
