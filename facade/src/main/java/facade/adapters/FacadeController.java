@@ -75,7 +75,7 @@ public class FacadeController {
     public CompletableFuture<Event> publishCreateCustomer(DTUPayAccount account) {
         String requestId = UUID.randomUUID().toString();
         registeredAccounts.put(requestId, new CompletableFuture<>());
-        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {1, account, null});
+        Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {requestId, account, null});
         queue.publish(createCustomerAccount);
         return registeredAccounts.get(requestId);
     }
@@ -115,7 +115,7 @@ public class FacadeController {
     public CompletableFuture<Event> publishCreateMerchant(DTUPayAccount account) {
         String requestId = UUID.randomUUID().toString();
         registeredAccounts.put(requestId, new CompletableFuture<>());
-        Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {1, account, null});
+        Event createMerchantAccount = new Event("CreateMerchantAccount", new Object[] {requestId, account, null});
         queue.publish(createMerchantAccount);
         return registeredAccounts.get(requestId);
     }
@@ -165,7 +165,7 @@ public class FacadeController {
         TokenPayload tokenPayload = new TokenPayload(cid, null, null, amount);
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
-        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
+        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {requestId, tokenPayload, null});
         queue.publish(requestTokens);
         return requestedTokens.get(requestId);
     }
@@ -190,7 +190,7 @@ public class FacadeController {
         String requestId = UUID.randomUUID().toString();
         requestedTokens.put(requestId, new CompletableFuture<>());
         TokenPayload tokenPayload = new TokenPayload(cid, null, null, 0);
-        Event requestTokens = new Event("RetrieveCustomerTokens", new Object[] {1, tokenPayload, null});
+        Event requestTokens = new Event("RetrieveCustomerTokens", new Object[] {requestId, tokenPayload, null});
         queue.publish(requestTokens);
         return requestedTokens.get(requestId);
     }
