@@ -69,6 +69,20 @@ public class FacadeController {
         return initiatedPayments.get(requestId);
     }
 
+
+    /**
+     * Publishes an event to the PaymentsReportForManagerRequested queue for the Payment
+     *
+     * @return CompletableFuture
+     */
+    public CompletableFuture<String> publishPaymentsReportForManagerRequested() {
+        String requestId = UUID.randomUUID().toString();
+        Event paymentRequestedEvent = new Event("PaymentsReportForManagerRequested", new Object[] {requestId, });
+        initiatedPayments.put(requestId, new CompletableFuture<>());
+        queue.publish(paymentRequestedEvent);
+        return initiatedPayments.get(requestId);
+    }
+
     /**
      * Publishes an event to the CreateCustomerAccount queue for Account
      *
@@ -92,7 +106,7 @@ public class FacadeController {
 
         // Check if account failed and complete completable
         String error = event.getArgument(2, String.class);
-        if (error != null){
+        if (error != null) {
             registeredAccounts.get(requestId).complete(event);
             registeredAccounts.remove(requestId);
         }
