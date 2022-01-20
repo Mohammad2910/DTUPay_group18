@@ -3,28 +3,28 @@
 set -e
 docker image prune
 
-cd messaging-utilities-3.2
+pushd messaging-utilities-3.2
 chmod u+x build.sh
 ./build.sh
+popd
 
-cd ..
-cd facade
+pushd facade
 chmod u+x mvnw
 ./mvnw package
+popd
 
-cd ..
-cd account
+pushd account
 mvn package
+popd
 
-cd ..
-cd token
+pushd token
 mvn package
+popd
 
-cd ..
-cd payment
+pushd payment
 mvn package
+popd
 
-cd ..
 #deploying the docker-containers (services) in the background specified in the docker-compose.yml file
 docker-compose build
 docker-compose up -d rabbitMq
