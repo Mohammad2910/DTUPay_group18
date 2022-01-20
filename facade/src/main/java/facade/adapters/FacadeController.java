@@ -16,6 +16,7 @@ public class FacadeController {
     MessageQueue queue;
     private CompletableFuture<Event> registeredMerchant;
     private CompletableFuture<Event> registeredCustomer;
+    private CompletableFuture<Event> requestedTokens;
 
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
@@ -28,6 +29,8 @@ public class FacadeController {
         queue.addHandler("AccountDeleteFailed", this::handleDeleteFailed);
         queue.addHandler("CustomerAccountCreated", this::handleCustomerCreated);
         queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreateFailed);
+        queue.addHandler("CustomerTokensRequested", this::handleCustomerTokenRequested);
+        queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequestFailed);
     }
 
     public void handlePaymentResponseProvided(Event event) {
@@ -47,9 +50,9 @@ public class FacadeController {
     }
 
     /**
-     * Publishes an event to the CreateCustomerAccount queue
+     * Publishes an event to the CreateCustomerAccount queue for Account
      *
-     * @param account
+     * @param account - DTUPayAccount sent by customer post request
      */
     public Event publishCreateCustomer(DTUPayAccount account) {
         registeredCustomer = new CompletableFuture<>();
@@ -58,18 +61,28 @@ public class FacadeController {
         return registeredCustomer.join();
     }
 
+    /**
+     * Consumes the successful events for the creation customer account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleCustomerCreated(Event event) {
         registeredCustomer.complete(event);
     }
 
+    /**
+     * Consumes the failed events for the creation customer account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleCustomerCreateFailed(Event event) {
         registeredCustomer.complete(event);
     }
 
     /**
-     * Publishes an event to the CreateMerchantAccount queue
+     * Publishes an event to the CreateMerchantAccount queue for Account
      *
-     * @param account
+     * @param account - DTUPayAccount sent by merchant post request
      */
     public Event publishCreateMerchant(DTUPayAccount account) {
         registeredMerchant = new CompletableFuture<>();
@@ -78,7 +91,6 @@ public class FacadeController {
         return registeredMerchant.join();
     }
 
-
     public void handleMerchantCreated(Event event) {
         registeredMerchant.complete(event);
     }
@@ -86,9 +98,9 @@ public class FacadeController {
         registeredMerchant.complete(event);
     }
 
-
     /**
      * Publishes the event for deleting a merchant account, and returns an event
+     *
      * @param account - the account we want to delete
      */
     public Event publishDeleteAccount(DTUPayAccount account) {
@@ -98,13 +110,36 @@ public class FacadeController {
         return registeredMerchant.join();
     }
 
+    /**
+     * Consumes the failed events for the creation merchant account
+     *
+     * @param event - event sent by Account
+     */
     public void handleDeleted(Event event) {
         registeredMerchant.complete(event);
     }
+
+    /**
+     * Consumes the failed events for the creation merchant account
+     *
+     * @param event - Event sent by Account
+     */
     public void handleDeleteFailed(Event event) {
         registeredMerchant.complete(event);
     }
 
+    public Event handleCustomerRequestsTokens(String cid, int amount){
+        TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
+        requestedTokens = new CompletableFuture<>();
+        Event requestTokens = new Event("CustomerRequestTokens", new Object[] {1, tokenPayload, null});
+        queue.publish(requestTokens);
+        return requestedTokens.join();
+    }
 
-
+    public void handleCustomerTokenRequested(Event event) {
+        requestedTokens.complete(event);
+    }
+    public void handleCustomerTokenRequestFailed(Event event) {
+        requestedTokens.complete(event);
+    }
 }

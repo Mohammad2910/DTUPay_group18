@@ -47,4 +47,24 @@ public class CustomerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
     }
+
+    @GET
+    @Path("/token/{cid}/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response requestTokens(@PathParam("cid") String customerId, @PathParam("amount") int amount){
+        Event event = facadeController.handleCustomerRequestsTokens(customerId, amount);
+
+        // Get error message, if any
+        String error = event.getArgument(2, String.class);
+        if (error == null) {
+            String successMsg = event.getArgument(1, String.class);
+            // Set object in response
+            return Response.ok(successMsg).build();
+        } else {
+            // Set error in response
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+    }
+
+
 }

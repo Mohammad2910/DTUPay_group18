@@ -25,6 +25,13 @@ public interface IStorageAdapter {
     boolean hasToken(String cid, String token);
 
     /**
+     * Method for getting the customer by a token
+     * @param token - the token we want to validate a customer from
+     * @return the customer id of the token owner
+     */
+    String getCustomerByToken(String token);
+
+    /**
      * Method for checking if customer is created in storage
      *
      * @param cid - the id of the customer
@@ -55,4 +62,6 @@ public interface IStorageAdapter {
      */
     void addNewCustomer(String cid, TokenSet tokens);
 
+
+    String getToken(String cid);
 }
