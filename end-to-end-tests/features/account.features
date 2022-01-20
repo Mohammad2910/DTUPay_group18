@@ -1,0 +1,4 @@
+Feature: customer account
+
+  Scenario: Create account
+  Scenario: Delete account
