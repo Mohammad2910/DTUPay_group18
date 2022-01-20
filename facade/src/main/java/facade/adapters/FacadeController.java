@@ -15,6 +15,7 @@ public class FacadeController {
     private Map<String, CompletableFuture<Event>> registeredAccounts = new HashMap<>();
     private Map<String, CompletableFuture<Event>> deletedAccounts = new HashMap<>();
     private Map<String, CompletableFuture<Event>> requestedTokens = new HashMap<>();
+    private Map<String, CompletableFuture<Event>> requestedReports = new HashMap<>();
 
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
@@ -73,12 +74,12 @@ public class FacadeController {
      *
      * @return CompletableFuture
      */
-    public CompletableFuture<String> publishPaymentsReportForManagerRequested() {
+    public CompletableFuture<Event> publishPaymentsReportForManagerRequested() {
         String requestId = UUID.randomUUID().toString();
-        Event paymentRequestedEvent = new Event("PaymentsReportForManagerRequested", new Object[] {requestId, });
-        initiatedPayments.put(requestId, new CompletableFuture<>());
-        queue.publish(paymentRequestedEvent);
-        return initiatedPayments.get(requestId);
+        Event event = new Event("PaymentsReportForManagerRequested", new Object[] {requestId});
+        requestedReports.put(requestId, new CompletableFuture<>());
+        queue.publish(event);
+        return requestedReports.get(requestId);
     }
 
     /**
@@ -116,10 +117,8 @@ public class FacadeController {
      * @param event - Event sent by Token
      */
     public void handleCustomerWithTokensCreated(Event event) {
-        System.out.println("inside handleCustomerWithTokensCreated...");
         String requestId = event.getArgument(0, String.class);
         registeredAccounts.get(requestId).complete(event);
-        System.out.println("COMPLETED!!!");
         registeredAccounts.remove(requestId);
     }
 

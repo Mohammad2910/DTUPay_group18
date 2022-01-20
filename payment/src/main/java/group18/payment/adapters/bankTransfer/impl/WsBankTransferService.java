@@ -15,6 +15,6 @@ public class WsBankTransferService implements BankTransferService {
 
     @Override
     public void transferMoneyFromTo(String merchantBankAccount, String customerBankAccount, BigDecimal amount) throws BankServiceException_Exception {
-        bankService.transferMoneyFromTo(merchantBankAccount, customerBankAccount, amount,"");
+        bankService.transferMoneyFromTo(customerBankAccount, merchantBankAccount, amount,"");
     }
 }

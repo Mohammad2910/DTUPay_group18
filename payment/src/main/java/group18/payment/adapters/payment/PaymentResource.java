@@ -21,6 +21,7 @@ public class PaymentResource {
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
     private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
     private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
+    private static final String REPORT_FOR_MANAGER_REQUESTED = "PaymentsReportForManagerRequested";
 
     private final PaymentService paymentService;
     private final MessageQueue queue;
@@ -49,6 +50,7 @@ public class PaymentResource {
            sendErrorResponse(requestId, e.getMessage());
         }
     }
+
 
     public void handleTokenValidateFailed(Event ev) {
         String requestId = ev.getArgument(0, String.class);
