@@ -77,7 +77,7 @@ public class TokenController {
 
             // Set tokens to payload
             tokenPayload.setTokens(tokenSet);
-            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, tokenPayload + "!", null});
+            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, tokenPayload, null});
             queue.publish(tokenSupplied);
         } catch (TokensEnoughException | TokenOutOfBoundsException | TokensNotEnoughException tokensException) {
             Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
