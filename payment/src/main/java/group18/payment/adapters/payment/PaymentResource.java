@@ -43,7 +43,7 @@ public class PaymentResource {
                sendErrorResponse(requestId, "parameters can not be null");
                return;
            }
-           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p});
+           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
            queue.publish(event);
         } catch (Exception e) {
            sendErrorResponse(requestId, e.getMessage());
