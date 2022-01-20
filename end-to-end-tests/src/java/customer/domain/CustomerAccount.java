@@ -1,4 +1,4 @@
-package behavioustests;
+package customer.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DTUPayAccount {
+public class CustomerAccount {
     String id, name, cpr, dtuBankAccount;
 }

@@ -1,27 +1,33 @@
 package storage;
 
 import domain.model.TokenSet;
-import exceptions.TokensNotEnoughException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Class that represents the storage unit of customer-tokenSet mappings
  *
  * @author Renjue, Christian and David
  */
-public class TokenStorage implements ITokenStorage {
+public class TokenStorage {
 
     HashMap<String, TokenSet> tokenHashMap = new HashMap<>();
 
-    @Override
+    /**
+     * Adds a new customer-tokenSet mapping to the storage
+     * @param cid - the id of the customer
+     * @param tokens that the customer possess
+     */
     public void addNewEntryToStorage(String cid, TokenSet tokens) {
         tokenHashMap.put(cid, tokens);
     }
 
-    @Override
+    /**
+     * Method for adding a new set of tokens to a customers existing tokenSet
+     * @param cid - the id of the customer
+     * @param tokens to add to the already existing tokenSet
+     */
     public TokenSet addTokensToCustomer(String cid, TokenSet tokens) {
         TokenSet tokenSetFromStorage = tokenHashMap.get(cid);
         for (String token : tokens.getTokenSet()) {
@@ -32,26 +38,43 @@ public class TokenStorage implements ITokenStorage {
         return tokenSetFromStorage;
     }
 
-    @Override
+    /**
+     * Method for removing a token from a specified customers tokenSet
+     * @param cid - the id of the customer
+     * @param token to be removed from the customer's tokenSet
+     */
     public void removeTokenFromCustomer(String cid, String token) {
         TokenSet set = tokenHashMap.get(cid);
         set.removeToken(token);
     }
 
-    @Override
+    /**
+     * Method for getting the amount of tokens in a specified customer's tokenSet
+     * @param cid - the id of the customer
+     * @return Integer specifying the amount of tokens in the tokenSet
+     */
     public int getCustomerTokenSetSize(String cid) {
         TokenSet tokenSet = tokenHashMap.get(cid);
         return tokenSet.findNumberOfTokens();
     }
 
+    /**
+     * Method for checking if a specified token exists in a specified customer's tokenSet
+     * @param cid - the id of the customer
+     * @param token to be checked
+     * @return boolean stating whether the specified token did exist or not
+     */
     //todo: throw an exception here if customer token is not valid
-    @Override
     public boolean isCustomerTokenValid(String cid, String token) {
         TokenSet set = tokenHashMap.get(cid);
         return set.findToken(token);
     }
 
-    @Override
+    /**
+     * Method for getting a customer from a given token
+     * @param token - the token to get a customer from
+     * @return - the customer id of the token owner
+     */
     public String getCustomerByToken(String token) {
         for (Map.Entry<String, TokenSet> entry : tokenHashMap.entrySet()) {
             for (String item : entry.getValue().getTokenSet()) {
@@ -64,12 +87,20 @@ public class TokenStorage implements ITokenStorage {
     }
 
 
-    @Override
+    /**
+     * Method for checking if customer is created in storage
+     * @param cid - the id of the customer
+     * @return boolean stating if the customer exists
+     */
     public boolean isCustomerCreated(String cid) {
         return tokenHashMap.get(cid) != null;
     }
 
-    @Override
+    /**
+     * Method for getting a token by a customerId
+     * @param cid - the id of the customer
+     * @return the first available token from the customer
+     */
     public String getToken(String cid){
         TokenSet tokenSet = tokenHashMap.get(cid);
         for (String item : tokenSet.getTokenSet()) {
@@ -80,7 +111,10 @@ public class TokenStorage implements ITokenStorage {
         return null;
     }
 
-    @Override
+    /**
+     * Method for getting the whole hashmap (storage) of all customer-tokenSet mappings
+     * @return Hashmap (storage)
+     */
     public HashMap<String, TokenSet> getAllTokens() {
         return tokenHashMap;
     }

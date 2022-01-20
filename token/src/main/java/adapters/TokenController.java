@@ -46,7 +46,8 @@ public class TokenController {
         this.publishPropagatedError("CreateCustomerWithTokens", requestId, errorMessage);
 
         try {
-            tokenBusinessLogic.createNewCustomer(event.getArgument(1, String.class));
+            String customerId = event.getArgument(1, String.class);
+            tokenBusinessLogic.createNewCustomer(customerId);
             Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, "Customer created with 6 tokens!", null});
             queue.publish(customerCreated);
         } catch (CustomerAlreadyExistsException customerAlreadyExistsException) {
@@ -112,7 +113,10 @@ public class TokenController {
         this.publishPropagatedError("CustomerTokenConsumeFailed", requestId, errorMessage);
 
         try {
-            tokenBusinessLogic.validateCustomerFromToken(event.getArgument(1, String.class));
+            // todo maybe change the consumeToken in BusinessLogic
+            String cid = tokenBusinessLogic.validateCustomerFromToken(event.getArgument(1, String.class));
+            String validatedToken = event.getArgument(1, String.class);  // the token has already been validated by ValidateCustomerToken
+            tokenBusinessLogic.consumeToken(cid, validatedToken);
             Event tokenConsumed = new Event("CustomerTokenConsumed", new Object[]{requestId, "Token is consumed!", null});
             queue.publish(tokenConsumed);
         } catch (TokenNotValidException tokenException) {

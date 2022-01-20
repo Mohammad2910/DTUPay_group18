@@ -2,13 +2,13 @@ package adapters;
 
 import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
-import storage.ITokenStorage;
+import storage.TokenStorage;
 
 public class StorageAdapter implements IStorageAdapter {
 
-    private ITokenStorage tokenStorage;
+    private TokenStorage tokenStorage;
 
-    public StorageAdapter(ITokenStorage tokenStorage) {
+    public StorageAdapter(TokenStorage tokenStorage) {
         this.tokenStorage = tokenStorage;
     }
 

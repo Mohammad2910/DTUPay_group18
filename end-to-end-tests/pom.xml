@@ -20,33 +20,26 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>6.9.1</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
-            <version>6.9.1</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-picocontainer</artifactId>
-            <version>6.9.1</version>
+            <version>7.0.0</version>
         </dependency>
         <!-- This is JUnit 5 aka Jupiter -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.0</version>
+            <version>5.8.1</version>
             <scope>test</scope>
         </dependency>
-        <!-- This is needed to provide the @Cucumber annotation needed for Cucumber
-            scenarios to run with the JUnit 5 test runner. -->
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>6.9.1</version>
-            <scope>test</scope>
-        </dependency>
+        <!--  These two dependencies allow to run JUnit 4 tests and Cucumber tests. -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
@@ -60,28 +53,65 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-ri</artifactId>
-            <version>2.3.3</version>
-            <type>pom</type>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.1.0</version>
+            <scope>test</scope>
         </dependency>
+        <!-- General REST framework -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>4.5.8.Final</version>
+            <version>4.7.1.Final</version>
         </dependency>
+        <!-- Serializer to and from JSON -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jsonb</artifactId>
-            <version>1.10.5.Final</version>
+            <version>2.2.0.Final</version>
         </dependency>
+        <!-- Serializer to and from XML -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jaxb</artifactId>
-            <version>1.10.5.Final</version>
+            <version>2.2.0.Final</version>
         </dependency>
-
-
+        <!-- For the soap plugin -->
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.3.2</version>
+                <executions>
+                    <execution>
+                        <id>generate-java-sources</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <extension>true</extension>
+                    <wsdlUrls>
+                        <wsdlUrl>http://fm-00.compute.dtu.dk/BankService.wsdl.xml</wsdlUrl>
+                    </wsdlUrls>
+                    <packageName>dtu.ws.fastmoney</packageName>
+                    <sourceDestDir>src/main/java</sourceDestDir>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

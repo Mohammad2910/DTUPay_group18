@@ -1,12 +1,12 @@
-package adapters;
+package adapter;
 
 import domain.model.*;
-import domain.storage.InMemory;
 import domain.DTUPayAccountBusinessLogic;
 import domain.exception.DuplicateBankAccountException;
 import domain.exception.NoSuchAccountException;
 import messaging.Event;
 import messaging.MessageQueue;
+import port.StorageInterface;
 
 public class AccountController {
     MessageQueue queue;
@@ -15,14 +15,14 @@ public class AccountController {
     /**
      * Delegate events to handlers
      *
-     * @param queue
-     * @param memory
+     * @param queue - MessageQueue
+     * @param storage - StorageInterface
      */
-    public AccountController(MessageQueue queue, InMemory memory) {
+    public AccountController(MessageQueue queue, StorageInterface storage) {
         this.queue = queue;
-        accountLogic = new DTUPayAccountBusinessLogic(memory);
+        accountLogic = new DTUPayAccountBusinessLogic(storage);
 
-        // todo: make handlers for each event Account need to look at
+        // Handlers for each event that Account needs to look consume
         queue.addHandler("CreateCustomerAccount", this::handleCreateCustomerAccountRequest);
         queue.addHandler("CreateMerchantAccount", this::handleCreateMerchantAccountRequest);
         queue.addHandler("ExportBankAccounts", this::handleExportBankAccountsRequest);
@@ -47,14 +47,18 @@ public class AccountController {
      * 3. error message
      *
      * @author s212358
-     * @param event
+     * @param event - Event
      */
     public void handleCreateCustomerAccountRequest(Event event) {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        // TODO: Stop after propagation
-        this.publishPropagatedError("CustomerAccountCreateFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("CustomerAccountCreateFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         // Create account
         DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
@@ -94,13 +98,18 @@ public class AccountController {
      * 3. error message
      *
      * @author s212358
-     * @param event
+     * @param event - Event
      */
     public void handleCreateMerchantAccountRequest(Event event) {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("MerchantAccountCreateFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("MerchantAccountCreateFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         // Create account
         DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
@@ -134,13 +143,18 @@ public class AccountController {
      * 3. error message
      *
      * @author s184174
-     * @param event
+     * @param event - Event
      */
     public void handleDeleteAccountRequest(Event event) {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("AccountDeleteFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("AccountDeleteFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         // Delete account
         DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
@@ -175,13 +189,18 @@ public class AccountController {
      * 3. error message
      *
      * @author s184174
-     * @param event
+     * @param event - Event
      */
     public void handleExportBankAccountsRequest(Event event) {
         // Publish propagated error, if any
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("BankAccountsExportFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("BankAccountsExportFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         // Get account
         PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
@@ -207,16 +226,13 @@ public class AccountController {
     /**
      * It propagates error messages sent by the consumed events.
      *
-     * @param eventName
-     * @param requestId
-     * @param errorMessage
+     * @param eventName - String
+     * @param requestId - String
+     * @param errorMessage - String
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
-        // Publish propagated error, if any
-        if (errorMessage != null) {
-            // Publish event
-            Event errorPropagated = new Event(eventName, new Object[] {requestId, null, errorMessage});
-            queue.publish(errorPropagated);
-        }
+        // Publish event
+        Event errorPropagated = new Event(eventName, new Object[] {requestId, null, errorMessage});
+        queue.publish(errorPropagated);
     }
 }

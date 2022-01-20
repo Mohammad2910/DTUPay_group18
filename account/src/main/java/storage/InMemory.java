@@ -1,7 +1,6 @@
-package domain.storage;
+package storage;
 
 import domain.model.DTUPayAccount;
-
 import java.util.HashMap;
 import java.util.Map;
 
