@@ -2,7 +2,7 @@ package services;
 
 import dtu.ws.fastmoney.*;
 import group18.domain.DTUPayAccount;
-import group18.services.CustomerService;
+import customer.CustomerService;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

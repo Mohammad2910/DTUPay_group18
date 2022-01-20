@@ -1,4 +1,4 @@
-package group18.domain;
+package customer.domain;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package group18.services;
+package customer;
 
 import group18.domain.DTUPayAccount;
 import group18.domain.Payment;
@@ -10,14 +10,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class MerchantService {
+public class CustomerService {
 
     // build the client and the target
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target("http://localhost:8080/merchant");
+    WebTarget target = client.target("http://localhost:8080/customer");
 
     /**
-     * Add merchant DTUPay account
+     * Add customer DTUPay account
      *
      * @param name
      * @param cpr

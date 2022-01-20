@@ -1,4 +1,4 @@
-package group18.ports;
+package merchant.ports;
 
 public interface IBankWrapper {
 

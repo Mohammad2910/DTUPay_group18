@@ -1,4 +1,4 @@
-package group18.domain;
+package merchant.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DTUPayAccount {
-    String id, name, cpr, dtuBankAccount;
+public class Payment {
+
+    String token, mid, amount;
+
 }
