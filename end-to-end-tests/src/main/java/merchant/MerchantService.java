@@ -1,6 +1,7 @@
-package customer;
+package merchant;
 
-import customer.domain.CustomerAccount;
+import domain.CustomerAccount;
+import merchant.domain.MerchantAccount;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,24 +10,23 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class CustomerService {
+public class MerchantService {
 
     // build the client and the target
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target("http://fm-18.compute.dtu.dk:8080/customer");
+    WebTarget target = client.target("http://fm-18.compute.dtu.dk:8080/merchant");
 
     /**
-     * Add customer DTUPay account
+     * Add merchant DTUPay account
      *
      * @param name
      * @param cpr
      * @param bankAccount
      */
     public String add(String name, String cpr, String bankAccount) {
-        CustomerAccount account = new CustomerAccount("", name, cpr, bankAccount);
-        String message = "";
-        // actually no response at current stage
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        MerchantAccount account = new MerchantAccount("", name, cpr, bankAccount);
+
+        Response response  = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(account, MediaType.APPLICATION_JSON));
 
