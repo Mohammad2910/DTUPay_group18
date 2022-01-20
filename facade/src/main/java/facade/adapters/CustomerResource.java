@@ -29,10 +29,7 @@ public class CustomerResource {
                             asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
                         } else {
                             // Get error message, if any
-                            try {
-                                System.out.println("createAccount.COMPLETED");
                                 String error = event.getArgument(2, String.class);
-                                System.out.println("createAccount.COMPLETED.error: " + error);
                                 if (error == null) {
                                     DTUPayAccount newAccount = event.getArgument(1, DTUPayAccount.class);
                                     // Set object in response
@@ -41,11 +38,7 @@ public class CustomerResource {
                                 } else {
                                     // Set error in response
                                     asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
-                                    System.out.println("createAccount.RESUMED with BAD_REQUEST");
                                 }
-                            } catch (Exception e) {
-                                System.out.println(e.getMessage());
-                            }
                         }
                     });
         });

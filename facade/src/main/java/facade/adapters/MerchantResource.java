@@ -1,19 +1,13 @@
 package facade.adapters;
 
 import javax.ws.rs.*;
-
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
-
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-
-import messaging.Event;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -90,11 +84,8 @@ public class MerchantResource {
         });
     }
 
-    /*
-       @Author Aidana
-     */
     @POST
-    @Path("/pay")
+    @Path("/payment")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void createPayment(Payment payment, final @Suspended AsyncResponse asyncResponse) {
