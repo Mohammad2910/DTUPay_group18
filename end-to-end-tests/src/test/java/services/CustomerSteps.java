@@ -17,6 +17,8 @@ public class CustomerSteps {
     CustomerAccount account = new CustomerAccount();
     CustomerService service = new CustomerService();
 
+    String message;
+
     @When("A customer wants to register to DTU Pay with name {string}")
     public void aCustomerWantsToRegisterToDTUPayWithName(String name) {
         account.setName(name);
@@ -80,6 +82,8 @@ public class CustomerSteps {
 
     @When("a customer's name is {string}, cpr is {string} and has a DTUBank account")
     public void aCustomerSNameIsCprIsAndHasADTUBankAccount(String name, String cpr) {
+        // Create the customer object and to the bank
+
         account.setName(name);
         account.setCpr(cpr);
 
@@ -98,24 +102,25 @@ public class CustomerSteps {
         }
     }
 
-    @And("is registered to DTU Pay")
+    @And("customer is registered to DTU Pay")
     public void isRegisteredToDTUPay() {
+        // Make sure that we don't get an error message
         String message = service.add(account);
         // 404
-        Assertions.assertNotEquals("An account with given bank account number already exists", message);
+        Assertions.assertNotEquals("Account doesn't exists", message);
         // 500
         Assertions.assertNotEquals("Internal server error", message);
         // default
         Assertions.assertNotEquals("Failed due to unknown error", message);
     }
 
-    @And("the customer wants delete their account")
+    @And("the customer wants to delete their account")
     public void theCustomerWantsDeleteTheirAccount() {
-        String deleteMsg = service.delete(account);
+        message = service.delete(account.getId());
     }
 
-    @Then("the customer's account is deleted and gets following message {string} + account.getId\\() + {string}")
-    public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId(String arg0, String arg1) {
-        //Assertions.assertEquals("Account with id:"+  +" is successfully deleted",arg0 + account.getId() + arg1);
+    @Then("the customer's account is deleted and gets a response")
+    public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId() {
+        Assertions.assertEquals("Account with id: " + account.getId() + " is successfully deleted",message);
     }
 }

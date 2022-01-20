@@ -38,13 +38,12 @@ public class CustomerService {
         }
     }
 
-    public String delete(CustomerAccount account) {
-        Response response = target.path("/delete").request(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON).post(Entity.entity(account, MediaType.APPLICATION_JSON));
+    public String delete(String id) {
+        Response response = target.path(id).request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON).delete();
 
         switch (response.getStatus()) {
             case 200:
-                return "Successfully created customer with ID: " + response.readEntity(CustomerAccount.class).getId();
             case 404:
                 return response.readEntity(String.class);
             case 500:
