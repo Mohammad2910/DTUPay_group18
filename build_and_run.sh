@@ -4,12 +4,11 @@ set -e
 docker image prune
 
 pushd messaging-utilities-3.2
-chmod u+x build.sh
-./build.sh
+bash build.sh
 popd
 
 pushd facade
- bash build.sh
+bash build.sh
 popd
 
 pushd account
