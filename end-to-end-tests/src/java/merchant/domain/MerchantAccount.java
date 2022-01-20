@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DTUPayAccount {
+public class MerchantAccount {
     String id, name, cpr, dtuBankAccount;
 }

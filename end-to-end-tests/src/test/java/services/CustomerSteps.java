@@ -1,7 +1,7 @@
 package services;
 
 import dtu.ws.fastmoney.*;
-import group18.domain.DTUPayAccount;
+import customer.domain.CustomerAccount;
 import customer.CustomerService;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CustomerSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
-    DTUPayAccount account = new DTUPayAccount();
+    CustomerAccount account = new CustomerAccount();
     CustomerService service = new CustomerService();
 
     @When("A customer wants to register to DTU Pay with name {string}")
@@ -58,7 +58,7 @@ public class CustomerSteps {
 //                System.out.println(a.getUser().getCprNumber());
 //                System.out.println(a.getUser().getFirstName());
 //                System.out.println(a.getUser().getLastName());
-                if ((a.getUser().getCprNumber().equals("c-cpr")) || (a.getUser().getCprNumber().equals("m-cpr"))) {
+                if ((a.getUser().getCprNumber().equals("123456-1234"))) {
                     dtuBank.retireAccount(a.getAccountId());
                 }
             }

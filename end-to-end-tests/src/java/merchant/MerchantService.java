@@ -1,6 +1,6 @@
 package merchant;
 
-import merchant.domain.DTUPayAccount;
+import merchant.domain.MerchantAccount;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -23,7 +23,7 @@ public class MerchantService {
      * @param bankAccount
      */
     public void add(String name, String cpr, String bankAccount) {
-        DTUPayAccount account = new DTUPayAccount("", name, cpr, bankAccount);
+        MerchantAccount account = new MerchantAccount("", name, cpr, bankAccount);
 
         // actually no response at current stage
         Response response  = target.request(MediaType.APPLICATION_JSON)

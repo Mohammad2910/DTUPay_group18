@@ -1,7 +1,6 @@
 package customer;
 
-import group18.domain.DTUPayAccount;
-import group18.domain.Payment;
+import customer.domain.CustomerAccount;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -14,7 +13,7 @@ public class CustomerService {
 
     // build the client and the target
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target("http://localhost:8080/customer");
+    WebTarget target = client.target("http://fm-18.compute.dtu.dk:8080/customer");
 
     /**
      * Add customer DTUPay account
@@ -23,12 +22,23 @@ public class CustomerService {
      * @param cpr
      * @param bankAccount
      */
-    public void add(String name, String cpr, String bankAccount) {
-        DTUPayAccount account = new DTUPayAccount("", name, cpr, bankAccount);
-
+    public String add(String name, String cpr, String bankAccount) {
+        CustomerAccount account = new CustomerAccount("", name, cpr, bankAccount);
+        String message = "";
         // actually no response at current stage
-        Response response  = target.request(MediaType.APPLICATION_JSON)
+        Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(account, MediaType.APPLICATION_JSON));
+
+        switch (response.getStatus()) {
+            case 200:
+                return "Successfully created customer with ID: " + response.readEntity(CustomerAccount.class).getId();
+            case 404:
+                return response.readEntity(String.class);
+            case 500:
+                return "Internal server error";
+            default:
+                return "Failed due to unknown error";
+        }
     }
 }

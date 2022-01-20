@@ -1,16 +1,7 @@
 package services;
 
-import group18.domain.Payment;
-import group18.services.PaymentService;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import org.junit.Assert;
-
-import java.util.ArrayList;
-
 public class PaymentSteps {
-
+/*
     PaymentService paymentService = new PaymentService();
     String token, mid, amount;
     
@@ -51,5 +42,6 @@ public class PaymentSteps {
             System.out.println(e.getMessage());
         }
     }
+ */
 }
 
