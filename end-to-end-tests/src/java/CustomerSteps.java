@@ -12,7 +12,7 @@ public class CustomerSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
     CustomerAccount account = new CustomerAccount();
     CustomerService service = new CustomerService();
-    
+    //test comment
     @When("A customer wants to register to DTU Pay with name {string}")
     public void aCustomerWantsToRegisterToDTUPayWithName(String name) {
         account.setName(name);
