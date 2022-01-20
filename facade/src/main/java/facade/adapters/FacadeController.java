@@ -17,6 +17,7 @@ public class FacadeController {
     private CompletableFuture<Event> registeredMerchant;
     private CompletableFuture<Event> registeredCustomer;
     private CompletableFuture<Event> requestedTokens;
+    private CompletableFuture<Event> retrievedToken;
 
     Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
     public FacadeController(MessageQueue q) {
@@ -31,6 +32,8 @@ public class FacadeController {
         queue.addHandler("CustomerAccountCreateFailed", this::handleCustomerCreateFailed);
         queue.addHandler("CustomerTokensRequested", this::handleCustomerTokenRequested);
         queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequestFailed);
+        queue.addHandler("RetrievedCustomerToken", this::handleRetrievedCustomerToken);
+        queue.addHandler("RetrieveCustomerTokenFailed", this::handleRetrieveCustomerTokenFailed);
     }
 
     public void handlePaymentResponseProvided(Event event) {
@@ -141,6 +144,12 @@ public class FacadeController {
         registeredMerchant.complete(event);
     }
 
+    /**
+     *  Publishes an event on the CustomerRequestTokens queue for Token
+     *
+     * @param cid - the cid of the customer that requests new tokens
+     * @param amount - the amount of tokens the customer requires
+     */
     public Event handleCustomerRequestsTokens(String cid, int amount){
         TokenPayload tokenPayload = new TokenPayload(cid, null, amount);
         requestedTokens = new CompletableFuture<>();
@@ -149,10 +158,51 @@ public class FacadeController {
         return requestedTokens.join();
     }
 
+    /**
+     * Consumes the successful events for the request of new tokens
+     *
+     * @param event - Event sent by Token
+     */
     public void handleCustomerTokenRequested(Event event) {
         requestedTokens.complete(event);
     }
+
+    /**
+     * Consumes the failed events for the request of new tokens
+     *
+     * @param event - Event by Token
+     */
     public void handleCustomerTokenRequestFailed(Event event) {
         requestedTokens.complete(event);
+    }
+
+    /**
+     *  Publishes an event on the RetrieveCustomerToken queue for Token
+     *
+     * @param cid - the cid of the customer we want a token for
+     */
+    public Event handleRetrieveToken(String cid){
+        TokenPayload tokenPayload = new TokenPayload(cid,null,0);
+        retrievedToken = new CompletableFuture<>();
+        Event retrieveToken = new Event("RetrieveCostumerToken", new Object[]{1, tokenPayload, null});
+        queue.publish(retrieveToken);
+        return retrievedToken.join();
+    }
+
+    /**
+     * Consumes the successful events for the retrieval of a customer's token
+     *
+     * @param event - Event by Token
+     */
+    public void handleRetrievedCustomerToken(Event event){
+        retrievedToken.complete(event);
+    }
+
+    /**
+     * Consumes the failed events for the retrieval of a customer's token
+     * @param event - Event by Token
+     */
+    public void handleRetrieveCustomerTokenFailed(Event event){
+        retrievedToken.complete(event);
     }
 }
