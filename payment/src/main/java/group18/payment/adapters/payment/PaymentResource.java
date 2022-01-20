@@ -7,12 +7,20 @@ import group18.payment.domain.model.Payment;
 import messaging.Event;
 import messaging.MessageQueue;
 
+/**
+ * Class for handling communication via RabbitMQ
+ *
+ * @Author Aidana
+ */
+
 public class PaymentResource {
 
-    private static final String BANK_ACCOUNTS_PROVIDED = "BankAccountsProvided";
+    private static final String BANK_ACCOUNTS_EXPORTED = "BankAccountsExported";
+    private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportedFailed";
     private static final String PAYMENT_REQUESTED = "PaymentRequested";
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
-    private static final String CUSTOMER_ID_REQUESTED = "CustomerIdRequested";
+    private static final String TOKEN_VALIDATION_REQUESTED = "TokenValidationRequested";
+    private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
 
     private final PaymentService paymentService;
     private final MessageQueue queue;
@@ -21,7 +29,10 @@ public class PaymentResource {
         this.paymentService = paymentService;
         this.queue = messageQueue;
         messageQueue.addHandler(PAYMENT_REQUESTED, this::handlePaymentRequestedEvent);
-        messageQueue.addHandler(BANK_ACCOUNTS_PROVIDED, this::handleBankAccountsProvidedEvent);
+        messageQueue.addHandler(BANK_ACCOUNTS_EXPORTED, this::handleBankAccountsProvidedEvent);
+        messageQueue.addHandler(BANK_ACCOUNTS_EXPORT_FAILED, this::handleBankAccountsProvidedEvent);
+        messageQueue.addHandler(TOKEN_VALIDATE_FAILED, this::handleTokenValidateFailed);
+
     }
 
     public void handlePaymentRequestedEvent(Event ev) {
@@ -32,11 +43,17 @@ public class PaymentResource {
                sendErrorResponse(requestId, "parameters can not be null");
                return;
            }
-           Event event = new Event(CUSTOMER_ID_REQUESTED, new Object[]{requestId, p});
+           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p});
            queue.publish(event);
         } catch (Exception e) {
            sendErrorResponse(requestId, e.getMessage());
         }
+    }
+
+    public void handleTokenValidateFailed(Event ev) {
+        String requestId = ev.getArgument(0, String.class);
+        String errorMsg = ev.getArgument(2, String.class);
+        sendErrorResponse(requestId, errorMsg);
     }
 
     public void handleBankAccountsProvidedEvent(Event ev) {
@@ -49,6 +66,7 @@ public class PaymentResource {
             }
             PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
             Payment payment = new Payment(p.getMerchantBankAccountId(), p.getCustomerBankAccountId(), p.getAmount(), requestId);
+            //transfer money
             paymentService.transferMoney(payment);
             Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId});
             queue.publish(event);

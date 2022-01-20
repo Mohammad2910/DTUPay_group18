@@ -29,7 +29,7 @@ public class TokenController {
         //todo: make handlers for each event
         queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens); // Account Microservice
         queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);  // Facade Microservice
-        queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);  // Payment Microservice
+        queue.addHandler("TokenValidationRequested", this::handleValidateCustomerToken);  // Payment Microservice
         queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);  // Validate then directly consume
         queue.addHandler("RetrieveCustomerToken", this::handleRetrieveCustomerToken);  // Facade Microservice
 
@@ -93,6 +93,7 @@ public class TokenController {
             PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
             String cid = tokenBusinessLogic.validateCustomerFromToken(paymentPayload.getToken());
             paymentPayload.setCustomerId(cid);
+            //TODO should rename to ban
             Event tokenValidated = new Event("CustomerTokenValidated", new Object[]{requestId, paymentPayload, null});
             queue.publish(tokenValidated);
         } catch (TokenNotValidException tokenException) {
