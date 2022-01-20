@@ -44,11 +44,12 @@ public class CustomerResource {
     }
 
     @DELETE
+    @Path("/{cid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void deleteAccount(DTUPayAccount account, final @Suspended AsyncResponse asyncResponse) {
+    public void deleteAccount(@PathParam("cid") String customerId, final @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
-            facadeController.publishDeleteAccount(account)
+            facadeController.publishDeleteAccount(customerId)
                     .orTimeout(10, TimeUnit.SECONDS)
                     .whenComplete((event, timeoutErr) -> {
                         if (timeoutErr != null) {

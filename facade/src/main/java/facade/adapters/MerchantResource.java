@@ -61,13 +61,13 @@ public class MerchantResource {
     }
 
     @DELETE
-    //@Path
+    @Path("/{mid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void deleteAccount(DTUPayAccount account, final @Suspended AsyncResponse asyncResponse) {
+    public void deleteAccount(@PathParam("mid") String merchantId, final @Suspended AsyncResponse asyncResponse) {
         // Get event
         threadPool.submit(() -> {
-            facadeController.publishDeleteAccount(account)
+            facadeController.publishDeleteAccount(merchantId)
                     .orTimeout(10, TimeUnit.SECONDS)
                     .whenComplete((event, timeoutErr) -> {
                         if (timeoutErr != null) {
@@ -90,9 +90,8 @@ public class MerchantResource {
         });
     }
 
-
     /*
-        @Author Aidana
+       @Author Aidana
      */
     @POST
     @Path("/pay")

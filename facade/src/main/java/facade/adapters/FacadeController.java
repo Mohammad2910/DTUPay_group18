@@ -134,12 +134,12 @@ public class FacadeController {
     /**
      * Publishes the event for deleting a merchant account, and returns an event
      *
-     * @param account - the account we want to delete
+     * @param customerId - the account we want to delete
      */
-    public CompletableFuture<Event> publishDeleteAccount(DTUPayAccount account) {
+    public CompletableFuture<Event> publishDeleteAccount(String customerId) {
         String requestId = UUID.randomUUID().toString();
         deletedAccounts.put(requestId, new CompletableFuture<>());
-        Event deleteAccount = new Event("DeleteAccount", new Object[] {requestId, account, null});
+        Event deleteAccount = new Event("DeleteAccount", new Object[] {requestId, customerId, null});
         queue.publish(deleteAccount);
         return deletedAccounts.get(requestId);
     }

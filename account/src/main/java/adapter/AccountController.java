@@ -160,9 +160,9 @@ public class AccountController {
         }
 
         // Delete account
-        DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
+        String accountId = event.getArgument(1, String.class);
         try {
-            accountLogic.delete(account);
+            accountLogic.delete(accountId);
         } catch (NoSuchAccountException e) {
             // Publish response event for facade with propagated error message
             Event accDeleteFailed = new Event("AccountDeleteFailed", new Object[] {requestId, null, e.getMessage()});
@@ -170,7 +170,7 @@ public class AccountController {
         }
 
         // Publish event for facade
-        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + account.getId() + " is successfully deleted", null});
+        Event accDeleteSucceeded = new Event("AccountDeleted", new Object[] {requestId, "Account with id: " + accountId + " is successfully deleted", null});
         queue.publish(accDeleteSucceeded);
     }
 
