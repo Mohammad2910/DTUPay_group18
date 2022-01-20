@@ -4,8 +4,6 @@ import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
 import messaging.MessageQueue;
 import messaging.Event;
-
-import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

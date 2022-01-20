@@ -92,16 +92,22 @@ public class TokenController {
     public void handleValidateCustomerToken(Event event) {
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
+        System.out.println("Before the publish error ------------------>");
         this.publishPropagatedError("CustomerTokenValidateFailed", requestId, errorMessage);
+        System.out.println("After the publish error ------------------>");
 
         try {
             PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
             String cid = tokenBusinessLogic.validateCustomerFromToken(paymentPayload.getToken());
             paymentPayload.setCustomerId(cid);
+            System.out.println("Before successful event  ------------------>");
             Event tokenValidated = new Event("CustomerTokenValidated", new Object[]{requestId, paymentPayload, null});
+            System.out.println("After successful event");
             queue.publish(tokenValidated);
         } catch (TokenNotValidException tokenException) {
+            System.out.println("Before failed event ------------------>");
             Event tokenNotValid = new Event("CustomerTokenValidateFailed", new Object[]{requestId, null, tokenException.getMessage()});
+            System.out.println("After failed event ------------------>");
             queue.publish(tokenNotValid);
         }
     }

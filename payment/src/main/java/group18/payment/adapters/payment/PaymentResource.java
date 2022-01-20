@@ -16,10 +16,10 @@ import messaging.MessageQueue;
 public class PaymentResource {
 
     private static final String BANK_ACCOUNTS_EXPORTED = "BankAccountsExported";
-    private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportedFailed";
+    private static final String BANK_ACCOUNTS_EXPORT_FAILED = "BankAccountsExportFailed";
     private static final String PAYMENT_REQUESTED = "PaymentRequested";
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
-    private static final String TOKEN_VALIDATION_REQUESTED = "TokenValidationRequested";
+    private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
     private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
 
     private final PaymentService paymentService;
@@ -43,7 +43,7 @@ public class PaymentResource {
                sendErrorResponse(requestId, "parameters can not be null");
                return;
            }
-           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p});
+           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
            queue.publish(event);
         } catch (Exception e) {
            sendErrorResponse(requestId, e.getMessage());
