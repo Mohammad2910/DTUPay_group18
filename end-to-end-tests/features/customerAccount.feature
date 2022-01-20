@@ -11,3 +11,6 @@ Feature: Customer account
     And customer is registered to DTU Pay
     And the customer wants to delete their account
     Then the customer's account is deleted and gets a response
+
+  Scenario: Create customer bank account
+    When somethingg
