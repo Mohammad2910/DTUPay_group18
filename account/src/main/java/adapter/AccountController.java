@@ -72,14 +72,14 @@ public class AccountController {
             Event accCreationFailed = new Event("CustomerAccountCreateFailed", new Object[] {requestId, null, e.getMessage()});
             queue.publish(accCreationFailed);
         }
+        // Publish response event for facade
+        Event accCreationSucceeded = new Event("CustomerAccountCreated", new Object[] {requestId, account, null});
+        queue.publish(accCreationSucceeded);
 
         // Publish event for token
         Event tokenAssign = new Event("CreateCustomerWithTokens", new Object[] {requestId, account.getId(), null});
         queue.publish(tokenAssign);
 
-        // Publish response event for facade
-        Event accCreationSucceeded = new Event("CustomerAccountCreated", new Object[] {requestId, account, null});
-        queue.publish(accCreationSucceeded);
     }
 
     /**

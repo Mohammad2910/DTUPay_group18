@@ -111,7 +111,7 @@ public class MerchantSteps {
 //                System.out.println(a.getUser().getCprNumber());
 //                System.out.println(a.getUser().getFirstName());
 //                System.out.println(a.getUser().getLastName());
-                if ((a.getUser().getCprNumber().equals("123456-1234"))) {
+                if ((a.getUser().getCprNumber().equals("123455-1234"))) {
                     dtuBank.retireAccount(a.getAccountId());
                 }
             }
