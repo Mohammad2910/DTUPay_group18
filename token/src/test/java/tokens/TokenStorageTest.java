@@ -96,6 +96,8 @@ class TokenStorageTest {
 
     @Test
     void getCustomerByToken() {
+
+        // token is valid
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
@@ -107,6 +109,9 @@ class TokenStorageTest {
         storage.addNewEntryToStorage(cid1, tokenSet);
 
         assertEquals(cid1, storage.getCustomerByToken(token));
+
+        // token is not valid
+        assertNull(storage.getCustomerByToken("token1"));
     }
 
     @Test
@@ -121,7 +126,7 @@ class TokenStorageTest {
         tokenSet.addToken(generator.generate());
         storage.addNewEntryToStorage(cid1, tokenSet);
 
-        assertEquals(tokenSet.getToken(0), storage.getTokens(cid1));
+        assertEquals(tokenSet.getTokenSet(), storage.getTokens(cid1));
     }
 
     @Test
@@ -129,9 +134,12 @@ class TokenStorageTest {
         TokenSet tokenSet = new TokenSet();
         TokenStorage storage = new TokenStorage();
         String cid1 = "cid1";
+        tokenSet.addToken(generator.generate());
         storage.addNewEntryToStorage(cid1, tokenSet);
 
-        assertNull(storage.getTokens(cid1));
+        assertNotNull(storage.getTokens(cid1)[0]);
+        assertNull(storage.getTokens(cid1)[1]);
+        assertNull(storage.getTokens(cid1)[5]);
     }
 
     @Test
@@ -152,3 +160,4 @@ class TokenStorageTest {
         assertNotNull(storage.getAllTokens());
     }
 }
+
