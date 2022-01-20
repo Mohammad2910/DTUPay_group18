@@ -1,6 +1,7 @@
 package adapters;
 
 import domain.TokenBusinessLogic;
+import domain.model.DTUPayAccount;
 import domain.model.PaymentPayload;
 import domain.model.TokenPayload;
 import domain.model.TokenSet;
@@ -45,9 +46,9 @@ public class TokenController {
         this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
 
         try {
-            String customerId = event.getArgument(1, String.class);
-            tokenBusinessLogic.createNewCustomer(customerId);
-            Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, "Customer created with 6 tokens!", null});
+            DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
+            tokenBusinessLogic.createNewCustomer(account.getId());
+            Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, account, null});
             queue.publish(customerCreated);
         } catch (CustomerAlreadyExistsException customerAlreadyExistsException) {
             Event customerAlreadyExists = new Event("CustomerWithTokensCreateFailed", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});

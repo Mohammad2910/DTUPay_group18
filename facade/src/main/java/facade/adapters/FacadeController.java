@@ -13,7 +13,6 @@ public class FacadeController {
 
     MessageQueue queue;
     private Map<String, CompletableFuture<Event>> registeredAccounts = new HashMap<>();
-    private Map<String, Event > accountsToBeCreated = new HashMap<>();
     private Map<String, CompletableFuture<Event>> deletedAccounts = new HashMap<>();
     private Map<String, CompletableFuture<Event>> requestedTokens = new HashMap<>();
 
@@ -92,7 +91,6 @@ public class FacadeController {
         registeredAccounts.put(requestId, new CompletableFuture<>());
         System.out.println("publishCreateCustomer with requestID: " + requestId);
         Event createCustomerAccount = new Event("CreateCustomerAccount", new Object[] {requestId, account, null});
-        accountsToBeCreated.put(requestId, createCustomerAccount);
         queue.publish(createCustomerAccount);
         return registeredAccounts.get(requestId);
     }
@@ -122,8 +120,7 @@ public class FacadeController {
         System.out.println("inside handleCustomerWithTokensCreated...");
         String requestId = event.getArgument(0, String.class);
         System.out.println("trying to find future for requestID: " + requestId);
-        Event account = accountsToBeCreated.get(requestId);
-        registeredAccounts.get(requestId).complete(account);
+        registeredAccounts.get(requestId).complete(event);
         System.out.println("COMPLETED!!!");
         registeredAccounts.remove(requestId);
     }
