@@ -73,7 +73,9 @@ public class TokenBusinessLogic {
     public String validateCustomerFromToken(String token) throws TokenNotValidException {
         String customer = storageAdapter.getCustomerByToken(token);
         if (customer != null){
-            consumeToken(customer,token);
+            System.out.println("========= found token owner customer ==============");
+            System.out.println(customer);
+            consumeToken(customer, token);
             return customer;
         }
         throw new TokenNotValidException("No customer has that token!");
