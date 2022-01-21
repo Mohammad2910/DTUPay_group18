@@ -1,7 +1,6 @@
 package facade.adapters;
 
 import javax.ws.rs.*;
-import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
 import javax.ws.rs.container.AsyncResponse;
