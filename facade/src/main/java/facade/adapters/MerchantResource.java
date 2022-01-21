@@ -97,7 +97,7 @@ public class MerchantResource {
                             asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
                         } else {
                             if (result == null) {
-                                asyncResponse.resume(Response.status(Response.Status.OK).build());
+                                asyncResponse.resume(Response.status(Response.Status.OK).entity(result).build());
                             } else {
                                 asyncResponse.resume(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).header("errMsg", result).build());
                             }

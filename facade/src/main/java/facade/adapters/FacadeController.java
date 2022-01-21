@@ -47,9 +47,10 @@ public class FacadeController {
      * @param event - Event
      */
     public void handlePaymentResponseProvided(Event event) {
-        var result = event.getArgument(1, String.class);
+        var err = event.getArgument(2, String.class);
         var requestId = event.getArgument(0, String.class);
-        initiatedPayments.get(requestId).complete(result);
+        var result = err == null ? event.getArgument(1, String.class) : null;
+        initiatedPayments.get(requestId).complete(err != null ? err : result);
         initiatedPayments.remove(requestId);
     }
 

@@ -22,6 +22,8 @@ public class PaymentResource {
     private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
     private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
     private static final String REPORT_FOR_MANAGER_REQUESTED = "PaymentsReportForManagerRequested";
+    private static final String REPORT_FOR_MANAGER_PROVIDED = "PaymentsReportForManagerProvided";
+
 
     private final PaymentService paymentService;
     private final MessageQueue queue;
@@ -36,18 +38,19 @@ public class PaymentResource {
 
     }
 
+
     public void handlePaymentRequestedEvent(Event ev) {
         String requestId = ev.getArgument(0, String.class);
         try {
-           PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
-           if (p.getMerchantId() == null || p.getToken() == null || p.getAmount() == null) {
-               sendErrorResponse(requestId, "parameters can not be null");
-               return;
-           }
-           Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
-           queue.publish(event);
+            PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
+            if (p.getMerchantId() == null || p.getToken() == null || p.getAmount() == null) {
+                sendErrorResponse(requestId, "parameters can not be null");
+                return;
+            }
+            Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
+            queue.publish(event);
         } catch (Exception e) {
-           sendErrorResponse(requestId, e.getMessage());
+            sendErrorResponse(requestId, e.getMessage());
         }
     }
 
@@ -70,7 +73,7 @@ public class PaymentResource {
             Payment payment = new Payment(p.getCustomerBankAccount(), p.getMerchantBankAccount(), p.getAmount(), requestId);
             //transfer money
             paymentService.transferMoney(payment);
-            Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId});
+            Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId, "Successful payment!", null});
             queue.publish(event);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());
@@ -79,7 +82,7 @@ public class PaymentResource {
 
     public void sendErrorResponse(String requestId, String errorMessage) {
         Event event = new Event(PAYMENT_RESPONSE_PROVIDED,
-                new Object[]{requestId, String.format("Oops! Something went wrong: '%s'", errorMessage)}
+                new Object[]{requestId, null, String.format("Oops! Something went wrong: '%s'", errorMessage)}
                 );
         queue.publish(event);
     }
