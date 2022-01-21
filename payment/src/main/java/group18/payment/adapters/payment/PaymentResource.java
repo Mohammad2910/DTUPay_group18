@@ -73,7 +73,7 @@ public class PaymentResource {
             Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId, "Successful payment!", null});
             queue.publish(event);
             //add to the report
-            Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount()) , null});
+            Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount(), p.getCustomerId()) , null});
             publishPaymentToReport(savePaymentEvent);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());

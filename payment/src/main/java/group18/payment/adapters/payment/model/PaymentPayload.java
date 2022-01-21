@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentPayload {
-    String merchantId, token, merchantBankAccount, customerBankAccount, amount;
+    String merchantId, token, merchantBankAccount, customerBankAccount, amount, customerId;
 }
 
