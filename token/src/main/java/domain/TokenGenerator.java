@@ -8,7 +8,7 @@ import java.security.SecureRandom;
  */
 public class TokenGenerator {
 
-    SecureRandom RNG = new SecureRandom();
+    private SecureRandom RNG = new SecureRandom();
 
     /**
      * Method that generates a single token of 32 bytes from a RNG (Random Number Generator)
