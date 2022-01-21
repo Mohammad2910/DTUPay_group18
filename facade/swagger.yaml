@@ -4,12 +4,30 @@ info:
   version: ""
   title: "DTUPay - Group 18"
   termsOfService: ""
-  contact:
-    email: "apiteam@swagger.io"
 tags:
   - name: "Merchant"
   - name: "Customer"
+  - name: "Manager"
 paths:
+  /manager/report:
+    post:
+      tags:
+        - "Manager"
+      summary: "Request a payment Report"
+      description: ""
+      operationId: "manager report"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "202":
+          description: "Successful Response"
+          schema:
+            type: string
+            example: ["sum":"1500", "payments": [{"token": "[@SG3ds3SDF3", "marchantId": "h45h8j8c7c5x", "amount": "500"},{"token": "[@sd4Df4g67", "marchantId": "d8sd7f5f4s5s", "amount": "1000"}]]
+        "408":
+          description: "Request Timeout"
   /merchant:
     post:
       tags:
@@ -84,6 +102,31 @@ paths:
           description: "Request Timeout"
         "400":
           description: "Account doesn't exists"
+  /merchant/report/{mid}:
+    post:
+      tags:
+        - "Merchant"
+      summary: "Request a payment Report"
+      description: ""
+      operationId: "merchant report"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "mid"
+          in: "path"
+          description: "ID of merchant"
+          required: true
+          type: "string"
+      responses:
+        "202":
+          description: "Successful Response"
+          schema:
+            type: string
+            example: [{"token": "[@SG3ds3SDF3", "marchantId": "h45h8j8c7c5x", "amount": "500"},{"token": "[@sd4Df4g67", "marchantId": "d8sd7f5f4s5s", "amount": "1000"}]
+        "408":
+          description: "Request Timeout"
   /customer:
     post:
       tags:
@@ -133,11 +176,36 @@ paths:
           description: "Request Timeout"
         "400":
           description: "Account doesn't exists"
+  /customer/report/{cid}:
+    post:
+      tags:
+        - "Customer"
+      summary: "Request a payment Report"
+      description: ""
+      operationId: "customer report"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "cid"
+          in: "path"
+          description: "ID of customer"
+          required: true
+          type: "string"
+      responses:
+        "202":
+          description: "Successful Response"
+          schema:
+            type: string
+            example: [{"token": "[@SG3ds3SDF3", "marchantId": "h45h8j8c7c5x", "amount": "500"},{"token": "[@sd4Df4g67", "marchantId": "d8sd7f5f4s5s", "amount": "1000"}]
+        "408":
+          description: "Request Timeout"
   /customer/token/{cid}/{amount}:
     post:
       tags:
         - "Customer"
-      summary: "Create customer tokens"
+      summary: "Create new customer tokens by amount"
       description: ""
       operationId: "create the amount of tokens requested for a customer"
       produces:

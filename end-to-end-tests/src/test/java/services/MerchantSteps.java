@@ -21,7 +21,6 @@ public class MerchantSteps {
         account.setName(name);
     }
 
-
     @And("merchant cpr {string}")
     public void merchantCpr(String cpr) {
         account.setCpr(cpr);
