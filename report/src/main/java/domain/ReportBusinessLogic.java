@@ -40,6 +40,7 @@ public class ReportBusinessLogic {
            sum += Integer.parseInt(p.getAmount());
            managerPayments.add(new ManagerPayment(p.getToken(), p.getMerchantId(), p.getAmount()));
         }
+        sum = managerPayments.isEmpty() ? null : sum;
         return new ManagerReport(managerPayments, sum);
     }
 

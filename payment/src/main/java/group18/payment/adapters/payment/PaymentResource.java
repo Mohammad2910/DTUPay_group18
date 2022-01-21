@@ -38,6 +38,7 @@ public class PaymentResource {
     }
 
     public void handlePaymentRequestedEvent(Event ev) {
+        System.out.println("Payment event starts from within Payment");
         String requestId = ev.getArgument(0, String.class);
         try {
             PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
@@ -45,6 +46,7 @@ public class PaymentResource {
                 sendErrorResponse(requestId, "parameters can not be null");
                 return;
             }
+
             Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
             queue.publish(event);
         } catch (Exception e) {
@@ -73,7 +75,7 @@ public class PaymentResource {
             Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId, "Successful payment!", null});
             queue.publish(event);
             //add to the report
-            Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount()) , null});
+            Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount(), p.getCustomerId()) , null});
             publishPaymentToReport(savePaymentEvent);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());

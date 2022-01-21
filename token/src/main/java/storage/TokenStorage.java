@@ -78,7 +78,7 @@ public class TokenStorage {
     public String getCustomerByToken(String token) {
         for (Map.Entry<String, TokenSet> entry : tokenHashMap.entrySet()) {
             for (String item : entry.getValue().getTokenSet()) {
-                if (token.equals(item)) {
+                if (token != null && token.equals(item)) {
                     return entry.getKey();
                 }
             }

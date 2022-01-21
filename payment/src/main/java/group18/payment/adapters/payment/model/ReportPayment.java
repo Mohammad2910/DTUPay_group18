@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportPayment {
-    String merchantId, token, amount;
+    String merchantId, token, amount, customerId;
 }
