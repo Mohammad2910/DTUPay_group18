@@ -3,7 +3,6 @@ package facade.adapters;
 import javax.ws.rs.*;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
-import facade.domain.ManagerReport;
 import facade.domain.Payment;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -17,17 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Path("/merchant")
 public class MerchantResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
-    private AccountList accountList = AccountList.getInstance();
-
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
-
-/*
-    public MerchantResource(FacadeController facadeController) {
-        //this.facadeController = facadeController;
-    }
-*/
 
     @POST
 //    @Path("/add")

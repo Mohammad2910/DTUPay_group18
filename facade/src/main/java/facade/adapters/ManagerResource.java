@@ -1,7 +1,6 @@
 package facade.adapters;
 
 import facade.domain.ManagerReport;
-
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -13,9 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Path("/manager")
 public class ManagerResource {
-
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
@@ -43,5 +40,4 @@ public class ManagerResource {
                     });
         });
     }
-
 }

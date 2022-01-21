@@ -1,6 +1,7 @@
 package facade.adapters;
 
 import facade.domain.DTUPayAccount;
+import facade.domain.TokenPayload;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -15,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 @Path("/customer")
 public class CustomerResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
