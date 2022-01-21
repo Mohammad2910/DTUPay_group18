@@ -2,7 +2,7 @@ package domain.model;
 
 /**
  * Class that represents a set of tokens.
- * @author Renjue and David
+ * @author Renjue
  */
 public class TokenSet {
 

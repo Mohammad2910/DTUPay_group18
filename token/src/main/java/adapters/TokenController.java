@@ -13,7 +13,7 @@ import messaging.MessageQueue;
 /**
  * Class for handling external communication via RabbitMQ
  *
- * @Author Christian, Renjue, David
+ * @author Christian
  */
 public class TokenController {
     MessageQueue queue;

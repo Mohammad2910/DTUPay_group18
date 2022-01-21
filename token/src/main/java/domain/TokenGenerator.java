@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 
 /**
  * class that generate a token
- * @auther Renjue and David
+ * @author David
  */
 public class TokenGenerator {
 

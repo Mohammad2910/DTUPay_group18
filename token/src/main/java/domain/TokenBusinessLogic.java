@@ -5,9 +5,9 @@ import domain.ports.IStorageAdapter;
 import exceptions.*;
 
 /**
- * Class for managing tokens
+ * Class for managing token business
  *
- * @author Renjue, Christian and David
+ * @author Renjue
  */
 public class TokenBusinessLogic {
 

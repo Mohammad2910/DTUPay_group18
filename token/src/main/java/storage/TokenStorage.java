@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Class that represents the storage unit of customer-tokenSet mappings
  *
- * @author Renjue, Christian and David
+ * @author David
  */
 public class TokenStorage {
 
