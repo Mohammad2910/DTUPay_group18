@@ -1,6 +1,5 @@
 package facade.adapters;
 
-import facade.domain.DTUPayAccount;
 import facade.domain.ManagerReport;
 
 import javax.ws.rs.*;
@@ -20,11 +19,11 @@ public class ManagerResource {
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
-    @Path("report/payments")
+    @Path("report")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
-            facadeController.publishPaymentsReportForManagerRequested()
+            facadeController.publishPaymentsReportForManagerEvent()
                     .orTimeout(10, TimeUnit.SECONDS)
                     .whenComplete((event, timeoutErr) -> {
                         if (timeoutErr != null) {

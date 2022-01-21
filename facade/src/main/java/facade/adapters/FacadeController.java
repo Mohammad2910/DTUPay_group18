@@ -17,7 +17,8 @@ public class FacadeController {
     private Map<String, CompletableFuture<Event>> requestedTokens = new HashMap<>();
     private Map<String, CompletableFuture<Event>> requestedReports = new HashMap<>();
 
-    Map<String, CompletableFuture<String>> initiatedPayments = new HashMap<>();
+    Map<String, CompletableFuture<Event>> initiatedPayments = new HashMap<>();
+
     public FacadeController(MessageQueue q) {
         queue = q;
 
@@ -47,10 +48,8 @@ public class FacadeController {
      * @param event - Event
      */
     public void handlePaymentResponseProvided(Event event) {
-        var err = event.getArgument(2, String.class);
         var requestId = event.getArgument(0, String.class);
-        var result = err == null ? event.getArgument(1, String.class) : null;
-        initiatedPayments.get(requestId).complete(err != null ? err : result);
+        initiatedPayments.get(requestId).complete(event);
         initiatedPayments.remove(requestId);
     }
 
@@ -60,7 +59,7 @@ public class FacadeController {
      * @param payment - Payment
      * @return CompletableFuture
      */
-    public CompletableFuture<String> publishPaymentRequested(Payment payment) {
+    public CompletableFuture<Event> publishPaymentRequested(Payment payment) {
         String requestId = UUID.randomUUID().toString();
         PaymentPayload p = new PaymentPayload(payment.getMid(), payment.getToken(), payment.getAmount());
         Event paymentRequestedEvent = new Event("PaymentRequested", new Object[] {requestId, p});
@@ -71,13 +70,39 @@ public class FacadeController {
 
 
     /**
-     * Publishes an event to the PaymentsReportForManagerRequested queue for the Payment
+     * Publishes an event to the ManagerReportRequested queue for the Report
      *
      * @return CompletableFuture
      */
-    public CompletableFuture<Event> publishPaymentsReportForManagerRequested() {
+    public CompletableFuture<Event> publishPaymentsReportForManagerEvent() {
         String requestId = UUID.randomUUID().toString();
-        Event event = new Event("PaymentsReportForManagerRequested", new Object[] {requestId});
+        Event event = new Event("ManagerReportRequested", new Object[] {requestId});
+        requestedReports.put(requestId, new CompletableFuture<>());
+        queue.publish(event);
+        return requestedReports.get(requestId);
+    }
+
+    /**
+     * Publishes an event to the MerchantReportRequested queue for the Report
+     *
+     * @return CompletableFuture
+     */
+    public CompletableFuture<Event> publishPaymentsReportForMerchantEvent(String merchantId) {
+        String requestId = UUID.randomUUID().toString();
+        Event event = new Event("MerchantReportRequested", new Object[] {requestId, merchantId});
+        requestedReports.put(requestId, new CompletableFuture<>());
+        queue.publish(event);
+        return requestedReports.get(requestId);
+    }
+
+    /**
+     * Publishes an event to the CustomerReportRequested queue for the Report
+     *
+     * @return CompletableFuture
+     */
+    public CompletableFuture<Event> publishPaymentsReportForCustomerEvent(String customerId) {
+        String requestId = UUID.randomUUID().toString();
+        Event event = new Event("CustomerReportRequested", new Object[] {requestId, customerId});
         requestedReports.put(requestId, new CompletableFuture<>());
         queue.publish(event);
         return requestedReports.get(requestId);

@@ -7,6 +7,7 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -127,6 +128,33 @@ public class CustomerResource {
                                     // Set error in response
                                     asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
                                 }
+                            }
+                        }
+                    });
+        });
+    }
+
+
+    @POST
+    @Path("report/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getlist(@PathParam("cid") String cid, @Suspended AsyncResponse asyncResponse) {
+        threadPool.submit(() -> {
+            facadeController.publishPaymentsReportForCustomerEvent(cid)
+                    .orTimeout(10, TimeUnit.SECONDS)
+                    .whenComplete((event, timeoutErr) -> {
+                        if (timeoutErr != null) {
+                            asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
+                        } else {
+                            // Get error message, if any
+                            String error = event.getArgument(2, String.class);
+                            if (error == null) {
+                                var report = event.getArgument(1, ArrayList.class);
+                                // Set object in response
+                                asyncResponse.resume(Response.ok(report).build());
+                            } else {
+                                // Set error in response
+                                asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
                             }
                         }
                     });

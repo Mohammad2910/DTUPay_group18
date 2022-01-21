@@ -15,6 +15,7 @@
         <module>payment</module>
         <module>token</module>
         <module>end-to-end-tests</module>
+        <module>report</module>
     </modules>
 
     <properties>

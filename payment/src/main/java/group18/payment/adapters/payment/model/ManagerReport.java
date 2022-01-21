@@ -1,5 +1,6 @@
-package facade.domain;
+package group18.payment.adapters.payment.model;
 
+import group18.payment.domain.model.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ManagerReport {
-    List<ManagerPayment> payments;
-    Integer sum;
+    List<Payment> payments;
+    Integer totalPaymentsSummary;
 }

@@ -1,4 +1,4 @@
-package facade.domain;
+package adapter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ManagerReport {
     List<ManagerPayment> payments;
-    Integer sum;
+    Integer totalPaymentsSummary;
 }

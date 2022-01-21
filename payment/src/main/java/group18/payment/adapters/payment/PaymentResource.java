@@ -2,6 +2,7 @@ package group18.payment.adapters.payment;
 
 
 import group18.payment.adapters.payment.model.PaymentPayload;
+import group18.payment.adapters.payment.model.ReportPayment;
 import group18.payment.domain.PaymentService;
 import group18.payment.domain.model.Payment;
 import messaging.Event;
@@ -21,9 +22,8 @@ public class PaymentResource {
     private static final String PAYMENT_RESPONSE_PROVIDED = "PaymentResponseProvided";
     private static final String TOKEN_VALIDATION_REQUESTED = "ValidateCustomerToken";
     private static final String TOKEN_VALIDATE_FAILED = "CustomerTokenValidateFailed";
-    private static final String REPORT_FOR_MANAGER_REQUESTED = "PaymentsReportForManagerRequested";
-    private static final String REPORT_FOR_MANAGER_PROVIDED = "PaymentsReportForManagerProvided";
 
+    private static final String SAVE_PAYMENT_REQUESTED = "SavePaymentRequested";
 
     private final PaymentService paymentService;
     private final MessageQueue queue;
@@ -35,9 +35,7 @@ public class PaymentResource {
         messageQueue.addHandler(BANK_ACCOUNTS_EXPORTED, this::handleBankAccountsProvidedEvent);
         messageQueue.addHandler(BANK_ACCOUNTS_EXPORT_FAILED, this::handleBankAccountsProvidedEvent);
         messageQueue.addHandler(TOKEN_VALIDATE_FAILED, this::handleTokenValidateFailed);
-
     }
-
 
     public void handlePaymentRequestedEvent(Event ev) {
         String requestId = ev.getArgument(0, String.class);
@@ -53,7 +51,6 @@ public class PaymentResource {
             sendErrorResponse(requestId, e.getMessage());
         }
     }
-
 
     public void handleTokenValidateFailed(Event ev) {
         String requestId = ev.getArgument(0, String.class);
@@ -75,6 +72,9 @@ public class PaymentResource {
             paymentService.transferMoney(payment);
             Event event = new Event(PAYMENT_RESPONSE_PROVIDED, new Object[]{requestId, "Successful payment!", null});
             queue.publish(event);
+            //add to the report
+            Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount()) , null});
+            publishPaymentToReport(savePaymentEvent);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());
         }
@@ -85,6 +85,14 @@ public class PaymentResource {
                 new Object[]{requestId, null, String.format("Oops! Something went wrong: '%s'", errorMessage)}
                 );
         queue.publish(event);
+    }
+
+    public void publishPaymentToReport(Event ev) {
+        try {
+            queue.publish(ev);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

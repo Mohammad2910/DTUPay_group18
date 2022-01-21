@@ -3,11 +3,13 @@ package facade.adapters;
 import javax.ws.rs.*;
 import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
+import facade.domain.ManagerReport;
 import facade.domain.Payment;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -92,14 +94,48 @@ public class MerchantResource {
         threadPool.submit(() -> {
             facadeController.publishPaymentRequested(payment)
                     .orTimeout(10, TimeUnit.SECONDS)
-                    .whenComplete((result, error) -> {
-                        if (error != null) {
+                    .whenComplete((event, timeoutErr) -> {
+                        if (timeoutErr != null) {
                             asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
                         } else {
-                            if (result == null) {
-                                asyncResponse.resume(Response.status(Response.Status.OK).entity(result).build());
+                            if (event != null) {
+                                // Get error message, if any
+                                String error = event.getArgument(2, String.class);
+                                if (error == null) {
+                                    String successMsg = event.getArgument(1, String.class);
+                                    // Set object in response
+                                    asyncResponse.resume(Response.ok(successMsg).build());
+                                } else {
+                                    // Set error in response
+                                    asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
+                                }
+                            }
+                        }
+                    });
+        });
+    }
+
+
+    @POST
+    @Path("report/{mid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void getlist(@PathParam("mid") String mid, @Suspended AsyncResponse asyncResponse) {
+        threadPool.submit(() -> {
+            facadeController.publishPaymentsReportForMerchantEvent(mid)
+                    .orTimeout(10, TimeUnit.SECONDS)
+                    .whenComplete((event, timeoutErr) -> {
+                        if (timeoutErr != null) {
+                            asyncResponse.resume(Response.status(Response.Status.REQUEST_TIMEOUT.getStatusCode()).header("errMsg", "Sorry, we could not return you a result within 10 seconds").build());
+                        } else {
+                            // Get error message, if any
+                            String error = event.getArgument(2, String.class);
+                            if (error == null) {
+                                var report = event.getArgument(1, ArrayList.class);
+                                // Set object in response
+                                asyncResponse.resume(Response.ok(report).build());
                             } else {
-                                asyncResponse.resume(Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).header("errMsg", result).build());
+                                // Set error in response
+                                asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
                             }
                         }
                     });

@@ -1,18 +1,15 @@
 package group18.payment.domain;
 
 import group18.payment.adapters.bankTransfer.BankTransferService;
-import group18.payment.domain.cache.PaymentsCache;
 import group18.payment.domain.model.Payment;
 
 import java.math.BigDecimal;
 
 public class PaymentService {
 
-    private final PaymentsCache cache;
     private final BankTransferService bank;
 
-    public PaymentService(PaymentsCache cache, BankTransferService bank) {
-        this.cache = cache;
+    public PaymentService(BankTransferService bank) {
         this.bank = bank;
     }
 
@@ -26,9 +23,7 @@ public class PaymentService {
             throw new IllegalArgumentException("amount can not be negative or null");
         }
         bank.transferMoneyFromTo(p.getMerchantBankAccount(), p.getCustomerBankAccount(), amountBD);
-        cache.addPayment(p);
     }
-
 
 
 }
