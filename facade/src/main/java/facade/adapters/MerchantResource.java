@@ -89,8 +89,8 @@ public class MerchantResource {
                                 // Get error message, if any
                                 String error = event.getArgument(2, String.class);
                                 if (error == null) {
-                                    String successMsg = event.getArgument(1, String.class);
                                     // Set object in response
+                                    String successMsg = event.getArgument(1, String.class);
                                     asyncResponse.resume(Response.ok(successMsg).build());
                                 } else {
                                     // Set error in response
