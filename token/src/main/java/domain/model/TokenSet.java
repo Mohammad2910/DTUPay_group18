@@ -79,7 +79,6 @@ public class TokenSet {
      * @return an integer representing the number of tokens in the tokenSet
      */
     public int findNumberOfTokens(){
-
         int count = 0;
         for (String token : tokenSet){
             if(token != null){

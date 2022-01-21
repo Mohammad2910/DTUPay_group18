@@ -31,7 +31,6 @@ public class TokenController {
         queue.addHandler("CreateCustomerWithTokens", this::handleCreateCustomerWithTokens); // Account Microservice
         queue.addHandler("CustomerRequestTokens", this::handleCustomerRequestsTokens);  // Facade Microservice
         queue.addHandler("ValidateCustomerToken", this::handleValidateCustomerToken);  // Payment Microservice
-        queue.addHandler("ConsumeCustomerToken", this::handleConsumeCustomerToken);  // Validate then directly consume
         queue.addHandler("RetrieveCustomerTokens", this::handleRetrieveCustomerTokens);  // Facade Microservice
     }
 
@@ -108,26 +107,6 @@ public class TokenController {
             Event tokenNotValid = new Event("CustomerTokenValidateFailed", new Object[]{requestId, null, tokenException.getMessage()});
             System.out.println("After failed event ------------------>");
             queue.publish(tokenNotValid);
-        }
-    }
-
-    /**
-     * Method for handling the consumption of the customer's token
-     *
-     * @param event - The event for communication whether the token has been consumed or not
-     */
-    public void handleConsumeCustomerToken(Event event) {
-        String requestId = event.getArgument(0, String.class);
-        String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("CustomerTokenConsumeFailed", requestId, errorMessage);
-
-        try {
-            tokenBusinessLogic.validateCustomerFromToken(event.getArgument(1, String.class));
-            Event tokenConsumed = new Event("CustomerTokenConsumed", new Object[]{requestId, "Token is consumed!", null});
-            queue.publish(tokenConsumed);
-        } catch (TokenNotValidException tokenException) {
-            Event tokenNotConsumed = new Event("CustomerTokenConsumeFailed", new Object[]{requestId, "Token is not valid, and therefore not consumed!"});
-            queue.publish(tokenNotConsumed);
         }
     }
 
