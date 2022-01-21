@@ -21,6 +21,7 @@ public class ReportController {
     private static final String CUSTOMER_REPORT_PROVIDED = "CustomerReportProvided";
 
     public ReportController(MessageQueue queue, ReportBusinessLogic reportBusinessLogic) {
+        System.out.println("Report event consumer is enabled...");
         this.queue = queue;
         this.reportBusinessLogic = reportBusinessLogic;
         queue.addHandler(SAVE_PAYMENT_REQUESTED, this::handleSavePaymentRequestedEvent);
