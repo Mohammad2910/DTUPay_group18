@@ -1,0 +1,237 @@
+swagger: "2.0"
+info:
+  description: "This is a DTUPay server public REST API endpoints."
+  version: ""
+  title: "DTUPay - Group 18"
+  termsOfService: ""
+  contact:
+    email: "apiteam@swagger.io"
+tags:
+  - name: "Merchant"
+  - name: "Customer"
+paths:
+  /merchant:
+    post:
+      tags:
+        - "Merchant"
+      summary: "Register a new merchant account to DTUPay"
+      description: ""
+      operationId: "register merchant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "DTUPayAccount object that needs to be registered to the DTUPay"
+          required: true
+          schema:
+            $ref: "#/definitions/DTUPayAccount"
+      responses:
+        "202":
+          description: "Successful Response"
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: "An account with given bank account number already exists"
+  /merchant/payment:
+    post:
+      tags:
+        - "Merchant"
+      summary: "Create a payment via DTUPay"
+      description: ""
+      operationId: "create payment"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Payment object"
+          required: true
+          schema:
+            $ref: "#/definitions/Payment"
+      responses:
+        "202":
+          description: "Successful Response"
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: "An account with given bank account number already exists"
+  /merhcant/{cid}:
+    delete:
+      tags:
+        - "Merchant"
+      summary: "Remove a merchant account from DTUPay"
+      description: ""
+      operationId: "remove merchant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "cid"
+          in: "path"
+          description: "ID of merchant to be removed"
+          required: true
+          type: "string"
+      responses:
+        "202":
+          description: "Successful Response"
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: "Account doesn't exists"
+  /customer:
+    post:
+      tags:
+        - "Customer"
+      summary: "Register a new customer account to DTUPay"
+      description: ""
+      operationId: "register customer"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "DTUPayAccount object that needs to be registered to the DTUPay"
+          required: true
+          schema:
+            $ref: "#/definitions/DTUPayAccount"
+      responses:
+        "202":
+          description: "Successful Response"
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: "An account with given bank account number already exists"
+  /customer/{mid}:
+    delete:
+      tags:
+        - "Customer"
+      summary: "Remove a customer account from DTUPay"
+      description: ""
+      operationId: "remove customer"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "mid"
+          in: "path"
+          description: "ID of customer to be removed"
+          required: true
+          type: "string"
+      responses:
+        "202":
+          description: "OK"
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: "Account doesn't exists"
+  /customer/token/{cid}/{amount}:
+    post:
+      tags:
+        - "Customer"
+      summary: "Create customer tokens"
+      description: ""
+      operationId: "create the amount of tokens requested for a customer"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "cid"
+          in: "path"
+          description: "ID of customer"
+          required: true
+          type: "string"
+        - name: "amount"
+          in: "path"
+          description: "How many tokens to produce"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Successful Response"
+          schema:
+            type: string
+            example: ["token 1", "token 2", "token 3"]
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: |
+            + Customer ran out of tokens!
+            + Customer requests too many tokens!
+            + Customer has sufficient tokens and cannot request more!
+  /customer/token/{cid}:
+    get:
+      tags:
+        - "Customer"
+      summary: "Retrieve all customer tokens"
+      description: ""
+      operationId: "retrieve all customer tokens"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "cid"
+          in: "path"
+          description: "ID of customer"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Successful Response"
+          schema:
+            type: string
+            example: ["token 1", "token 2", "token 3"]
+        "408":
+          description: "Request Timeout"
+        "400":
+          description: |
+            + Customer ran out of tokens!
+            + Customer requests too many tokens!
+            + Customer has sufficient tokens and cannot request more!
+definitions:
+  DTUPayAccount:
+    type: "object"
+    required:
+      - "id"
+      - "name"
+      - "cpr"
+      - "dtuBankAccount"
+    properties:
+      id:
+        type: "string"
+        example: ""
+      name:
+        type: "string"
+        example: "John Doe"
+      cpr:
+        type: "string"
+        example: "01012001-1234"
+      dtuBankAccount:
+        type: "string"
+        example: "a1s2de2jd9-3dk393jo9s-d7e83kd03l"
+    xml:
+      name: "DTUPayAccount"
+  Payment:
+    type: "object"
+    required:
+      - "token"
+      - "mid"
+      - "amount"
+    properties:
+      token:
+        type: "string"
+        example: "2dd56we8f9v7b6c0xs8f6v5b4"
+      mid:
+        type: "string"
+        example: "s8ddf5a8s9df8d6s5a7s8f7d5"
+      amount:
+        type: "string"
+        example: "1000"
+    xml:
+      name: "Payment"
