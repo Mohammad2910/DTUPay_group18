@@ -29,5 +29,5 @@ popd
 pushd end-to-end-tests
 bash deploy.sh
 sleep 5
-#bash test.sh
+bash test.sh
 popd
