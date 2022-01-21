@@ -21,6 +21,9 @@ public class CustomerResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    /**
+     * @author Mohammad
+     */
     public void createAccount(DTUPayAccount account, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishCreateCustomer(account)
@@ -48,6 +51,9 @@ public class CustomerResource {
     @Path("/{cid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author Maria Eleni
+     */
     public void deleteAccount(@PathParam("cid") String customerId, final @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishDeleteAccount(customerId)
@@ -76,6 +82,9 @@ public class CustomerResource {
     @POST
     @Path("/token/{cid}/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author Christian
+     */
     public void requestTokens(@PathParam("cid") String customerId, @PathParam("amount") int amount, @Suspended AsyncResponse asyncResponse){
         threadPool.submit(() -> {
             facadeController.publishCustomerRequestsTokens(customerId, amount)
@@ -106,6 +115,9 @@ public class CustomerResource {
     @GET
     @Path("/token/{cid}")
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author Renjue
+     */
     public void retrieveTokens(@PathParam("cid") String customerId, @Suspended AsyncResponse asyncResponse){
         threadPool.submit(() -> {
             facadeController.publishRetrieveCustomerTokens(customerId)
@@ -137,6 +149,9 @@ public class CustomerResource {
     @POST
     @Path("/report/{cid}")
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author David
+     */
     public void getlist(@PathParam("cid") String cid, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishPaymentsReportForCustomerEvent(cid)

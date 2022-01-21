@@ -1,3 +1,4 @@
+# @Author: David
 Feature: Merchant account
   Scenario: Create a new merchant account
     When A merchant wants to register to DTU Pay with name "G18 Merchant"

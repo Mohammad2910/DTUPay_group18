@@ -8,7 +8,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class MerchantSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
@@ -57,7 +56,6 @@ public class MerchantSteps {
     @When("a merchant's name is {string}, cpr is {string} and has a DTUBank account")
     public void aCustomerSNameIsCprIsAndHasADTUBankAccount(String name, String cpr) {
         // Create the customer object and to the bank
-
         account.setName(name);
         account.setCpr(cpr);
 
@@ -98,45 +96,5 @@ public class MerchantSteps {
     @Then("the merchant's account is deleted and gets a response")
     public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId() {
         Assertions.assertEquals("Account with id: " + account.getId() + " is successfully deleted",message);
-    }
-
-    @When("something")
-    public void something() {
-        try {
-            List<AccountInfo> list = dtuBank.getAccounts();
-            for (AccountInfo a : list) {
-//                System.out.println(a.getAccountId());
-//                System.out.println(a.getUser().getCprNumber());
-//                System.out.println(a.getUser().getFirstName());
-//                System.out.println(a.getUser().getLastName());
-                if ((a.getUser().getLastName().equals("group-18"))
-                        || (a.getUser().getLastName().equals("Tester"))
-                        || (a.getUser().getLastName().equals("Mister"))
-                        || (a.getUser().getCprNumber().equals("m-cpr"))
-                        || (a.getUser().getCprNumber().equals("c-cpr"))) {
-                    dtuBank.retireAccount(a.getAccountId());
-                }
-            }
-        } catch (Exception bsException) {
-            System.out.println(bsException.getMessage());
-        }
-
-//        String merchantAccountIdentifier ="";
-//        account.setName("Merchant");
-//        account.setCpr("123455-1234");
-//
-//        User user = new User();
-//        user.setCprNumber(account.getCpr());
-//        user.setFirstName(account.getName());
-//        user.setLastName("Tester");
-//        try {
-//            // Create customer with balance
-//            BigDecimal bigBalance = new BigDecimal(10000);
-//            merchantAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
-//            account.setDtuBankAccount(merchantAccountIdentifier);
-//        } catch (BankServiceException_Exception bsException) {
-//            bsException.printStackTrace();
-//        }
-//        System.out.println(merchantAccountIdentifier);
     }
 }

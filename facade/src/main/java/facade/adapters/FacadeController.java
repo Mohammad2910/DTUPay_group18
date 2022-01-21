@@ -19,6 +19,10 @@ public class FacadeController {
     private Map<String, CompletableFuture<Event>> requestedReports = new HashMap<>();
     Map<String, CompletableFuture<Event>> initiatedPayments = new HashMap<>();
 
+    /**
+     * @author Maria Eleni
+     * @param q
+     */
     public FacadeController(MessageQueue q) {
         queue = q;
 
@@ -50,6 +54,7 @@ public class FacadeController {
     /**
      * Consumes an event for the payment completion
      *
+     * @author David
      * @param event - Event
      */
     public void handlePaymentResponseProvided(Event event) {
@@ -61,6 +66,7 @@ public class FacadeController {
     /**
      * Publishes an event to the PaymentRequested queue for the Payment
      *
+     * @author Christian
      * @param payment - Payment
      * @return CompletableFuture
      */
@@ -76,6 +82,7 @@ public class FacadeController {
     /**
      * Publishes an event to the ManagerReportRequested queue for the Report
      *
+     * @author Renjue
      * @return CompletableFuture
      */
     public CompletableFuture<Event> publishPaymentsReportForManagerEvent() {
@@ -89,6 +96,7 @@ public class FacadeController {
     /**
      * Publishes an event to the MerchantReportRequested queue for the Report
      *
+     * @author Aidana
      * @return CompletableFuture
      */
     public CompletableFuture<Event> publishPaymentsReportForMerchantEvent(String merchantId) {
@@ -102,6 +110,7 @@ public class FacadeController {
     /**
      * Publishes an event to the CustomerReportRequested queue for the Report
      *
+     * @author Mohammad
      * @return CompletableFuture
      */
     public CompletableFuture<Event> publishPaymentsReportForCustomerEvent(String customerId) {
@@ -115,6 +124,7 @@ public class FacadeController {
     /**
      * Consumes the events for the report creation
      *
+     * @author Maria Eleni
      * @param event - Event sent by Report
      */
     public void handleReportProvided(Event event) {
@@ -126,6 +136,7 @@ public class FacadeController {
     /**
      * Publishes an event to the CreateCustomerAccount queue for Account
      *
+     * @author David
      * @param account - DTUPayAccount sent by customer post request
      */
     public CompletableFuture<Event> publishCreateCustomer(DTUPayAccount account) {
@@ -139,6 +150,7 @@ public class FacadeController {
     /**
      * Consumes the events for the creation customer account
      *
+     * @author Christian
      * @param event - Event sent by Account
      */
     public void handleCustomerCreated(Event event) {
@@ -155,6 +167,7 @@ public class FacadeController {
     /**
      * Consumes the events for the token supply of the newly created account
      *
+     * @author Renjue
      * @param event - Event sent by Token
      */
     public void handleCustomerWithTokensCreated(Event event) {
@@ -166,6 +179,7 @@ public class FacadeController {
     /**
      * Publishes an event to the CreateMerchantAccount queue for Account
      *
+     * @author Aidana
      * @param account - DTUPayAccount sent by merchant post request
      */
     public CompletableFuture<Event> publishCreateMerchant(DTUPayAccount account) {
@@ -179,6 +193,7 @@ public class FacadeController {
     /**
      * Consumes an event for the creation merchant account
      *
+     * @author Mohammad
      * @param event - event by Account
      */
     public void handleMerchantCreated(Event event) {
@@ -190,6 +205,7 @@ public class FacadeController {
     /**
      * Publishes the event for deleting a merchant account, and returns an event
      *
+     * @author Maria Eleni
      * @param customerId - the account we want to delete
      */
     public CompletableFuture<Event> publishDeleteAccount(String customerId) {
@@ -203,6 +219,7 @@ public class FacadeController {
     /**
      * Consumes the events for the deleting merchant account
      *
+     * @author David
      * @param event - event sent by Account
      */
     public void handleDeleted(Event event) {
@@ -214,6 +231,7 @@ public class FacadeController {
     /**
      *  Publishes an event on the CustomerRequestTokens queue for Token
      *
+     * @author Christian
      * @param cid - the cid of the customer that requests new tokens
      * @param amount - the amount of tokens the customer requires
      */
@@ -229,6 +247,7 @@ public class FacadeController {
     /**
      * Consumes the successful events for the request of new tokens
      *
+     * @author Renjue
      * @param event - Event sent by Token
      */
     public void handleCustomerTokenRequested(Event event) {
@@ -240,6 +259,7 @@ public class FacadeController {
     /**
      *  Publishes an event on the CustomerRequestTokens queue for Token
      *
+     * @author Aidana
      * @param cid - the cid of the customer that requests new tokens
      */
     public CompletableFuture<Event> publishRetrieveCustomerTokens(String cid){
@@ -254,6 +274,7 @@ public class FacadeController {
     /**
      * Consumes and event for the token retrieval
      *
+     * @author Mohammad
      * @param event - Event sent from Token
      */
     public void handleCustomerTokenRetrieved(Event event) {

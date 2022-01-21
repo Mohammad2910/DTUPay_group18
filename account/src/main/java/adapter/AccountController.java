@@ -49,7 +49,7 @@ public class AccountController {
      * 2. null
      * 3. error message
      *
-     * @author s212358
+     * @author Maria Eleni
      * @param event - Event
      */
     public void handleCreateCustomerAccountRequest(Event event) {
@@ -100,7 +100,7 @@ public class AccountController {
      * 2. null
      * 3. error message
      *
-     * @author s212358
+     * @author Maria Eleni
      * @param event - Event
      */
     public void handleCreateMerchantAccountRequest(Event event) {
@@ -145,7 +145,7 @@ public class AccountController {
      * 2. null
      * 3. error message
      *
-     * @author s184174
+     * @author Mohammad
      * @param event - Event
      */
     public void handleDeleteAccountRequest(Event event) {
@@ -191,7 +191,7 @@ public class AccountController {
      * 2. null
      * 3. error message
      *
-     * @author s184174
+     * @author Mohammad
      * @param event - Event
      */
     public void handleCustomerTokenValidatedRequest(Event event) {
@@ -229,6 +229,7 @@ public class AccountController {
     /**
      * It propagates error messages sent by the consumed events.
      *
+     * @author Maria Eleni
      * @param eventName - String
      * @param requestId - String
      * @param errorMessage - String

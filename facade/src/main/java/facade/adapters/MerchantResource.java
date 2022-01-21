@@ -20,6 +20,9 @@ public class MerchantResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    /**
+     * @author Maria Eleni
+     */
     public void createAccount(DTUPayAccount account, final @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishCreateMerchant(account)
@@ -47,6 +50,9 @@ public class MerchantResource {
     @Path("/{mid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author Mohammad
+     */
     public void deleteAccount(@PathParam("mid") String merchantId, final @Suspended AsyncResponse asyncResponse) {
         // Get event
         threadPool.submit(() -> {
@@ -77,6 +83,9 @@ public class MerchantResource {
     @Path("/payment")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    /**
+     * @author Aidana
+     */
     public void createPayment(Payment payment, final @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishPaymentRequested(payment)
@@ -106,6 +115,9 @@ public class MerchantResource {
     @POST
     @Path("/report/{mid}")
     @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * @author Maria Eleni
+     */
     public void getlist(@PathParam("mid") String mid, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
             facadeController.publishPaymentsReportForMerchantEvent(mid)

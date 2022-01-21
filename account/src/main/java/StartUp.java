@@ -4,6 +4,9 @@ import messaging.implementations.RabbitMqQueue;
 import storage.InMemory;
 import port.StorageInterface;
 
+/**
+ * @Author Mohammed
+ */
 public class StartUp {
     public static void main(String[] args) {
         new StartUp().startUp();

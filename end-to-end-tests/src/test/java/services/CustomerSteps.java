@@ -59,8 +59,6 @@ public class CustomerSteps {
 
     @And("Cleanup")
     public void cleanup() {
-        //  System.out.println("Running: tearDown");
-        // BankService dtuBank = new BankServiceService().getBankServicePort();
         try {
             List<AccountInfo> list = dtuBank.getAccounts();
             for (AccountInfo a : list) {
@@ -120,41 +118,5 @@ public class CustomerSteps {
     @Then("the customer's account is deleted and gets a response")
     public void theCustomerSAccountIsDeletedAndGetsFollowingMessageAccountGetId() {
         Assertions.assertEquals("Account with id: " + account.getId() + " is successfully deleted",message);
-    }
-
-    @When("somethingg")
-    public void somethingg() {
-        try {
-            List<AccountInfo> list = dtuBank.getAccounts();
-            for (AccountInfo a : list) {
-//                System.out.println(a.getAccountId());
-//                System.out.println(a.getUser().getCprNumber());
-//                System.out.println(a.getUser().getFirstName());
-//                System.out.println(a.getUser().getLastName());
-                if ((a.getUser().getLastName().equals("group-18") || (a.getUser().getLastName().equals("Tester")) || (a.getUser().getLastName().equals("Mister")))) {
-                    dtuBank.retireAccount(a.getAccountId());
-                }
-            }
-        } catch (Exception bsException) {
-            System.out.println(bsException.getMessage());
-        }
-
-//        String customerAccountIdentifier ="";
-//        account.setName("Customer");
-//        account.setCpr("123456-1234");
-//
-//        User user = new User();
-//        user.setCprNumber(account.getCpr());
-//        user.setFirstName(account.getName());
-//        user.setLastName("Tester");
-//        try {
-//            // Create customer with balance
-//            BigDecimal bigBalance = new BigDecimal(10000);
-//            customerAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
-//            account.setDtuBankAccount(customerAccountIdentifier);
-//        } catch (BankServiceException_Exception bsException) {
-//            bsException.printStackTrace();
-//        }
-//        System.out.println(customerAccountIdentifier);
     }
 }

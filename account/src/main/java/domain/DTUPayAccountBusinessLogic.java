@@ -20,6 +20,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Get an account by id
      *
+     * @author Maria Eleni
      * @param id - String
      * @return DTUPayAccount
      * @throws NoSuchAccountException
@@ -37,6 +38,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Create a DTUPay account
      *
+     * @author Mohammad
      * @param account - DTUPayAccount
      * @throws DuplicateBankAccountException
      */
@@ -56,6 +58,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Delete a DTUPay account
      *
+     * @author Maria Eleni
      * @param id - String
      * @throws NoSuchAccountException
      */
@@ -68,6 +71,7 @@ public class DTUPayAccountBusinessLogic {
     /**
      * Check a DTUBank account is already registered to a DTUPay account
      *
+     * @author Mohammad
      * @param account - DTUPayAccount
      * @throws DuplicateBankAccountException
      */

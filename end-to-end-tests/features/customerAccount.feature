@@ -1,3 +1,4 @@
+# @Author: Mohammad
 Feature: Customer account
   Scenario: Create a new customer account
     When A customer wants to register to DTU Pay with name "G18 Customer"

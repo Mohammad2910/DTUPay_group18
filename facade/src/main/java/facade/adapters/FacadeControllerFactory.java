@@ -2,6 +2,9 @@ package facade.adapters;
 
 import messaging.implementations.RabbitMqQueue;
 
+/**
+ * @author Mohammad
+ */
 public class FacadeControllerFactory {
     static FacadeController service = null;
     public FacadeController getService(){

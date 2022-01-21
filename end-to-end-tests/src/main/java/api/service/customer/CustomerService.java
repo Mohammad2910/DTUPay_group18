@@ -1,16 +1,12 @@
 package api.service.customer;
 
 import api.model.DTUPayAccount;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CustomerService {
 
@@ -21,6 +17,7 @@ public class CustomerService {
     /**
      * Add customer DTUPay account
      *
+     * @Author Mohammad
      * @param account CustomerAccount
      */
     public String add(DTUPayAccount account) {
@@ -47,6 +44,7 @@ public class CustomerService {
     /**
      * Delete a customer by id
      *
+     * @Author David
      * @param id String
      * @return String
      */
@@ -72,6 +70,7 @@ public class CustomerService {
     /**
      * Get all customer tokens
      *
+     * @Aythor Maria Eleni
      * @param id String
      * @return String
      */

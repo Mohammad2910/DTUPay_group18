@@ -15,6 +15,9 @@ public class ManagerResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
+    /**
+     * @author Aidana
+     */
     @POST
     @Path("/report")
     @Produces(MediaType.APPLICATION_JSON)

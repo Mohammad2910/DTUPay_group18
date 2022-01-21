@@ -8,8 +8,7 @@ import messaging.MessageQueue;
 
 /***
  * This class handles report request events via MessageQueue
- * @Author Aidana, Marialena
- *
+ * @Author Aidana, Maria Eleni
  */
 
 public class ReportController {

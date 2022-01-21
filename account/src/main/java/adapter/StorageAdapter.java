@@ -5,6 +5,9 @@ import port.StorageInterface;
 import storage.InMemory;
 import java.util.Map;
 
+/**
+ * @author Maria Eleni
+ */
 public class StorageAdapter implements StorageInterface {
     private InMemory inMemory;
 

@@ -4,6 +4,9 @@ import domain.model.DTUPayAccount;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Mohammad and Maria Eleni
+ */
 public class InMemory {
 
     // key: value -> id: dtuBankAccount

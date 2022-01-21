@@ -18,6 +18,7 @@ public class MerchantService {
     /**
      * Add merchant DTUPay account
      *
+     * @Author David
      * @param account MerchantAccount
      */
     public String add(DTUPayAccount account) {
@@ -45,6 +46,7 @@ public class MerchantService {
     /**
      * Delete a merchant by id
      *
+     * @Author Mohammad
      * @param id String
      * @return String
      */
@@ -70,6 +72,7 @@ public class MerchantService {
     /**
      * Create payment via DTUPay
      *
+     * @Author Maria Eleni
      * @param payment Payment
      */
     public String createPayment(Payment payment) {
