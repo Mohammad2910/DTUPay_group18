@@ -60,7 +60,7 @@ paths:
           description: "Request Timeout"
         "400":
           description: "An account with given bank account number already exists"
-  /merhcant/{cid}:
+  /merchant/{cid}:
     delete:
       tags:
         - "Merchant"
