@@ -80,7 +80,6 @@ public class CustomerService {
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON).get();
 
-        System.out.println(response.readEntity(String[].class));
         switch (response.getStatus()) {
             case 200:
             case 202:

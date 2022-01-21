@@ -118,16 +118,8 @@ public class PaymentSteps {
             }
         }
 
-        System.out.println("selected payment token");
-        System.out.println(payment.getToken());
-
         // Invoke payment
         message = merchantService.createPayment(payment);
-
-        System.out.println("customer");
-        System.out.println(customerAccount.getId());
-        System.out.println("merchant");
-        System.out.println(merchantAccount.getId());
     }
 
     @Then("the payment is successful")
