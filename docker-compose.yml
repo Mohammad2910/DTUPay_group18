@@ -18,6 +18,11 @@ services:
     image: payment
     container_name: payment
 
+  report:
+    build: report
+    image: report
+    container_name: report
+
   token:
     build: token
     image: token
