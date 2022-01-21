@@ -57,7 +57,7 @@ public class TokenBusinessLogic {
      * @return boolean stating whether the possessed token is valid or not
      * @throws TokenNotValidException - if the token is not valid
      */
-    public boolean validateToken(String cid, String token) throws TokenNotValidException {
+    public boolean hasToken(String cid, String token) throws TokenNotValidException {
         if (storageAdapter.hasToken(cid, token)){
             return storageAdapter.hasToken(cid, token);
         }
@@ -73,6 +73,7 @@ public class TokenBusinessLogic {
     public String validateCustomerFromToken(String token) throws TokenNotValidException {
         String customer = storageAdapter.getCustomerByToken(token);
         if (customer != null){
+            consumeToken(customer,token);
             return customer;
         }
         throw new TokenNotValidException("No customer has that token!");

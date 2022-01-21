@@ -22,6 +22,10 @@ pushd payment
 bash build.sh
 popd
 
+pushd report
+bash build.sh
+popd
+
 pushd end-to-end-tests
 bash deploy.sh
 sleep 5

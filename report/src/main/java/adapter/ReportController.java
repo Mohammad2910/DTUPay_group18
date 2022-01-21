@@ -1,19 +1,21 @@
 package adapter;
 
+import domain.ReportBusinessLogic;
 import domain.model.Payment;
-import domain.model.ReportBusinessLogic;
 import messaging.Event;
 import messaging.MessageQueue;
 
 public class ReportController {
-
     MessageQueue queue;
     ReportBusinessLogic reportBusinessLogic;
+
+    // Consumed events
     private static final String SAVE_PAYMENT_REQUESTED = "SavePaymentRequested";
     private static final String MANAGER_REPORT_REQUESTED = "ManagerReportRequested";
     private static final String MERCHANT_REPORT_REQUESTED = "MerchantReportRequested";
     private static final String CUSTOMER_REPORT_REQUESTED = "CustomerReportRequested";
 
+    // Published events
     private static final String MANAGER_REPORT_PROVIDED = "ManagerReportProvided";
     private static final String MERCHANT_REPORT_PROVIDED= "MerchantReportProvided";
     private static final String CUSTOMER_REPORT_PROVIDED = "CustomerReportProvided";

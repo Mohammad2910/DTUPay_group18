@@ -2,18 +2,14 @@ package adapter;
 
 import domain.model.Payment;
 import port.StorageInterface;
-import storage.Repository;
-
+import storage.RepositoryInterface;
 import java.util.List;
 
 public class StorageAdapter implements StorageInterface {
-
-    private final Repository repository;
-
-    public StorageAdapter(Repository repository) {
+    private final RepositoryInterface repository;
+    public StorageAdapter(RepositoryInterface repository) {
         this.repository = repository;
     }
-
 
     @Override
     public void addPayment(Payment payment) {

@@ -1,4 +1,4 @@
-package adapter;
+package domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

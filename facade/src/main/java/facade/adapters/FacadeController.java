@@ -2,6 +2,8 @@ package facade.adapters;
 
 import facade.domain.DTUPayAccount;
 import facade.domain.Payment;
+import facade.domain.PaymentPayload;
+import facade.domain.TokenPayload;
 import messaging.MessageQueue;
 import messaging.Event;
 import java.util.HashMap;
@@ -10,13 +12,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class FacadeController {
-
     MessageQueue queue;
     private Map<String, CompletableFuture<Event>> registeredAccounts = new HashMap<>();
     private Map<String, CompletableFuture<Event>> deletedAccounts = new HashMap<>();
     private Map<String, CompletableFuture<Event>> requestedTokens = new HashMap<>();
     private Map<String, CompletableFuture<Event>> requestedReports = new HashMap<>();
-
     Map<String, CompletableFuture<Event>> initiatedPayments = new HashMap<>();
 
     public FacadeController(MessageQueue q) {
@@ -38,8 +38,13 @@ public class FacadeController {
         queue.addHandler("CustomerTokensRequestFailed", this::handleCustomerTokenRequested);
         queue.addHandler("CustomerTokenRetrieved", this::handleCustomerTokenRetrieved);
         queue.addHandler("CustomerTokenRetrievedFailed", this::handleCustomerTokenRetrieved);
-         queue.addHandler("CustomerWithTokensCreated", this::handleCustomerWithTokensCreated);
-         queue.addHandler("CustomerWithTokensCreateFailed", this::handleCustomerWithTokensCreated);
+        queue.addHandler("CustomerWithTokensCreated", this::handleCustomerWithTokensCreated);
+        queue.addHandler("CustomerWithTokensCreateFailed", this::handleCustomerWithTokensCreated);
+
+        // From Report
+        queue.addHandler("ManagerReportProvided", this::handleReportProvided);
+        queue.addHandler("MerchantReportProvided", this::handleReportProvided);
+        queue.addHandler("CustomerReportProvided", this::handleReportProvided);
     }
 
     /**
@@ -67,7 +72,6 @@ public class FacadeController {
         queue.publish(paymentRequestedEvent);
         return initiatedPayments.get(requestId);
     }
-
 
     /**
      * Publishes an event to the ManagerReportRequested queue for the Report
@@ -106,6 +110,17 @@ public class FacadeController {
         requestedReports.put(requestId, new CompletableFuture<>());
         queue.publish(event);
         return requestedReports.get(requestId);
+    }
+
+    /**
+     * Consumes the events for the report creation
+     *
+     * @param event - Event sent by Report
+     */
+    public void handleReportProvided(Event event) {
+        String requestId = event.getArgument(0, String.class);
+        requestedReports.get(requestId).complete(event);
+        requestedReports.remove(requestId);
     }
 
     /**

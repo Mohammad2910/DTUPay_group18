@@ -1,4 +1,4 @@
-package adapter;
+package facade.domain;
 
 
 import lombok.AllArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerPayment {
-    String token, merchantId, amount;
+public class PaymentPayload {
+    String merchantId, token, amount;
 }

@@ -1,7 +1,6 @@
 package facade.adapters;
 
 import facade.domain.ManagerReport;
-
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -13,13 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 @Path("/manager")
 public class ManagerResource {
-
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
-    @Path("report")
+    @Path("/report")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
@@ -32,8 +29,8 @@ public class ManagerResource {
                             // Get error message, if any
                             String error = event.getArgument(2, String.class);
                             if (error == null) {
-                                ManagerReport report = event.getArgument(1, ManagerReport.class);
                                 // Set object in response
+                                ManagerReport report = event.getArgument(1, ManagerReport.class);
                                 asyncResponse.resume(Response.ok(report).build());
                             } else {
                                 // Set error in response
@@ -43,5 +40,4 @@ public class ManagerResource {
                     });
         });
     }
-
 }
