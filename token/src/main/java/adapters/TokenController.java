@@ -66,9 +66,7 @@ public class TokenController {
         String errorMessage = event.getArgument(2, String.class);
         this.publishPropagatedError("CustomerTokensRequestFailed", requestId, errorMessage);
 
-        //todo: argument expects customer id
         try {
-            //todo: we need to have cid and token amount in the payload
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
             tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
 
