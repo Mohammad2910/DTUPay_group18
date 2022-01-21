@@ -38,6 +38,7 @@ public class PaymentResource {
     }
 
     public void handlePaymentRequestedEvent(Event ev) {
+        System.out.println("Payment event starts from within Payment");
         String requestId = ev.getArgument(0, String.class);
         try {
             PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
@@ -45,7 +46,9 @@ public class PaymentResource {
                 sendErrorResponse(requestId, "parameters can not be null");
                 return;
             }
+
             Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
+            System.out.println("Published event for token validation for Token");
             queue.publish(event);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());

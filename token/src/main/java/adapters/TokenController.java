@@ -42,7 +42,12 @@ public class TokenController {
     public void handleCreateCustomerWithTokens(Event event) {
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         try {
             DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
@@ -63,7 +68,12 @@ public class TokenController {
     public void handleCustomerRequestsTokens(Event event) {
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("CustomerTokensRequestFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("CustomerTokensRequestFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         try {
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
@@ -89,24 +99,33 @@ public class TokenController {
      */
     public void handleValidateCustomerToken(Event event) {
         String requestId = event.getArgument(0, String.class);
-        String errorMessage = event.getArgument(2, String.class);
-        System.out.println("Before the publish error ------------------>");
-        this.publishPropagatedError("CustomerTokenValidateFailed", requestId, errorMessage);
-        System.out.println("After the publish error ------------------>");
-
         try {
-            PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
-            String cid = tokenBusinessLogic.validateCustomerFromToken(paymentPayload.getToken());
-            paymentPayload.setCustomerId(cid);
-            System.out.println("Before successful event  ------------------>");
-            Event tokenValidated = new Event("CustomerTokenValidated", new Object[]{requestId, paymentPayload, null});
-            System.out.println("After successful event");
-            queue.publish(tokenValidated);
-        } catch (TokenNotValidException tokenException) {
-            System.out.println("Before failed event ------------------>");
-            Event tokenNotValid = new Event("CustomerTokenValidateFailed", new Object[]{requestId, null, tokenException.getMessage()});
-            System.out.println("After failed event ------------------>");
-            queue.publish(tokenNotValid);
+            System.out.println("Token validation event is initialized by Token");
+            String errorMessage = event.getArgument(2, String.class);
+            if (errorMessage != null) {
+                this.publishPropagatedError("CustomerTokenValidateFailed", requestId, errorMessage);
+
+                // Exit
+                return;
+            }
+
+            try {
+                PaymentPayload paymentPayload = event.getArgument(1, PaymentPayload.class);
+                String cid = tokenBusinessLogic.validateCustomerFromToken(paymentPayload.getToken());
+                paymentPayload.setCustomerId(cid);
+                System.out.println("Before successful event  ------------------>");
+                Event tokenValidated = new Event("CustomerTokenValidated", new Object[]{requestId, paymentPayload, null});
+                System.out.println("After successful event");
+                queue.publish(tokenValidated);
+            } catch (TokenNotValidException tokenException) {
+                System.out.println("Before failed event ------------------>");
+                Event tokenNotValid = new Event("CustomerTokenValidateFailed", new Object[]{requestId, null, tokenException.getMessage()});
+                System.out.println("After failed event ------------------>");
+                queue.publish(tokenNotValid);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            this.publishPropagatedError("CustomerTokenValidateFailed", requestId, e.getMessage());
         }
     }
 
@@ -118,7 +137,12 @@ public class TokenController {
     public void handleRetrieveCustomerTokens(Event event){
         String requestId = event.getArgument(0, String.class);
         String errorMessage = event.getArgument(2, String.class);
-        this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, errorMessage);
+        if (errorMessage != null) {
+            this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, errorMessage);
+
+            // Exit
+            return;
+        }
 
         try {
             TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
@@ -140,11 +164,8 @@ public class TokenController {
      * @param errorMessage - the message to propagate
      */
     private void publishPropagatedError(String eventName, String requestId, String errorMessage) {
-        // Publish propagated error, if any
-        if (errorMessage != null) {
-            // Publish event
-            Event errorPropagated = new Event(eventName, new Object[]{requestId, null, errorMessage});
-            queue.publish(errorPropagated);
-        }
+        // Publish event
+        Event errorPropagated = new Event(eventName, new Object[]{requestId, null, errorMessage});
+        queue.publish(errorPropagated);
     }
 }

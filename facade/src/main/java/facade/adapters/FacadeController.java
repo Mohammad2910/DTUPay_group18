@@ -65,11 +65,13 @@ public class FacadeController {
      * @return CompletableFuture
      */
     public CompletableFuture<Event> publishPaymentRequested(Payment payment) {
+        System.out.println("Initialize payment from Facade");
         String requestId = UUID.randomUUID().toString();
         PaymentPayload p = new PaymentPayload(payment.getMid(), payment.getToken(), payment.getAmount());
         Event paymentRequestedEvent = new Event("PaymentRequested", new Object[] {requestId, p});
         initiatedPayments.put(requestId, new CompletableFuture<>());
         queue.publish(paymentRequestedEvent);
+        System.out.println("Published payment for Payment");
         return initiatedPayments.get(requestId);
     }
 
