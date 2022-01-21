@@ -1,8 +1,8 @@
-package java.domain;
+package domain;
 
 import java.util.List;
 
-import domain.ReportBusinessLogic;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
