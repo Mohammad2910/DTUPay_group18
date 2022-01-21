@@ -53,7 +53,7 @@ class TokenBusinessLogicTest {
     }
 
     @Test
-    void validateToken() {
+    void hasToken() {
         String cid = "cid1";
         String token1 = "token1";
         String token2 = "token2";
@@ -64,21 +64,21 @@ class TokenBusinessLogicTest {
         set.addToken(token3);
         try {
             tokenBusinessLogic.addNewCustomer(cid, set);
-            assertTrue(tokenBusinessLogic.validateToken(cid, token2));
+            assertTrue(tokenBusinessLogic.hasToken(cid, token2));
         } catch (TokenNotValidException exception) {
-            assertThrows(TokenNotValidException.class, () -> tokenBusinessLogic.validateToken(cid, "token4"));
+            assertThrows(TokenNotValidException.class, () -> tokenBusinessLogic.hasToken(cid, "token4"));
         }
     }
 
     @Test
-    void validateToken_ThrowsTokenNotValidException() {
+    void hasToken_ThrowsTokenNotValidException() {
         String cid = "cid1";
         try{
             tokenBusinessLogic.createNewCustomer(cid);
         }catch (CustomerAlreadyExistsException customerAlreadyExistsException){
            customerAlreadyExistsException.printStackTrace();
         }
-        assertThrows(TokenNotValidException.class, () -> tokenBusinessLogic.validateToken(cid, "tokenNotAdded"));
+        assertThrows(TokenNotValidException.class, () -> tokenBusinessLogic.hasToken(cid, "tokenNotAdded"));
     }
 
     @Test
@@ -182,8 +182,9 @@ class TokenBusinessLogicTest {
         set.addToken(token1);
         set.addToken(token2);
         tokenBusinessLogic.addNewCustomer(cid, set);
+        assertEquals(2, tokenBusinessLogic.checkCustomerTokenSetSize(cid));
         assertEquals(cid, tokenBusinessLogic.validateCustomerFromToken(token1));
-        assertEquals(cid, tokenBusinessLogic.validateCustomerFromToken(token2));
+        assertEquals(1, tokenBusinessLogic.checkCustomerTokenSetSize(cid));
     }
 
     @Test

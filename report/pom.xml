@@ -8,14 +8,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>report</artifactId>
-
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
@@ -38,6 +35,13 @@
             <groupId>hubert.dtu.dk</groupId>
             <artifactId>messaging-utilities</artifactId>
             <version>3.2</version>
+        </dependency>
+        <!-- Jupiter (JUnit 5) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

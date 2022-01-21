@@ -1,15 +1,11 @@
 package storage;
 
 import domain.model.Payment;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemory implements Repository {
-
+public class InMemory implements RepositoryInterface {
     private final List<Payment> payments = new ArrayList<>();
-
     private static InMemory instance;
 
     private InMemory() {}
@@ -21,10 +17,12 @@ public class InMemory implements Repository {
         return instance;
     }
 
+    @Override
     public void addPayment(Payment payment) {
        payments.add(payment);
     }
 
+    @Override
     public List<Payment> getPayments() {
        return payments;
     }

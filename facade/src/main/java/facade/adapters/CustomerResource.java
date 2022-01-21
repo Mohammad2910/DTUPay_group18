@@ -1,6 +1,7 @@
 package facade.adapters;
 
 import facade.domain.DTUPayAccount;
+import facade.domain.TokenPayload;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -15,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 @Path("/customer")
 public class CustomerResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
@@ -136,7 +136,7 @@ public class CustomerResource {
 
 
     @POST
-    @Path("report/{cid}")
+    @Path("/report/{cid}")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@PathParam("cid") String cid, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
@@ -149,8 +149,8 @@ public class CustomerResource {
                             // Get error message, if any
                             String error = event.getArgument(2, String.class);
                             if (error == null) {
-                                var report = event.getArgument(1, ArrayList.class);
                                 // Set object in response
+                                var report = event.getArgument(1, ArrayList.class);
                                 asyncResponse.resume(Response.ok(report).build());
                             } else {
                                 // Set error in response

@@ -1,9 +1,7 @@
 package facade.adapters;
 
 import javax.ws.rs.*;
-import facade.domain.AccountList;
 import facade.domain.DTUPayAccount;
-import facade.domain.ManagerReport;
 import facade.domain.Payment;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
@@ -17,20 +15,9 @@ import java.util.concurrent.TimeUnit;
 @Path("/merchant")
 public class MerchantResource {
     FacadeController facadeController = new FacadeControllerFactory().getService();
-
-    private AccountList accountList = AccountList.getInstance();
-
-
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
-/*
-    public MerchantResource(FacadeController facadeController) {
-        //this.facadeController = facadeController;
-    }
-*/
-
     @POST
-//    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAccount(DTUPayAccount account, final @Suspended AsyncResponse asyncResponse) {
@@ -117,7 +104,7 @@ public class MerchantResource {
 
 
     @POST
-    @Path("report/{mid}")
+    @Path("/report/{mid}")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@PathParam("mid") String mid, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
@@ -130,8 +117,8 @@ public class MerchantResource {
                             // Get error message, if any
                             String error = event.getArgument(2, String.class);
                             if (error == null) {
-                                var report = event.getArgument(1, ArrayList.class);
                                 // Set object in response
+                                var report = event.getArgument(1, ArrayList.class);
                                 asyncResponse.resume(Response.ok(report).build());
                             } else {
                                 // Set error in response
@@ -141,6 +128,4 @@ public class MerchantResource {
                     });
         });
     }
-
-
 }

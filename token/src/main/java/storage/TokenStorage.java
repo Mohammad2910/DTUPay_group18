@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class TokenStorage {
 
-    HashMap<String, TokenSet> tokenHashMap = new HashMap<>();
+    private HashMap<String, TokenSet> tokenHashMap = new HashMap<>();
 
     /**
      * Adds a new customer-tokenSet mapping to the storage
@@ -27,6 +27,7 @@ public class TokenStorage {
      * Method for adding a new set of tokens to a customers existing tokenSet
      * @param cid - the id of the customer
      * @param tokens to add to the already existing tokenSet
+     * @return a tokenSet upon completion of the adding behavior
      */
     public TokenSet addTokensToCustomer(String cid, TokenSet tokens) {
         TokenSet tokenSetFromStorage = tokenHashMap.get(cid);
@@ -64,7 +65,6 @@ public class TokenStorage {
      * @param token to be checked
      * @return boolean stating whether the specified token did exist or not
      */
-    //todo: throw an exception here if customer token is not valid
     public boolean isCustomerTokenValid(String cid, String token) {
         TokenSet set = tokenHashMap.get(cid);
         return set.findToken(token);
@@ -113,3 +113,4 @@ public class TokenStorage {
         return tokenHashMap;
     }
 }
+
