@@ -45,10 +45,12 @@ paths:
           description: "DTUPayAccount object that needs to be registered to the DTUPay"
           required: true
           schema:
-            $ref: "#/definitions/DTUPayAccount"
+            $ref: "#/definitions/DTUPayAccountNew"
       responses:
         "202":
           description: "Successful Response"
+          schema:
+            $ref: "#/definitions/DTUPayAccount"
         "408":
           description: "Request Timeout"
         "400":
@@ -73,7 +75,7 @@ paths:
             $ref: "#/definitions/Payment"
       responses:
         "202":
-          description: "Successful Response"
+          description: "Successful Payment!"
         "408":
           description: "Request Timeout"
         "400":
@@ -97,7 +99,7 @@ paths:
           type: "string"
       responses:
         "202":
-          description: "Successful Response"
+          description: "Account with id: d7sd6sd5f5tf5vt5v4s6 is successfully deleted"
         "408":
           description: "Request Timeout"
         "400":
@@ -144,10 +146,12 @@ paths:
           description: "DTUPayAccount object that needs to be registered to the DTUPay"
           required: true
           schema:
-            $ref: "#/definitions/DTUPayAccount"
+            $ref: "#/definitions/DTUPayAccountNew"
       responses:
         "202":
           description: "Successful Response"
+          schema:
+            $ref: "#/definitions/DTUPayAccount"
         "408":
           description: "Request Timeout"
         "400":
@@ -171,7 +175,7 @@ paths:
           type: "string"
       responses:
         "202":
-          description: "OK"
+          description: "Account with id: d7sd6sd5f5tf5vt5v4s6 is successfully deleted"
         "408":
           description: "Request Timeout"
         "400":
@@ -273,7 +277,7 @@ definitions:
     properties:
       id:
         type: "string"
-        example: ""
+        example: "6df6d7s6s54a3d"
       name:
         type: "string"
         example: "John Doe"
@@ -285,6 +289,28 @@ definitions:
         example: "a1s2de2jd9-3dk393jo9s-d7e83kd03l"
     xml:
       name: "DTUPayAccount"
+  DTUPayAccountNew:
+    type: "object"
+    required:
+      - "id"
+      - "name"
+      - "cpr"
+      - "dtuBankAccount"
+    properties:
+      id:
+        type: "string"
+        example: ""
+      name:
+        type: "string"
+        example: "John Doe"
+      cpr:
+        type: "string"
+        example: "01012001-1234"
+      dtuBankAccount:
+        type: "string"
+        example: "a1s2de2jd9-3dk393jo9s-d7e83kd03l"
+    xml:
+      name: "DTUPayAccountNew"
   Payment:
     type: "object"
     required:
