@@ -48,7 +48,6 @@ public class PaymentResource {
             }
 
             Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
-            System.out.println("Published event for token validation for Token");
             queue.publish(event);
         } catch (Exception e) {
             sendErrorResponse(requestId, e.getMessage());

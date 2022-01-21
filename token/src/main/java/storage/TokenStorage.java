@@ -79,7 +79,6 @@ public class TokenStorage {
         for (Map.Entry<String, TokenSet> entry : tokenHashMap.entrySet()) {
             for (String item : entry.getValue().getTokenSet()) {
                 if (token != null && token.equals(item)) {
-                    System.out.println("============ token found ===================");
                     return entry.getKey();
                 }
             }

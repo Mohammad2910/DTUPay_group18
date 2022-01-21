@@ -35,7 +35,6 @@ public class CustomerResource {
                                     DTUPayAccount newAccount = event.getArgument(1, DTUPayAccount.class);
                                     // Set object in response
                                     asyncResponse.resume(Response.ok(newAccount).build());
-                                    System.out.println("createAccount.RESUMED with OK");
                                 } else {
                                     // Set error in response
                                     asyncResponse.resume(Response.status(Response.Status.BAD_REQUEST).entity(error).build());

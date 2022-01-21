@@ -29,7 +29,6 @@ public class TokenSet {
            String t = tokenSet[i];
            if(t != null && t.equals(token)){
                tokenSet[i] = null;
-               System.out.println("============= Token deleted =============");
                break;
            }
        }
