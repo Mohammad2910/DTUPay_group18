@@ -4,6 +4,10 @@ import domain.model.TokenSet;
 import domain.ports.IStorageAdapter;
 import storage.TokenStorage;
 
+/**
+ *
+ * @author David
+ */
 public class StorageAdapter implements IStorageAdapter {
 
     private TokenStorage tokenStorage;

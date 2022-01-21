@@ -1,6 +1,8 @@
-package domain;
+package java.domain;
 
 import java.util.List;
+
+import domain.ReportBusinessLogic;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +56,7 @@ class ReportBusinessLogicTest {
         // Assert total payment summary
         businessLogic.addPayment(new Payment("token", "1", "merchantId", "customerId"));
         report = businessLogic.getManagerReport();
-        int reportTotalPaymentsSummary = report.getTotalPaymentsSummary();
+        int reportTotalPaymentsSummary = report.getSum();
         assertEquals(1001, reportTotalPaymentsSummary);
     }
 

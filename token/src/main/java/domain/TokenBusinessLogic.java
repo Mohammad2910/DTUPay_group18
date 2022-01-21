@@ -5,9 +5,9 @@ import domain.ports.IStorageAdapter;
 import exceptions.*;
 
 /**
- * Class for managing tokens
+ * Class for managing token business
  *
- * @author Renjue, Christian and David
+ * @author Renjue
  */
 public class TokenBusinessLogic {
 
@@ -73,7 +73,7 @@ public class TokenBusinessLogic {
     public String validateCustomerFromToken(String token) throws TokenNotValidException {
         String customer = storageAdapter.getCustomerByToken(token);
         if (customer != null){
-            consumeToken(customer,token);
+            consumeToken(customer, token);
             return customer;
         }
         throw new TokenNotValidException("No customer has that token!");

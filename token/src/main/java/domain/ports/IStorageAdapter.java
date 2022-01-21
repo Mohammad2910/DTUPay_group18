@@ -4,6 +4,7 @@ import domain.model.TokenSet;
 
 /**
  * Interface that describes what methods that should be implemented by an adapter
+ * @author David
  */
 public interface IStorageAdapter {
 

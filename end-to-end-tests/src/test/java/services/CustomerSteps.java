@@ -61,7 +61,7 @@ public class CustomerSteps {
 
     @And("Cleanup")
     public void cleanup() {
-        System.out.println("Running: tearDown");
+//        System.out.println("Running: tearDown");
         //BankService dtuBank = new BankServiceService().getBankServicePort();
         try {
             List<AccountInfo> list = dtuBank.getAccounts();

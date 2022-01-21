@@ -4,7 +4,10 @@ import domain.TokenBusinessLogic;
 import messaging.implementations.RabbitMqQueue;
 import storage.TokenStorage;
 
-
+/**
+ *
+ * @author Christian
+ */
 public class TokenStartUp {
     public static void main(String[] args) {
         new TokenStartUp().startUp();

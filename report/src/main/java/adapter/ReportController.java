@@ -28,7 +28,6 @@ public class ReportController {
     private static final String CUSTOMER_REPORT_PROVIDED = "CustomerReportProvided";
 
     public ReportController(MessageQueue queue, ReportBusinessLogic reportBusinessLogic) {
-        System.out.println("Report event consumer is enabled...");
         this.queue = queue;
         this.reportBusinessLogic = reportBusinessLogic;
         queue.addHandler(SAVE_PAYMENT_REQUESTED, this::handleSavePaymentRequestedEvent);
@@ -43,16 +42,13 @@ public class ReportController {
     }
 
     public void handleManagerReportRequestedEvent(Event ev) {
-        System.out.println("Manager Report Requested is being handled by Report");
         var requestId = ev.getArgument(0, String.class);
         try {
             var report = reportBusinessLogic.getManagerReport();
             Event event = new Event(MANAGER_REPORT_PROVIDED, new Object[]{requestId, report, null});
-            System.out.println("Manager Report is published");
             queue.publish(event);
         } catch (Exception e) {
             Event event = new Event(MANAGER_REPORT_PROVIDED, new Object[]{requestId, null, e.getMessage()});
-            System.out.println("Manager Report is not published, error!");
             System.out.println(e.getMessage());
             queue.publish(event);
         }

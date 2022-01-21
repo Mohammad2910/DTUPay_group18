@@ -2,7 +2,7 @@ package domain.model;
 
 /**
  * Class that represents a set of tokens.
- * @author Renjue and David
+ * @author Renjue
  */
 public class TokenSet {
 
@@ -26,7 +26,8 @@ public class TokenSet {
      */
     public void removeToken(String token){
        for(int i = 0; i < 6; i++){
-           if(tokenSet[i].equals(token)){
+           String t = tokenSet[i];
+           if(t != null && t.equals(token)){
                tokenSet[i] = null;
                break;
            }
