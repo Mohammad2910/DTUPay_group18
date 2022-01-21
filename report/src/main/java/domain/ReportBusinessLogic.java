@@ -1,19 +1,16 @@
-package domain.model;
+package domain;
 
-import adapter.CustomerPayment;
-import adapter.ManagerPayment;
-import adapter.ManagerReport;
-import adapter.MerchantPayment;
+import domain.model.CustomerPayment;
+import domain.model.ManagerPayment;
+import domain.model.ManagerReport;
+import domain.model.MerchantPayment;
+import domain.model.Payment;
 import port.StorageInterface;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReportBusinessLogic {
-
     private final StorageInterface storage;
-
     public ReportBusinessLogic(StorageInterface storage) {
         this.storage = storage;
     }
@@ -23,8 +20,8 @@ public class ReportBusinessLogic {
         List<ManagerPayment> managerPayments = new ArrayList<>(payments.size());
         Integer sum = 0;
         for (Payment p: payments) {
-           sum += Integer.getInteger(p.amount);
-           managerPayments.add(new ManagerPayment(p.token, p.merchantId, p.amount));
+           sum += Integer.getInteger(p.getAmount());
+           managerPayments.add(new ManagerPayment(p.getToken(), p.getMerchantId(), p.getAmount()));
         }
         return new ManagerReport(managerPayments, sum);
     }
@@ -33,8 +30,8 @@ public class ReportBusinessLogic {
         List<Payment> payments = storage.getPayments();
         List<MerchantPayment> merchantPayments = new ArrayList<>(payments.size());
         for (Payment p: payments) {
-            if(p.merchantId.equals(merchantId)) {
-                merchantPayments.add(new MerchantPayment(p.token, p.amount));
+            if(p.getMerchantId().equals(merchantId)) {
+                merchantPayments.add(new MerchantPayment(p.getToken(), p.getAmount()));
             }
         }
         return merchantPayments;
@@ -44,8 +41,8 @@ public class ReportBusinessLogic {
         List<Payment> payments = storage.getPayments();
         List<CustomerPayment> customerPayments = new ArrayList<>(payments.size());
         for (Payment p: payments) {
-            if(p.customerId.equals(customerId)) {
-                customerPayments.add(new CustomerPayment(p.token, p.merchantId, p.amount));
+            if(p.getCustomerId().equals(customerId)) {
+                customerPayments.add(new CustomerPayment(p.getToken(), p.getMerchantId(), p.getAmount()));
             }
         }
         return customerPayments;
