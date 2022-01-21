@@ -1,22 +1,19 @@
 package services;
 
+import api.model.DTUPayAccount;
+import api.service.merchant.MerchantService;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import merchant.MerchantService;
-import merchant.domain.MerchantAccount;
 import org.junit.jupiter.api.Assertions;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 public class MerchantSteps {
     BankService dtuBank = new BankServiceService().getBankServicePort();
-
-    MerchantAccount account = new MerchantAccount();
+    DTUPayAccount account = new DTUPayAccount();
     MerchantService service = new MerchantService();
-
     String message;
 
     @When("A merchant wants to register to DTU Pay with name {string}")
@@ -35,7 +32,7 @@ public class MerchantSteps {
         User user = new User();
         user.setCprNumber(account.getCpr());
         user.setFirstName(account.getName());
-        user.setLastName("Mister");
+        user.setLastName("group-18");
 
         try {
             // Create customer with balance
@@ -68,7 +65,7 @@ public class MerchantSteps {
         User user = new User();
         user.setCprNumber(account.getCpr());
         user.setFirstName(account.getName());
-        user.setLastName("Mister");
+        user.setLastName("group-18");
 
         try {
             // Create customer with balance
@@ -86,6 +83,8 @@ public class MerchantSteps {
         String message = service.add(account);
         // 404
         Assertions.assertNotEquals("Account doesn't exists", message);
+        // 408
+        Assertions.assertNotEquals("Request Timeout", message);
         // 500
         Assertions.assertNotEquals("Internal server error", message);
         // default
@@ -111,7 +110,11 @@ public class MerchantSteps {
 //                System.out.println(a.getUser().getCprNumber());
 //                System.out.println(a.getUser().getFirstName());
 //                System.out.println(a.getUser().getLastName());
-                if ((a.getUser().getCprNumber().equals("123455-1234"))) {
+                if ((a.getUser().getLastName().equals("group-18"))
+                        || (a.getUser().getLastName().equals("Tester"))
+                        || (a.getUser().getLastName().equals("Mister"))
+                        || (a.getUser().getCprNumber().equals("m-cpr"))
+                        || (a.getUser().getCprNumber().equals("c-cpr"))) {
                     dtuBank.retireAccount(a.getAccountId());
                 }
             }
@@ -119,22 +122,22 @@ public class MerchantSteps {
             System.out.println(bsException.getMessage());
         }
 
-        String merchantAccountIdentifier ="";
-        account.setName("Merchant");
-        account.setCpr("123455-1234");
-
-        User user = new User();
-        user.setCprNumber(account.getCpr());
-        user.setFirstName(account.getName());
-        user.setLastName("Tester");
-        try {
-            // Create customer with balance
-            BigDecimal bigBalance = new BigDecimal(10000);
-            merchantAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
-            account.setDtuBankAccount(merchantAccountIdentifier);
-        } catch (BankServiceException_Exception bsException) {
-            bsException.printStackTrace();
-        }
-        System.out.println(merchantAccountIdentifier);
+//        String merchantAccountIdentifier ="";
+//        account.setName("Merchant");
+//        account.setCpr("123455-1234");
+//
+//        User user = new User();
+//        user.setCprNumber(account.getCpr());
+//        user.setFirstName(account.getName());
+//        user.setLastName("Tester");
+//        try {
+//            // Create customer with balance
+//            BigDecimal bigBalance = new BigDecimal(10000);
+//            merchantAccountIdentifier = dtuBank.createAccountWithBalance(user, bigBalance);
+//            account.setDtuBankAccount(merchantAccountIdentifier);
+//        } catch (BankServiceException_Exception bsException) {
+//            bsException.printStackTrace();
+//        }
+//        System.out.println(merchantAccountIdentifier);
     }
 }

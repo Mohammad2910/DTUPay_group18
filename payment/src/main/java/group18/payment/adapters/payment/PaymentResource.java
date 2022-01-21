@@ -9,9 +9,11 @@ import messaging.Event;
 import messaging.MessageQueue;
 
 /**
- * Class for handling communication via RabbitMQ
+ * Class for handling payment requests from the client
+ * and communicating with other microservices via MessageQueue
  *
  * @Author Aidana
+ *
  */
 
 public class PaymentResource {
@@ -37,29 +39,45 @@ public class PaymentResource {
         messageQueue.addHandler(TOKEN_VALIDATE_FAILED, this::handleTokenValidateFailed);
     }
 
+    /**
+     * This method handles events published by merchant Facade to do payments.
+     * checks
+     * @param ev - event to handle.
+     */
     public void handlePaymentRequestedEvent(Event ev) {
-        System.out.println("Payment event starts from within Payment");
         String requestId = ev.getArgument(0, String.class);
         try {
             PaymentPayload p = ev.getArgument(1, PaymentPayload.class);
-            if (p.getMerchantId() == null || p.getToken() == null || p.getAmount() == null) {
-                sendErrorResponse(requestId, "parameters can not be null");
-                return;
-            }
-
+            paymentService.checkForValidPaymentParameters(p);
+            //if parameters to do payment are valid then send event to validate token
             Event event = new Event(TOKEN_VALIDATION_REQUESTED, new Object[]{requestId, p, null});
             queue.publish(event);
         } catch (Exception e) {
+            //in case of any exception send response to the merchant facade with error description
             sendErrorResponse(requestId, e.getMessage());
         }
     }
 
+    /**
+     * This method handles events from the token micro in case of token validation failed.
+     * Token micro puts failed scenarios to separate topic and sends event back to payments
+     *
+     * otherwise if token validation is successful the token micro sends event further to the account micro
+     *
+     * @param ev - event to handle.
+     */
     public void handleTokenValidateFailed(Event ev) {
         String requestId = ev.getArgument(0, String.class);
         String errorMsg = ev.getArgument(2, String.class);
         sendErrorResponse(requestId, errorMsg);
     }
 
+    /**
+     * This method handles events from the account micro
+     * at this step the payment is sent to the bank and to the report micro
+     *
+     * @param ev - event to handle.
+     */
     public void handleBankAccountsProvidedEvent(Event ev) {
         String requestId = ev.getArgument(0, String.class);
         try {
@@ -78,10 +96,18 @@ public class PaymentResource {
             Event savePaymentEvent = new Event(SAVE_PAYMENT_REQUESTED, new Object[]{requestId, new ReportPayment(p.getMerchantId(), p.getToken(), p.getAmount(), p.getCustomerId()) , null});
             publishPaymentToReport(savePaymentEvent);
         } catch (Exception e) {
+            //in case of any exception send response to the merchant facade with error description
             sendErrorResponse(requestId, e.getMessage());
         }
     }
 
+    /**
+     * This method sends error payment response to the client
+     *
+     * @param requestId - payment requestId
+     * @param errorMessage - message to be shown to the client
+     *
+     */
     public void sendErrorResponse(String requestId, String errorMessage) {
         Event event = new Event(PAYMENT_RESPONSE_PROVIDED,
                 new Object[]{requestId, null, String.format("Oops! Something went wrong: '%s'", errorMessage)}
@@ -89,6 +115,12 @@ public class PaymentResource {
         queue.publish(event);
     }
 
+    /**
+     * This method sends successful payment to the Report micro
+     *
+     * @param ev - event
+     *
+     */
     public void publishPaymentToReport(Event ev) {
         try {
             queue.publish(ev);

@@ -6,6 +6,11 @@ import group18.payment.adapters.bankTransfer.BankTransferService;
 
 import java.math.BigDecimal;
 
+/***
+ * @Author Aidana
+ *
+ */
+
 public class WsBankTransferService implements BankTransferService {
     private final BankService bankService;
 
