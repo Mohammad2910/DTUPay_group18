@@ -39,8 +39,8 @@ public class ReportController {
         System.out.println("Manager Report Requested is being handled by Report");
         var requestId = ev.getArgument(0, String.class);
         try {
-            var list = reportBusinessLogic.getManagerReport();
-            Event event = new Event(MANAGER_REPORT_PROVIDED, new Object[]{requestId, list, null});
+            var report = reportBusinessLogic.getManagerReport();
+            Event event = new Event(MANAGER_REPORT_PROVIDED, new Object[]{requestId, report, null});
             System.out.println("Manager Report is published");
             queue.publish(event);
         } catch (Exception e) {
