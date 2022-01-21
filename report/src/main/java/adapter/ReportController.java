@@ -5,6 +5,13 @@ import domain.model.Payment;
 import messaging.Event;
 import messaging.MessageQueue;
 
+
+/***
+ * This class handles report request events via MessageQueue
+ * @Author Aidana, Marialena
+ *
+ */
+
 public class ReportController {
     MessageQueue queue;
     ReportBusinessLogic reportBusinessLogic;

@@ -11,7 +11,7 @@ public class PaymentStartUp {
     public static void main(String[] args) {
         new PaymentStartUp().startUp();
     }
-//
+
     private void startUp() {
 
         BankService bankService = new BankServiceService().getBankServicePort();

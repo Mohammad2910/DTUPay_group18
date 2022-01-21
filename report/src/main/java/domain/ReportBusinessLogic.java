@@ -9,6 +9,11 @@ import port.StorageInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ *
+ * @Author Aidana, Marialena
+ *
+ */
 public class ReportBusinessLogic {
     private final StorageInterface storage;
     public ReportBusinessLogic(StorageInterface storage) {
