@@ -16,7 +16,7 @@ public class ManagerResource {
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @POST
-    @Path("report")
+    @Path("/report")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {

@@ -136,7 +136,7 @@ public class CustomerResource {
 
 
     @POST
-    @Path("report/{cid}")
+    @Path("/report/{cid}")
     @Produces(MediaType.APPLICATION_JSON)
     public void getlist(@PathParam("cid") String cid, @Suspended AsyncResponse asyncResponse) {
         threadPool.submit(() -> {
