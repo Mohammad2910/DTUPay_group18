@@ -149,8 +149,8 @@ public class CustomerResource {
                             // Get error message, if any
                             String error = event.getArgument(2, String.class);
                             if (error == null) {
-                                var report = event.getArgument(1, ArrayList.class);
                                 // Set object in response
+                                var report = event.getArgument(1, ArrayList.class);
                                 asyncResponse.resume(Response.ok(report).build());
                             } else {
                                 // Set error in response

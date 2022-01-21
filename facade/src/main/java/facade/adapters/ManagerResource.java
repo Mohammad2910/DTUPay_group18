@@ -29,8 +29,8 @@ public class ManagerResource {
                             // Get error message, if any
                             String error = event.getArgument(2, String.class);
                             if (error == null) {
-                                ManagerReport report = event.getArgument(1, ManagerReport.class);
                                 // Set object in response
+                                ManagerReport report = event.getArgument(1, ManagerReport.class);
                                 asyncResponse.resume(Response.ok(report).build());
                             } else {
                                 // Set error in response
