@@ -15,17 +15,40 @@ public class ReportBusinessLogic {
         this.storage = storage;
     }
 
+    /**
+     * Puts a payment into storage
+     *
+     * @param payment Payment
+     */
+    public void addPayment(Payment payment) {
+        storage.addPayment(payment);
+    }
+
+    /**
+     * Retrieves the Manager Report
+     * Contains:
+     * - Total amount of money
+     * - All payments
+     *
+     * @return ManagerReport
+     */
     public ManagerReport getManagerReport() {
         List<Payment> payments = storage.getPayments();
         List<ManagerPayment> managerPayments = new ArrayList<>(payments.size());
         Integer sum = 0;
         for (Payment p: payments) {
-           sum += Integer.getInteger(p.getAmount());
+           sum += Integer.parseInt(p.getAmount());
            managerPayments.add(new ManagerPayment(p.getToken(), p.getMerchantId(), p.getAmount()));
         }
         return new ManagerReport(managerPayments, sum);
     }
 
+    /**
+     * Retrieves the list of Merchant Payments
+     *
+     * @param merchantId String
+     * @return List <MerchantPayment>
+     */
     public List<MerchantPayment> getMerchantReport(String merchantId) {
         List<Payment> payments = storage.getPayments();
         List<MerchantPayment> merchantPayments = new ArrayList<>(payments.size());
@@ -37,6 +60,12 @@ public class ReportBusinessLogic {
         return merchantPayments;
     }
 
+    /**
+     * Retrieves the list of Customer Payments
+     *
+     * @param customerId String
+     * @return List <CustomerPayment>
+     */
     public List<CustomerPayment> getCustomerReport(String customerId) {
         List<Payment> payments = storage.getPayments();
         List<CustomerPayment> customerPayments = new ArrayList<>(payments.size());
@@ -48,11 +77,10 @@ public class ReportBusinessLogic {
         return customerPayments;
     }
 
+    /**
+     * Cleans up storage
+     */
     public void cleanUpPayments() {
         storage.getPayments().clear();
-    }
-
-    public void addPayment(Payment p) {
-        storage.addPayment(p);
     }
 }
