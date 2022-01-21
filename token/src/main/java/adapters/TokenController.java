@@ -41,22 +41,26 @@ public class TokenController {
      */
     public void handleCreateCustomerWithTokens(Event event) {
         String requestId = event.getArgument(0, String.class);
-        String errorMessage = event.getArgument(2, String.class);
-        if (errorMessage != null) {
-            this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
-
-            // Exit
-            return;
-        }
-
         try {
-            DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
-            tokenBusinessLogic.createNewCustomer(account.getId());
-            Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, account, null});
-            queue.publish(customerCreated);
-        } catch (CustomerAlreadyExistsException customerAlreadyExistsException) {
-            Event customerAlreadyExists = new Event("CustomerWithTokensCreateFailed", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});
-            queue.publish(customerAlreadyExists);
+            String errorMessage = event.getArgument(2, String.class);
+            if (errorMessage != null) {
+                this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, errorMessage);
+
+                // Exit
+                return;
+            }
+
+            try {
+                DTUPayAccount account = event.getArgument(1, DTUPayAccount.class);
+                tokenBusinessLogic.createNewCustomer(account.getId());
+                Event customerCreated = new Event("CustomerWithTokensCreated", new Object[]{requestId, account, null});
+                queue.publish(customerCreated);
+            } catch (CustomerAlreadyExistsException customerAlreadyExistsException) {
+                Event customerAlreadyExists = new Event("CustomerWithTokensCreateFailed", new Object[]{requestId, null, customerAlreadyExistsException.getMessage()});
+                queue.publish(customerAlreadyExists);
+            }
+        } catch (Exception e) {
+            this.publishPropagatedError("CustomerWithTokensCreateFailed", requestId, e.getMessage());
         }
     }
 
@@ -67,28 +71,32 @@ public class TokenController {
      */
     public void handleCustomerRequestsTokens(Event event) {
         String requestId = event.getArgument(0, String.class);
-        String errorMessage = event.getArgument(2, String.class);
-        if (errorMessage != null) {
-            this.publishPropagatedError("CustomerTokensRequestFailed", requestId, errorMessage);
-
-            // Exit
-            return;
-        }
-
         try {
-            TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
-            tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
+            String errorMessage = event.getArgument(2, String.class);
+            if (errorMessage != null) {
+                this.publishPropagatedError("CustomerTokensRequestFailed", requestId, errorMessage);
 
-            // Get newly created tokens for customer
-            String[] tokenSet = tokenBusinessLogic.getTokens(tokenPayload.getCid());
+                // Exit
+                return;
+            }
 
-            // Set tokens to payload
-            tokenPayload.setTokens(tokenSet);
-            Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, tokenPayload, null});
-            queue.publish(tokenSupplied);
-        } catch (TokensEnoughException | TokenOutOfBoundsException | TokensNotEnoughException tokensException) {
-            Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
-            queue.publish(customerHasSufficientTokens);
+            try {
+                TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
+                tokenBusinessLogic.supplyTokens(tokenPayload.getCid(), tokenPayload.getTokenAmount());
+
+                // Get newly created tokens for customer
+                String[] tokenSet = tokenBusinessLogic.getTokens(tokenPayload.getCid());
+
+                // Set tokens to payload
+                tokenPayload.setTokens(tokenSet);
+                Event tokenSupplied = new Event("CustomerTokensRequested", new Object[]{requestId, tokenPayload, null});
+                queue.publish(tokenSupplied);
+            } catch (TokensEnoughException | TokenOutOfBoundsException | TokensNotEnoughException tokensException) {
+                Event customerHasSufficientTokens = new Event("CustomerTokensRequestFailed", new Object[]{requestId, null, tokensException.getMessage()});
+                queue.publish(customerHasSufficientTokens);
+            }
+        } catch (Exception e) {
+            this.publishPropagatedError("CustomerTokensRequestFailed", requestId, e.getMessage());
         }
     }
 
@@ -136,23 +144,27 @@ public class TokenController {
      */
     public void handleRetrieveCustomerTokens(Event event){
         String requestId = event.getArgument(0, String.class);
-        String errorMessage = event.getArgument(2, String.class);
-        if (errorMessage != null) {
-            this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, errorMessage);
-
-            // Exit
-            return;
-        }
-
         try {
-            TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
-            String[] tokens = tokenBusinessLogic.getTokens(tokenPayload.getCid());
-            tokenPayload.setTokens(tokens);
-            Event tokenRetrieved = new Event("CustomerTokenRetrieved", new Object[]{requestId, tokenPayload, null});
-            queue.publish(tokenRetrieved);
-        } catch (TokensNotEnoughException tokenException) {
-            Event tokenNotRetrieved = new Event("CustomerTokenRetrievedFailed", new Object[]{requestId, tokenException.getMessage()});
-            queue.publish(tokenNotRetrieved);
+            String errorMessage = event.getArgument(2, String.class);
+            if (errorMessage != null) {
+                this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, errorMessage);
+
+                // Exit
+                return;
+            }
+
+            try {
+                TokenPayload tokenPayload = event.getArgument(1, TokenPayload.class);
+                String[] tokens = tokenBusinessLogic.getTokens(tokenPayload.getCid());
+                tokenPayload.setTokens(tokens);
+                Event tokenRetrieved = new Event("CustomerTokenRetrieved", new Object[]{requestId, tokenPayload, null});
+                queue.publish(tokenRetrieved);
+            } catch (TokensNotEnoughException tokenException) {
+                Event tokenNotRetrieved = new Event("CustomerTokenRetrievedFailed", new Object[]{requestId, tokenException.getMessage()});
+                queue.publish(tokenNotRetrieved);
+            }
+        } catch (Exception e) {
+            this.publishPropagatedError("CustomerTokenRetrievedFailed", requestId, e.getMessage());
         }
     }
 
