@@ -40,6 +40,11 @@ public class FacadeController {
         queue.addHandler("CustomerTokenRetrievedFailed", this::handleCustomerTokenRetrieved);
         queue.addHandler("CustomerWithTokensCreated", this::handleCustomerWithTokensCreated);
         queue.addHandler("CustomerWithTokensCreateFailed", this::handleCustomerWithTokensCreated);
+
+        // From Report
+        queue.addHandler("ManagerReportProvided", this::handleReportProvided);
+        queue.addHandler("MerchantReportProvided", this::handleReportProvided);
+        queue.addHandler("CustomerReportProvided", this::handleReportProvided);
     }
 
     /**
@@ -74,6 +79,7 @@ public class FacadeController {
      * @return CompletableFuture
      */
     public CompletableFuture<Event> publishPaymentsReportForManagerEvent() {
+        System.out.println("Manager Report is requested by Facade");
         String requestId = UUID.randomUUID().toString();
         Event event = new Event("ManagerReportRequested", new Object[] {requestId});
         requestedReports.put(requestId, new CompletableFuture<>());
@@ -105,6 +111,18 @@ public class FacadeController {
         requestedReports.put(requestId, new CompletableFuture<>());
         queue.publish(event);
         return requestedReports.get(requestId);
+    }
+
+    /**
+     * Consumes the events for the report creation
+     *
+     * @param event - Event sent by Report
+     */
+    public void handleReportProvided(Event event) {
+        System.out.println("Report is fetched and is sending back to resource from facade controller to manager resource");
+        String requestId = event.getArgument(0, String.class);
+        requestedReports.get(requestId).complete(event);
+        requestedReports.remove(requestId);
     }
 
     /**

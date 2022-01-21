@@ -40,7 +40,7 @@ public class TokenSet {
      */
     public int getTokenIndex(String token){
 
-        int indexOfToken = -1;
+        int indexOfToken = 0;
         for(int i = 0; i < 6 ; i++){
 
             if(tokenSet[i] != null){
@@ -95,3 +95,5 @@ public class TokenSet {
     public String[] getTokenSet(){ return tokenSet; }
 
 }
+
+
